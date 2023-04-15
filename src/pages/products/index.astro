@@ -1,0 +1,55 @@
+---
+import { listProducts } from "../../api/listProducts";
+import Card from "../../components/Card.astro";
+import Footer from "../../components/Footer.astro";
+import Navbar from "../../components/Navbar.astro";
+import Layout from "../../layouts/Layout.astro";
+
+interface Iproduct {
+  title: "string";
+  thumbnail: "string";
+  description: "string";
+}
+
+const res = await listProducts();
+const products = res?.products;
+// console.log(products);
+---
+
+<Layout title="Products">
+  <Navbar />
+  <main>
+    <div class="product-nav-wrapper">
+      <h1>Designed for inspiring workplaces</h1>
+    </div>
+
+    <div class="product-container">
+      {
+        products?.map((product: Iproduct) => (
+          <Card
+            imageSrc={product.thumbnail}
+            title={product.title}
+            shortDescription={product.description}
+          />
+        ))
+      }
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .product-nav-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .product-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    justify-content: center;
+    max-width: 90%;
+    margin: 25px auto;
+  }
+</style>
