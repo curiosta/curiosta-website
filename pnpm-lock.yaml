@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@astro-aws/adapter': ^0.3.0
   '@astrojs/preact': ^2.1.0
   '@astrojs/tailwind': ^3.1.1
   '@medusajs/medusa-js': ^2.0.2
@@ -9,6 +10,7 @@ specifiers:
   tailwindcss: ^3.0.24
 
 dependencies:
+  '@astro-aws/adapter': 0.3.0_astro@2.3.0
   '@astrojs/preact': 2.1.0_preact@10.13.2
   '@astrojs/tailwind': 3.1.1_zwpyd63tzib74yordqn4to2xfu
   '@medusajs/medusa-js': 2.0.2
@@ -24,6 +26,18 @@ packages:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.18
+    dev: false
+
+  /@astro-aws/adapter/0.3.0_astro@2.3.0:
+    resolution: {integrity: sha512-11tz/msigkaX5ZXNS3SJX9+DgJJ/nB4NPZ3utJQFzMGxRw9ZWwuKqOGZoQtPF2jfyb/EDClIWaumLcK3KqDWMg==}
+    engines: {node: 16.x || 18.x}
+    peerDependencies:
+      astro: '>=1'
+    dependencies:
+      '@astrojs/webapi': 2.1.0
+      astro: 2.3.0
+      esbuild: 0.17.16
+      merge-anything: 5.1.4
     dev: false
 
   /@astrojs/compiler/0.31.4:
@@ -1777,6 +1791,11 @@ packages:
     engines: {node: '>=12'}
     dev: false
 
+  /is-what/4.1.8:
+    resolution: {integrity: sha512-yq8gMao5upkPoGEU9LsB2P+K3Kt8Q3fQFCGyNCWOAnJAMzEXVV9drYb0TXr42TTliLLhKIBvulgAXgtLLnwzGA==}
+    engines: {node: '>=12.13'}
+    dev: false
+
   /is-wsl/2.2.0:
     resolution: {integrity: sha512-fKzAra0rGJUUBwGBgNkHZuToZcn+TtXHpeCgmkMJMMYx1sQDYaCSyjJBSCa2nH1DGm7s3n1oBnohoVTBaN7Lww==}
     engines: {node: '>=8'}
@@ -2046,6 +2065,13 @@ packages:
     resolution: {integrity: sha512-V4Zn/ncyN1QNSqSBxTrMOLpjr+IKdHl2v3KVLoWmDPscP4r9GcCi71gjgvUV1SFSKh92AjAG4peFuBl2/YgCJg==}
     dependencies:
       '@types/mdast': 3.0.11
+    dev: false
+
+  /merge-anything/5.1.4:
+    resolution: {integrity: sha512-7PWKwGOs5WWcpw+/OvbiFiAvEP6bv/QHiicigpqMGKIqPPAtGhBLR8LFJW+Zu6m9TXiR/a8+AiPlGG0ko1ruoQ==}
+    engines: {node: '>=12.13'}
+    dependencies:
+      is-what: 4.1.8
     dev: false
 
   /merge-stream/2.0.0:

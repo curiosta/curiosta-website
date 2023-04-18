@@ -10,6 +10,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astro-aws/adapter": "^0.3.0",
     "@astrojs/preact": "^2.1.0",
     "@astrojs/tailwind": "^3.1.1",
     "@medusajs/medusa-js": "^2.0.2",

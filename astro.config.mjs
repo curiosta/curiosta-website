@@ -1,4 +1,5 @@
 import { defineConfig } from "astro/config";
+import { astroAWSFunctions } from "@astro-aws/adapter";
 import tailwind from "@astrojs/tailwind";
 
 import preact from "@astrojs/preact";
@@ -6,5 +7,6 @@ import preact from "@astrojs/preact";
 // https://astro.build/config
 export default defineConfig({
   output: "server",
-  integrations: [tailwind(), preact()]
+  adapter: astroAWSFunctions(),
+  integrations: [tailwind(), preact()],
 });
