@@ -6,9 +6,10 @@ import Navbar from "../../components/Navbar.astro";
 import Layout from "../../layouts/Layout.astro";
 
 interface Iproduct {
-  title: "string";
-  thumbnail: "string";
-  description: "string";
+  title: string;
+  thumbnail: string;
+  description: string;
+  id: string;
 }
 
 const res = await listProducts();
@@ -19,37 +20,32 @@ const products = res?.products;
 <Layout title="Products">
   <Navbar />
   <main>
-    <div class="product-nav-wrapper">
-      <h1>Designed for inspiring workplaces</h1>
-    </div>
+    <div class="bg-white">
+      <div
+        class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8"
+      >
+        <div class="md:flex md:items-center md:justify-between">
+          <h2 class="text-2xl font-bold tracking-tight text-gray-900">
+            Trending products
+          </h2>
+        </div>
 
-    <div class="product-container">
-      {
-        products?.map((product: Iproduct) => (
-          <Card
-            imageSrc={product.thumbnail}
-            title={product.title}
-            shortDescription={product.description}
-          />
-        ))
-      }
+        <div
+          class="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 lg:gap-x-8"
+        >
+          {
+            products?.map((product: Iproduct) => (
+              <Card
+                id={product.id}
+                imageSrc={product.thumbnail}
+                title={product.title}
+                shortDescription={product.description}
+              />
+            ))
+          }
+        </div>
+      </div>
     </div>
   </main>
   <Footer />
 </Layout>
-
-<style>
-  .product-nav-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .product-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    justify-content: center;
-    max-width: 90%;
-    margin: 25px auto;
-  }
-</style>
