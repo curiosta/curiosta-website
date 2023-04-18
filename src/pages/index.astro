@@ -5,6 +5,8 @@ import Footer from "../components/Footer.astro";
 import HeroSection from "../components/HeroSection.astro";
 import Navbar from "../components/Navbar.astro";
 import Layout from "../layouts/Layout.astro";
+import { Picture } from "@astrojs/image/components";
+import engineer from "../assets/images/engineer.jpg";
 
 interface Iproduct {
   title: string;
@@ -17,7 +19,10 @@ const res = await listProducts();
 const products = res?.products;
 ---
 
-<Layout title="Curiosta - A global platform for local making ">
+<Layout
+  title="Curiosta - A global platform for local making "
+  description="Curiosta - A global platform for local making"
+>
   <Navbar />
   <HeroSection />
 
@@ -28,10 +33,13 @@ const products = res?.products;
   >
     <div class="relative overflow-hidden rounded-lg">
       <div class="absolute inset-0">
-        <img
-          src="https://cdn.pixabay.com/photo/2020/03/17/17/46/engineer-4941342_1280.jpg"
+        <Picture
+          src={engineer}
           alt=""
           class="h-full w-full object-cover object-center"
+          widths={[400, 800, 1200]}
+          aspectRatio={16 / 9}
+          formats={["avif", "webp"]}
         />
       </div>
       <div
