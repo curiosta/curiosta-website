@@ -4,7 +4,6 @@ import Card from "../components/Card.astro";
 import Footer from "../components/Footer.astro";
 import HeroSection from "../components/HeroSection.astro";
 import Navbar from "../components/Navbar.astro";
-import WorksIntro from "../components/WorksIntro.astro";
 import Layout from "../layouts/Layout.astro";
 
 interface Iproduct {
@@ -18,7 +17,7 @@ const res = await listProducts();
 const products = res?.products;
 ---
 
-<Layout title="home">
+<Layout title="Curiosta - A global platform for local making ">
   <Navbar />
   <HeroSection />
 
