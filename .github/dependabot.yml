@@ -1,0 +1,17 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+
+version: 2
+updates:
+  - package-ecosystem: "npm" # Package manager for JavaScript projects
+    directory: "/" # Location of package manifests (usually in the root directory)
+    schedule:
+      interval: "weekly" # Update frequency (daily, weekly, or monthly)
+
+  # You can add more package ecosystems and customize settings as needed
+  # - package-ecosystem: "another-package-ecosystem"
+  #   directory: "path/to/manifests"
+  #   schedule:
+  #     interval: "update-frequency"
