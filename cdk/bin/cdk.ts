@@ -21,4 +21,6 @@ new CdkStack(app, "CdkStack", {
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
 });
 
-new CuriostaPipelineStack(app, "PipelineStack", {});
+new CuriostaPipelineStack(app, "PipelineStack", {
+  env: { account: "615256776167", region: "ap-south-1" },
+});
