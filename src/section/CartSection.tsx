@@ -105,7 +105,7 @@ const CartSection = () => {
                         type="button"
                         title="Remove"
                         class="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500"
-                        onClick={() => removeCartItem(item.id)}
+                        onClick={() => removeCartItem(item.id, item.variant)}
                       >
                         <span class="sr-only">Remove</span>
                         <svg
