@@ -34,7 +34,7 @@ const Card = ({ id, imageSrc, title, shortDescription, variants }: Props) => {
           {shortDescription.slice(0, 30) + "..."}
         </p>
         <p class="mt-1 text-sm font-medium text-gray-900">
-          ${variants[0].prices[1].amount}
+          ${variants[0].prices[1].amount / 100}
         </p>
       </div>
     </div>

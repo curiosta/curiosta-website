@@ -26,21 +26,20 @@ interface Props {
 const ProductInfo = ({ product, productId }: Props) => {
   const selectedVariant = useSignal<string>(product.variants.at(0)?.title!);
 
-  const selectedPrice = product.variants
-    .filter((item) => item.title === selectedVariant.value)
-    .map((item) => item.prices[1].amount)[0];
+  const selectedPrice =
+    product.variants
+      .filter((item) => item.title === selectedVariant.value)
+      .map((item) => item.prices[1].amount)[0] / 100;
 
   return (
     <div class="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
       <h1 class="text-3xl font-bold tracking-tight text-gray-900">
         {product.title}
       </h1>
-
       <div class="mt-3">
         <h2 class="sr-only">Product information</h2>
         <p class="text-3xl tracking-tight text-gray-900">${selectedPrice}</p>
       </div>
-
       {/* Reviews  */}
       <div class="mt-3">
         <h3 class="sr-only">Reviews</h3>
@@ -68,7 +67,6 @@ const ProductInfo = ({ product, productId }: Props) => {
           <p class="sr-only">4 out of 5 stars</p>
         </div>
       </div>
-
       <div class="mt-6">
         <h3 class="sr-only">Description</h3>
 
@@ -76,7 +74,6 @@ const ProductInfo = ({ product, productId }: Props) => {
           <p>{product.description}</p>
         </div>
       </div>
-
       <AddToCartForm
         productId={productId}
         productTitle={product.title}
