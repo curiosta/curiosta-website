@@ -31,7 +31,7 @@ export function addCartItem({
   );
   if (existingProductId && existingProductVariant) {
     cartItems.value = cartItems.value.map((item) => {
-      if (item.id == id) {
+      if (item.variant === variant) {
         return { ...item, quantity: item.quantity + 1 };
       } else {
         return item;
@@ -53,7 +53,7 @@ export function increaseCartItem(id: string, variant: string) {
   );
   if (existingProductId && existingProductVariant) {
     cartItems.value = cartItems.value.map((item) => {
-      if (item.variant == variant) {
+      if (item.variant === variant) {
         return { ...item, quantity: item.quantity + 1 };
       } else {
         return item;
@@ -69,7 +69,7 @@ export function decreaseCartItem(id: string, variant: string) {
   );
   if (existingProductId && existingProductVariant) {
     cartItems.value = cartItems.value.map((item) => {
-      if (item.variant == variant) {
+      if (item.variant === variant) {
         return { ...item, quantity: item.quantity - 1 };
       } else {
         return item;
@@ -79,7 +79,9 @@ export function decreaseCartItem(id: string, variant: string) {
   }
 }
 
-export function removeCartItem(id: string) {
-  const updateCart = cartItems.value.filter((item) => item.id != id);
+export function removeCartItem(id: string, variant: string) {
+  const updateCart = cartItems.value.filter(
+    (item) => item.id !== id || item.variant !== variant
+  );
   return (cartItems.value = updateCart);
 }
