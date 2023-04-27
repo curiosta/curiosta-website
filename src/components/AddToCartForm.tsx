@@ -2,9 +2,8 @@ import type { ChangeEvent } from "preact/compat";
 import Button from "./Button";
 import { addCartItem } from "../store/cartStore";
 import { cartItems } from "../store/cartStore";
-import { useRef } from "preact/compat";
 import ProductVariants from "./ProductVariants";
-import type { Signal } from "@preact/signals";
+import { Signal, signal } from "@preact/signals";
 
 interface Props {
   productId: string;
@@ -22,7 +21,7 @@ interface Props {
   selectedVariant: Signal<string>;
   price: number;
 }
-
+const isPopUp = signal(false);
 const AddToCartForm = ({
   productId,
   productTitle,
@@ -31,8 +30,6 @@ const AddToCartForm = ({
   selectedVariant,
   price,
 }: Props) => {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-
   const handleAddCart = (e: ChangeEvent) => {
     e.preventDefault();
     addCartItem({
@@ -42,12 +39,12 @@ const AddToCartForm = ({
       variant: selectedVariant.value,
       price: price,
     });
-    dialogRef.current?.show();
+    isPopUp.value = true;
   };
   localStorage.setItem("cartItem", JSON.stringify(cartItems.value));
 
   return (
-    <div class="mt-6 relative">
+    <div class="mt-6 ">
       <form onSubmit={handleAddCart}>
         <ProductVariants
           productVariants={productVariants}
@@ -57,27 +54,32 @@ const AddToCartForm = ({
           <Button
             type="submit"
             class={`flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full`}
+            title="Add to cart"
             btnLabel={` Add to cart`}
           />
         </div>
       </form>
       {/* popup */}
-      <dialog
-        class={
-          "p-3 border rounded-lg  w-[200px] bg-white absolute left-10 z-10 after:absolute after:border-[15px] after:border-transparent after:border-t-0 after:border-b-[15px] after:border-solid after:border-b-white after:top-[-15px] after:left-10 "
-        }
-        ref={dialogRef}
+      <div
+        class={`fixed right-0 bottom-0  w-full ${
+          isPopUp.value ? "flex" : "hidden "
+        }  justify-center items-center  bg-[#464646c4] p-3   z-20`}
       >
-        <div class="flex flex-col">
-          <div class="flex  items-center gap-4 mb-4 pt-3 relative">
-            <span
-              class="absolute -top-4 -right-1 text-lg cursor-pointer "
-              onClick={() => dialogRef.current?.close()}
-            >
-              x
-            </span>
-            <img src={productImage} alt="" class={"h-8 w-8"} />
-            <span class="text-green-500 font-medium ">Added to cart</span>
+        <span
+          class="absolute top-0 right-3  text-xl text-white font-bold cursor-pointer "
+          onClick={() => (isPopUp.value = false)}
+        >
+          X
+        </span>
+        <div class="flex flex-col bg-white w-1/2 p-3 rounded-md ">
+          <div class="flex  items-center gap-4 mb-4 pt-3 ">
+            <img src={productImage} alt="" class={" w-20  object-cover  "} />
+            <div>
+              <p class="font-medium ">{productTitle}</p>
+              <p class="  "> Variant: {selectedVariant}</p>
+              <p class="  ">Price: ${price}</p>
+              <p class="text-green-500 font-medium ">Added to cart</p>
+            </div>
           </div>
           <a
             href="/cart"
@@ -86,7 +88,7 @@ const AddToCartForm = ({
             Go to cart
           </a>
         </div>
-      </dialog>
+      </div>
     </div>
   );
 };
