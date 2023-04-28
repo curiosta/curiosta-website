@@ -7,18 +7,20 @@ const SignupForm = () => {
   const handleCreateUser = async (e: ChangeEvent) => {
     e.preventDefault();
     try {
-      const formData = new FormData(formRef.current!);
-      const { first_name, last_name, email, password } = Object.fromEntries(
-        formData.entries()
-      ) as User;
-      const newUser = await createUser({
-        first_name,
-        last_name,
-        email,
-        password,
-      });
-      console.log(newUser);
-      console.log("user created");
+      if (formRef.current) {
+        const formData = new FormData(formRef.current);
+        const { first_name, last_name, email, password } = Object.fromEntries(
+          formData.entries()
+        ) as User;
+        const newUser = await createUser({
+          first_name,
+          last_name,
+          email,
+          password,
+        });
+        console.log(newUser);
+        console.log("user created");
+      }
     } catch (err) {
       console.log(err);
     }
