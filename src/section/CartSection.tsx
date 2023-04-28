@@ -46,11 +46,11 @@ const CartSection = () => {
                       <p class="text-gray-500">Sienna</p>
 
                       <p class="ml-4 border-l border-gray-200 pl-4 text-gray-500">
-                        {item.variant}
+                        {item.variant.title}
                       </p>
                     </div>
                     <p class="mt-1 text-sm font-medium text-gray-900">
-                      ${item.price}
+                      ${item.variant.price}
                     </p>
                   </div>
 
@@ -63,10 +63,12 @@ const CartSection = () => {
                         type="button"
                         title="Decrease"
                         class={`rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
-                          item.quantity! <= 1 ? "opacity-70" : ""
+                          item.quantity <= 1 ? "opacity-70" : ""
                         } `}
-                        onClick={() => decreaseCartItem(item.id, item.variant)}
-                        disabled={item.quantity! <= 1}
+                        onClick={() =>
+                          decreaseCartItem(item.id, item.variant.id)
+                        }
+                        disabled={item.quantity <= 1}
                       >
                         <svg
                           class="h-5 w-5"
@@ -88,7 +90,9 @@ const CartSection = () => {
                         type="button"
                         title="Add more"
                         class="rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                        onClick={() => increaseCartItem(item.id, item.variant)}
+                        onClick={() =>
+                          increaseCartItem(item.id, item.variant.id)
+                        }
                       >
                         <svg
                           class="h-5 w-5"
@@ -105,7 +109,7 @@ const CartSection = () => {
                         type="button"
                         title="Remove"
                         class="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500"
-                        onClick={() => removeCartItem(item.id, item.variant)}
+                        onClick={() => removeCartItem(item.id, item.variant.id)}
                       >
                         <span class="sr-only">Remove</span>
                         <svg
