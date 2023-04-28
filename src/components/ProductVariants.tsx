@@ -10,10 +10,27 @@ interface Props {
       amount: number;
     }[];
   }[];
-  selectedVariant: Signal<string>;
+  selectedVariant: {
+    id: Signal<string | undefined>;
+    title: Signal<string | undefined>;
+    inventoryQty: Signal<number | undefined>;
+    price: Signal<number | undefined>;
+  };
 }
 
 const ProductVariants = ({ productVariants, selectedVariant }: Props) => {
+  const handleVariant = (
+    id: string,
+    title: string,
+    prices: { amount: number },
+    inventoryQty: number
+  ) => {
+    selectedVariant.id.value = id;
+    selectedVariant.title.value = title;
+    selectedVariant.inventoryQty.value = inventoryQty;
+    selectedVariant.price.value = prices.amount / 100;
+  };
+
   return (
     <div>
       <div class="flex items-center justify-between">
@@ -25,7 +42,7 @@ const ProductVariants = ({ productVariants, selectedVariant }: Props) => {
           {productVariants.map((variant) => (
             <label
               class={`flex items-center ${
-                variant.title === selectedVariant.value
+                variant.title === selectedVariant.title.value
                   ? "border-transparent bg-indigo-600 text-white hover:bg-indigo-700"
                   : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
               } justify-center rounded-md border py-3 px-3 text-sm font-medium uppercase sm:flex-1 cursor-pointer focus:outline-none`}
@@ -35,7 +52,14 @@ const ProductVariants = ({ productVariants, selectedVariant }: Props) => {
                 name="variant-choice"
                 value={variant.title}
                 class="sr-only"
-                onInput={(e) => (selectedVariant.value = e.currentTarget.value)}
+                onInput={() =>
+                  handleVariant(
+                    variant.id,
+                    variant.title,
+                    variant.prices[1],
+                    variant.inventory_quantity
+                  )
+                }
                 aria-labelledby="variant-choice-0-label"
               />
               <span id="variant-choice-0-label">{variant.title}</span>
