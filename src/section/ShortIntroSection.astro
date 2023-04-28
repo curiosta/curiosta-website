@@ -1,13 +1,12 @@
 ---
 import { Picture } from "@astrojs/image/components";
-import engineerImage from "../assets/images/engineer.jpg";
 ---
 
 <section aria-labelledby="social-impact-heading" class="mx-auto max-w-7xl px-4">
   <div class="relative overflow-hidden rounded-lg">
     <div class="absolute inset-0">
       <Picture
-        src={engineerImage}
+        src={"/images/engineer.jpg"}
         alt=""
         class="h-full w-full object-cover object-center"
         widths={[400, 800, 1200]}
