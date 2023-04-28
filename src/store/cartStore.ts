@@ -1,87 +1,96 @@
-import { signal } from "@preact/signals";
+import { Signal, signal } from "@preact/signals";
 
 export type CartItem = {
   id: string;
   name: string;
   imageSrc: string;
   quantity: number;
-  price: number;
-  variant: string;
+  variant: {
+    id: Signal<string | undefined>;
+    title: Signal<string | undefined>;
+    inventoryQty: Signal<number | undefined>;
+    price: Signal<number | undefined>;
+  };
 };
 
 export type CartItemDisplayInfo = Pick<
   CartItem,
-  "id" | "name" | "imageSrc" | "price" | "variant"
+  "id" | "name" | "imageSrc" | "variant"
 >;
 
-const localData = JSON.parse(localStorage.getItem("cartItem")!);
+let localData = [];
+if (typeof window !== "undefined") {
+  localData = JSON.parse(localStorage.getItem("cartItem")!);
+}
 
-export const cartItems = signal<CartItem[]>(localData || []);
+export const cartItems = signal<CartItem[]>(localData ?? []);
 
-export function addCartItem({
+export function addItemToCart({
   id,
   name,
   imageSrc,
-  price,
   variant,
 }: CartItemDisplayInfo) {
-  const existingProductId = cartItems.value?.some((item) => item.id === id);
-  const existingProductVariant = cartItems.value?.some(
-    (item) => item.variant === variant
+  const cartItemsValue = cartItems.value;
+
+  if (!cartItemsValue) return;
+
+  const existingCartItem = cartItemsValue.find(
+    (item) => item.id === id && String(item.variant.id) === variant.id.value
   );
-  if (existingProductId && existingProductVariant) {
-    cartItems.value = cartItems.value.map((item) => {
-      if (item.variant === variant) {
-        return { ...item, quantity: item.quantity + 1 };
-      } else {
-        return item;
-      }
-    });
-    return;
+
+  if (existingCartItem) {
+    existingCartItem.quantity += 1;
   } else {
-    cartItems.value = [
-      ...cartItems.value,
-      { id, name, imageSrc, price, variant, quantity: 1 },
-    ];
+    cartItemsValue.push({ id, name, imageSrc, variant, quantity: 1 });
   }
 }
 
-export function increaseCartItem(id: string, variant: string) {
-  const existingProductId = cartItems.value?.some((item) => item.id === id);
-  const existingProductVariant = cartItems.value?.some(
-    (item) => item.variant === variant
+export function increaseCartItem(
+  id: string,
+  variantId: Signal<string | undefined>
+) {
+  const cartItemsValue = cartItems.value;
+
+  const index = cartItemsValue.findIndex(
+    (item) => item.id === id && item.variant.id === variantId
   );
-  if (existingProductId && existingProductVariant) {
-    cartItems.value = cartItems.value.map((item) => {
-      if (item.variant === variant) {
-        return { ...item, quantity: item.quantity + 1 };
-      } else {
-        return item;
-      }
-    });
-    return;
-  }
-}
-export function decreaseCartItem(id: string, variant: string) {
-  const existingProductId = cartItems.value?.some((item) => item.id === id);
-  const existingProductVariant = cartItems.value?.some(
-    (item) => item.variant === variant
-  );
-  if (existingProductId && existingProductVariant) {
-    cartItems.value = cartItems.value.map((item) => {
-      if (item.variant === variant) {
-        return { ...item, quantity: item.quantity - 1 };
-      } else {
-        return item;
-      }
-    });
-    return;
+
+  if (index !== -1) {
+    const updateCartItems = [...cartItemsValue];
+    updateCartItems[index] = {
+      ...updateCartItems[index],
+      quantity: updateCartItems[index].quantity + 1,
+    };
+    return (cartItems.value = updateCartItems);
   }
 }
 
-export function removeCartItem(id: string, variant: string) {
+export function decreaseCartItem(
+  id: string,
+  variantId: Signal<string | undefined>
+) {
+  const cartItemsValue = cartItems.value;
+  const index = cartItemsValue.findIndex(
+    (item) => item.id === id && item.variant.id === variantId
+  );
+
+  if (index !== -1) {
+    const updateCartItems = [...cartItemsValue];
+    updateCartItems[index] = {
+      ...updateCartItems[index],
+      quantity: updateCartItems[index].quantity - 1,
+    };
+    return (cartItems.value = updateCartItems);
+  }
+}
+
+export function removeCartItem(
+  id: string,
+  variantId: Signal<string | undefined>
+) {
   const updateCart = cartItems.value.filter(
-    (item) => item.id !== id || item.variant !== variant
+    (item) => item.id !== id || item.variant.id !== variantId
   );
   return (cartItems.value = updateCart);
 }
