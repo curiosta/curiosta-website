@@ -2,7 +2,7 @@ import { cartItems } from "../store/cartStore";
 
 const OrderSection = () => {
   const subTotal = cartItems.value.reduce(
-    (acc, currVal) => acc + currVal.price * currVal.quantity,
+    (acc, currVal) => acc + currVal.quantity * +currVal.variant.price,
     0
   );
 
