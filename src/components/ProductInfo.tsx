@@ -24,12 +24,16 @@ interface Props {
 }
 
 const ProductInfo = ({ product, productId }: Props) => {
-  const selectedVariant = useSignal<string>(product.variants.at(0)?.title!);
+  const defaultVariant = product.variants.at(0);
 
-  const selectedPrice =
-    product.variants
-      .filter((item) => item.title === selectedVariant.value)
-      .map((item) => item.prices[1].amount)[0] / 100;
+  const selectedVariant = {
+    id: useSignal(defaultVariant?.id),
+    title: useSignal(defaultVariant?.title),
+    inventoryQty: useSignal(defaultVariant?.inventory_quantity),
+    price: useSignal(
+      defaultVariant?.prices[1].amount && defaultVariant?.prices[1].amount / 100
+    ),
+  };
 
   return (
     <div class="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
@@ -38,7 +42,9 @@ const ProductInfo = ({ product, productId }: Props) => {
       </h1>
       <div class="mt-3">
         <h2 class="sr-only">Product information</h2>
-        <p class="text-3xl tracking-tight text-gray-900">${selectedPrice}</p>
+        <p class="text-3xl tracking-tight text-gray-900">
+          ${selectedVariant.price.value}
+        </p>
       </div>
       {/* Reviews  */}
       <div class="mt-3">
@@ -74,13 +80,13 @@ const ProductInfo = ({ product, productId }: Props) => {
           <p>{product.description}</p>
         </div>
       </div>
+
       <AddToCartForm
         productId={productId}
         productTitle={product.title}
         productImage={product.images[0].url}
         productVariants={product.variants}
         selectedVariant={selectedVariant}
-        price={selectedPrice}
       />
 
       <section aria-labelledby="details-heading" class="mt-12">
