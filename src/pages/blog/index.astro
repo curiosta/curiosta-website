@@ -4,6 +4,7 @@ import Navbar from "../../components/Navbar.astro";
 import Layout from "../../layouts/Layout.astro";
 import BlogCard from "../../components/BlogCard.astro";
 import { contentfulClient } from "../../api/blogs";
+import type { FieldsType } from "contentful";
 
 const blogsEntries = await contentfulClient.getEntries({
   content_type: "pageBlogPost",
@@ -11,13 +12,13 @@ const blogsEntries = await contentfulClient.getEntries({
 
 const blogs = blogsEntries.items.map((item) => {
   const { title, shortDescription, slug, publishedDate, featuredImage } =
-    item.fields;
+    item.fields as FieldsType;
   return {
     title,
     slug,
-    shortDescription,
+    description: shortDescription,
     featuredImage,
-    date: publishedDate,
+    date: new Date(publishedDate).toLocaleDateString(),
   };
 });
 ---
@@ -42,13 +43,13 @@ const blogs = blogsEntries.items.map((item) => {
             ? blogs.map((blog) => (
                 <BlogCard
                   title={blog.title}
-                  description={blog.shortDescription}
+                  description={blog.description}
                   slug={blog.slug}
                   date={blog.date}
                   image={blog.featuredImage}
                 />
               ))
-            : "Blog not found "
+            : "Blog not found"
         }
 
         <!-- More posts... -->
