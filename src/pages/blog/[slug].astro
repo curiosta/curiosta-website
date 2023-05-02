@@ -1,44 +1,58 @@
 ---
+import type { EntrySkeletonType, FieldsType } from "contentful";
 import { contentfulClient } from "../../api/blogs";
 import BlogCard from "../../components/BlogCard.astro";
 import Footer from "../../components/Footer.astro";
 import Navbar from "../../components/Navbar.astro";
 import Layout from "../../layouts/Layout.astro";
 import { documentToHtmlString } from "@contentful/rich-text-html-renderer";
+import type { BlogPost } from "../../api/blogs";
 
 const { slug } = Astro.params;
 let post;
 try {
-  const data = await contentfulClient.getEntries({
+  const data = await contentfulClient.getEntries<EntrySkeletonType, string>({
     content_type: "pageBlogPost",
     "fields.slug": slug,
   });
-  // console.log(data.items[0].fields.relatedBlogPosts.fields);
+  // console.log(data.items[0].fields.relatedBlogPosts);
   const { title, publishedDate, content, featuredImage, relatedBlogPosts } =
-    data.items[0].fields;
+    data.items[0].fields as FieldsType;
   post = {
     title,
-    date: publishedDate,
+    date: new Date(publishedDate).toLocaleDateString(),
     content: documentToHtmlString(content),
-    image: featuredImage,
+    image: featuredImage?.fields,
     relatedBlogPosts,
   };
 } catch (error) {
   return Astro.redirect("/404");
 }
 // console.log(post);
+
+const blogs = post.relatedBlogPosts?.map((item: FieldsType) => {
+  const { title, shortDescription, slug, publishedDate, featuredImage } =
+    item.fields;
+  return {
+    title,
+    slug,
+    description: shortDescription,
+    featuredImage,
+    date: new Date(publishedDate).toLocaleDateString(),
+  };
+});
 ---
 
-<Layout title={post?.title as string} description={""}>
+<Layout title={post?.title} description={""}>
   <Navbar />
   <main class="py-24 mx-auto max-w-[80%] px-6 lg:px-8">
-    <!-- <img
+    <img
       src={post?.image.file.url}
-      alt={post?.image.fileName}
+      alt={post?.image.title}
       class="w-full h-[500px] object-cover"
-    /> -->
+    />
     <section class="my-2">
-      <div class="mx-auto text-base leading-7 text-gray-700">
+      <div class="mx-auto text-base leading-7 text-gray-700 mb-4">
         <p class="text-base font-semibold leading-7 text-indigo-600">
           Introducing
         </p>
@@ -48,24 +62,30 @@ try {
           {post?.title}
         </h1>
         <div class="flex items-center gap-3">
-          <p>Published on: {post?.date}</p>
+          <p class="my-2 text-sm">Published on: {post?.date}</p>
         </div>
-        <article set:html={post?.content} />
       </div>
+      <article set:html={post?.content} />
+
       <!-- related blogs -->
-      <!-- {
-        post?.relatedBlogPosts
-          ? post.relatedBlogPosts.fields.map((blog) => (
-              <BlogCard
-                title={blog.title}
-                description={blog.shortDescription}
-                slug={blog.slug}
-                date={blog.date}
-                image={blog.featuredImage}
-              />
-            ))
-          : "Blog not found "
-      } -->
+      <h2 class="text-xl font-bold mt-5 mb-3">Related blogs</h2>
+      <div
+        class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3"
+      >
+        {
+          blogs
+            ? blogs.map((blog: BlogPost) => (
+                <BlogCard
+                  title={blog.title}
+                  description={blog.description}
+                  slug={blog.slug}
+                  date={blog.date}
+                  image={blog.featuredImage}
+                />
+              ))
+            : "Blog not found "
+        }
+      </div>
     </section>
   </main>
   <Footer />
