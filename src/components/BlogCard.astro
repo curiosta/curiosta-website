@@ -1,12 +1,12 @@
 ---
-const { title, slug, date, description, content, image } = Astro.props;
+const { title, slug, date, description, image } = Astro.props;
 ---
 
-<article class="flex flex-col items-start justify-between">
+<article class="flex flex-col items-start">
   <div class="relative w-full">
     <img
       src={image.fields.file.url}
-      alt={image.fields.fileName}
+      alt={image.fields.title}
       class="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]"
     />
     <div
