@@ -1,0 +1,61 @@
+---
+import Footer from "../../components/Footer.astro";
+import Navbar from "../../components/Navbar.astro";
+import Layout from "../../layouts/Layout.astro";
+import BlogCard from "../../components/BlogCard.astro";
+import { contentfulClient } from "../../api/blogs";
+import type { FieldsType } from "contentful";
+
+const blogsEntries = await contentfulClient.getEntries({
+  content_type: "pageBlogPost",
+});
+
+const blogs = blogsEntries.items.map((item) => {
+  const { title, shortDescription, slug, publishedDate, featuredImage } =
+    item.fields as FieldsType;
+  return {
+    title,
+    slug,
+    description: shortDescription,
+    featuredImage,
+    date: new Date(publishedDate).toLocaleDateString(),
+  };
+});
+---
+
+<Layout title="Blog" description="Curiosta blog">
+  <Navbar />
+  <main class="bg-white py-24 sm:py-32">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          Curiosta blog
+        </h2>
+        <p class="mt-2 text-lg leading-8 text-gray-600">
+          Learn how to grow your business with our expert advice.
+        </p>
+      </div>
+      <div
+        class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3"
+      >
+        {
+          blogs
+            ? blogs.map((blog) => (
+                <BlogCard
+                  title={blog.title}
+                  description={blog.description}
+                  slug={blog.slug}
+                  date={blog.date}
+                  image={blog.featuredImage}
+                />
+              ))
+            : "Blog not found"
+        }
+
+        <!-- More posts... -->
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
