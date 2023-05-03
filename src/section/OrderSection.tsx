@@ -1,6 +1,16 @@
 import { cartItems } from "../store/cartStore";
 
 const OrderSection = () => {
+  const subTotal = cartItems.value.reduce(
+    (acc, currVal) => acc + currVal.quantity * +currVal.variant.price,
+    0
+  );
+
+  const shippingCost = 50;
+  const taxRate = 10;
+
+  const totalCost = subTotal + shippingCost + taxRate;
+
   return (
     <section
       aria-labelledby="summary-heading"
@@ -15,7 +25,7 @@ const OrderSection = () => {
       <dl class="mt-6 space-y-4">
         <div class="flex items-center justify-between">
           <dt class="text-sm text-gray-600">Subtotal</dt>
-          <dd class="text-sm font-medium text-gray-900">$99.00</dd>
+          <dd class="text-sm font-medium text-gray-900">${subTotal}</dd>
         </div>
         <div class="flex items-center justify-between border-t border-gray-200 pt-4">
           <dt class="flex items-center text-sm text-gray-600">
@@ -41,7 +51,7 @@ const OrderSection = () => {
               </svg>
             </a>
           </dt>
-          <dd class="text-sm font-medium text-gray-900">$5.00</dd>
+          <dd class="text-sm font-medium text-gray-900">${shippingCost}</dd>
         </div>
         <div class="flex items-center justify-between border-t border-gray-200 pt-4">
           <dt class="flex text-sm text-gray-600">
@@ -67,11 +77,11 @@ const OrderSection = () => {
               </svg>
             </a>
           </dt>
-          <dd class="text-sm font-medium text-gray-900">$8.32</dd>
+          <dd class="text-sm font-medium text-gray-900">${taxRate}</dd>
         </div>
         <div class="flex items-center justify-between border-t border-gray-200 pt-4">
           <dt class="text-base font-medium text-gray-900">Order total</dt>
-          <dd class="text-base font-medium text-gray-900">$112.32</dd>
+          <dd class="text-base font-medium text-gray-900">${totalCost}</dd>
         </div>
       </dl>
 

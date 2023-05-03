@@ -24,7 +24,13 @@ const { product } = productId ? await getProduct(productId) : null;
         <ProductImage productImages={product.images} client:load />
 
         <!-- Product info -->
-        <ProductInfo productId={productId!} product={product} client:load />
+        {
+          productId ? (
+            <ProductInfo productId={productId} product={product} client:load />
+          ) : (
+            "No product found"
+          )
+        }
       </div>
     </div>
   </main>
