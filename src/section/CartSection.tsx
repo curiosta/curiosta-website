@@ -6,7 +6,6 @@ import {
 } from "@store/cartStore";
 
 const CartSection = () => {
-
   localStorage.setItem("cartItem", JSON.stringify(cartItems.value));
 
   return (
@@ -56,7 +55,7 @@ const CartSection = () => {
                   </div>
 
                   <div class="mt-4 sm:mt-0 sm:pr-9">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center  gap-2">
                       <label for="quantity-0" class="sr-only">
                         Quantity, Basic Tee
                       </label>
@@ -94,14 +93,14 @@ const CartSection = () => {
                           increaseCartItem(item.id, item.variant.id)
                         }
                       >
-                        {/* <svg
+                        <svg
                           class="h-5 w-5"
                           viewBox="0 0 20 20"
                           fill="currentColor"
                           aria-hidden="true"
                         >
                           <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                        </svg> */}
+                        </svg>
                       </button>
                     </div>
                     <div class="absolute right-0 top-0">
