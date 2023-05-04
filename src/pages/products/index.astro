@@ -1,9 +1,9 @@
 ---
-import { listProducts } from "../../api/listProducts";
-import Footer from "../../components/Footer.astro";
-import Navbar from "../../components/Navbar.astro";
-import Layout from "../../layouts/Layout.astro";
-import ProductSection from "../../section/ProductSection";
+import { listProducts } from "@api/listProducts";
+import Footer from "@components/Footer.astro";
+import Navbar from "@components/Navbar.astro";
+import Layout from "@layouts/Layout.astro";
+import ProductSection from "@section/ProductSection";
 
 const res = await listProducts();
 const products = res?.products;

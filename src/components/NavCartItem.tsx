@@ -1,4 +1,4 @@
-import { cartItems } from "../store/cartStore";
+import { cartItems } from "@store/cartStore";
 
 const NavCartItem = () => {
   const totalCartItems = cartItems.value.reduce(
