@@ -11,7 +11,9 @@ import type { BlogPost } from "@api/blogs";
 const { slug } = Astro.params;
 let post;
 try {
-  const data = await (await contentfulClient()).getEntries<EntrySkeletonType, string>({
+  const ContentfulClientModule = await contentfulClient();
+  
+  const data = await ContentfulClientModule.getEntries<EntrySkeletonType, string>({
     content_type: "pageBlogPost",
     "fields.slug": slug,
   });

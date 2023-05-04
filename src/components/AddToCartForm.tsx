@@ -4,7 +4,6 @@ import { addItemToCart } from "@store/cartStore";
 import { cartItems } from "@store/cartStore";
 import ProductVariants from "./ProductVariants";
 import { Signal, signal } from "@preact/signals";
-
 interface Props {
   productId: string;
   productTitle: string;

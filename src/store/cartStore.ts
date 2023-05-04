@@ -70,7 +70,6 @@ export function decreaseCartItem(
   id: string,
   variantId: Signal<string | undefined>
 ) {
-  console.log(cartItems.value);
   cartItems.value = cartItems.value.map((value) => value.id === id && value.variant.id === variantId ? ({ ...value, quantity: value.quantity - 1 }) : value)
 }
 

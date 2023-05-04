@@ -1,0 +1,8 @@
+---
+const {name} = Astro.props as {name: string};
+const icon = await import(`../../assets/images/icon/${name}.svg?raw`);
+---
+
+<Fragment set:html={icon.default}>
+<slot />
+</Fragment>

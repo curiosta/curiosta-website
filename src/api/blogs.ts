@@ -23,4 +23,6 @@ export const contentfulClient = async () => {
     accessToken: import.meta.env.CONTENTFUL_ACCESS_TOKEN,
     host: "cdn.contentful.com",
   });
+
+  return client;
 }
