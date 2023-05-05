@@ -1,10 +1,10 @@
 ---
-import { getProduct } from "../../api/getProduct";
-import Navbar from "../../components/Navbar.astro";
-import Footer from "../../components/Footer.astro";
-import ProductImage from "../../components/ProductImage";
-import Layout from "../../layouts/Layout.astro";
-import ProductInfo from "../../components/ProductInfo";
+import { getProduct } from "@api/getProduct";
+import Navbar from "@components/Navbar.astro";
+import Footer from "@components/Footer.astro";
+import ProductImage from "@components/ProductImage";
+import Layout from "@layouts/Layout.astro";
+import ProductInfo from "@components/ProductInfo";
 
 const productId = Astro.params.id;
 const { product } = productId ? await getProduct(productId) : null;

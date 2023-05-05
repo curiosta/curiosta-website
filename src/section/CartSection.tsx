@@ -3,7 +3,7 @@ import {
   decreaseCartItem,
   increaseCartItem,
   removeCartItem,
-} from "../store/cartStore";
+} from "@store/cartStore";
 
 const CartSection = () => {
   localStorage.setItem("cartItem", JSON.stringify(cartItems.value));
@@ -62,9 +62,8 @@ const CartSection = () => {
                       <button
                         type="button"
                         title="Decrease"
-                        class={`rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
-                          item.quantity <= 1 ? "opacity-70" : ""
-                        } `}
+                        class={`rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${item.quantity <= 1 ? "opacity-70" : ""
+                          } `}
                         onClick={() =>
                           decreaseCartItem(item.id, item.variant.id)
                         }
@@ -82,7 +81,7 @@ const CartSection = () => {
                       <span
                         id="quantity-0"
                         name="quantity-0"
-                        className=" border border-slate-400  py-1 px-3"
+                        className="border border-slate-400  py-1 px-3"
                       >
                         {item.quantity}
                       </span>

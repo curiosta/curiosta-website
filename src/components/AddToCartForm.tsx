@@ -1,7 +1,7 @@
 import type { ChangeEvent } from "preact/compat";
 import Button from "./Button";
-import { addItemToCart } from "../store/cartStore";
-import { cartItems } from "../store/cartStore";
+import { addItemToCart } from "@store/cartStore";
+import { cartItems } from "@store/cartStore";
 import ProductVariants from "./ProductVariants";
 import { Signal, signal } from "@preact/signals";
 
@@ -64,9 +64,8 @@ const AddToCartForm = ({
       </form>
       {/* popup */}
       <div
-        class={`fixed right-0 bottom-0  w-full ${
-          isPopUp.value ? "flex" : "hidden "
-        }  justify-center items-center  bg-[#464646c4] p-3   z-20`}
+        class={`fixed right-0 bottom-0  w-full ${isPopUp.value ? "flex" : "hidden "
+          }  justify-center items-center  bg-[#464646c4] p-3   z-20`}
       >
         {/* close popup */}
         <span

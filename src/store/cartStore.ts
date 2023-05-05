@@ -31,18 +31,19 @@ export function addItemToCart({
   imageSrc,
   variant,
 }: CartItemDisplayInfo) {
-  const cartItemsValue = cartItems.value;
-
-  if (!cartItemsValue) return;
-
-  const existingCartItem = cartItemsValue.find(
+  // checking if product already exists in cart or not
+  const existingCartItem = cartItems.value?.find(
     (item) => item.id === id && String(item.variant.id) === variant.id.value
   );
 
   if (existingCartItem) {
-    existingCartItem.quantity += 1;
+    // product already exists in cart. Updating it's quantity by 1
+    cartItems.value = cartItems.value.map((item) => item.id === id ? ({ ...item, quantity: item.quantity + 1 }) : item)
+
   } else {
-    cartItemsValue.push({ id, name, imageSrc, variant, quantity: 1 });
+
+    // adding new product to cart
+    cartItems.value = [...cartItems.value, { id, name, imageSrc, variant, quantity: 1 }];
   }
 }
 
@@ -50,39 +51,27 @@ export function increaseCartItem(
   id: string,
   variantId: Signal<string | undefined>
 ) {
-  const cartItemsValue = cartItems.value;
-
-  const index = cartItemsValue.findIndex(
+  const CartProductIndex = cartItems.value.findIndex(
     (item) => item.id === id && item.variant.id === variantId
   );
 
-  if (index !== -1) {
-    const updateCartItems = [...cartItemsValue];
-    updateCartItems[index] = {
-      ...updateCartItems[index],
-      quantity: updateCartItems[index].quantity + 1,
-    };
-    return (cartItems.value = updateCartItems);
-  }
+  if (CartProductIndex === -1) return;
+
+  const updateCartItems = [...cartItems.value];
+
+  updateCartItems[CartProductIndex] = {
+    ...updateCartItems[CartProductIndex],
+    quantity: updateCartItems[CartProductIndex].quantity + 1,
+  };
+  return (cartItems.value = updateCartItems);
 }
 
 export function decreaseCartItem(
   id: string,
   variantId: Signal<string | undefined>
 ) {
-  const cartItemsValue = cartItems.value;
-  const index = cartItemsValue.findIndex(
-    (item) => item.id === id && item.variant.id === variantId
-  );
-
-  if (index !== -1) {
-    const updateCartItems = [...cartItemsValue];
-    updateCartItems[index] = {
-      ...updateCartItems[index],
-      quantity: updateCartItems[index].quantity - 1,
-    };
-    return (cartItems.value = updateCartItems);
-  }
+  console.log(cartItems.value);
+  cartItems.value = cartItems.value.map((value) => value.id === id && value.variant.id === variantId ? ({ ...value, quantity: value.quantity - 1 }) : value)
 }
 
 export function removeCartItem(

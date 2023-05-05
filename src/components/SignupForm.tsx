@@ -1,5 +1,5 @@
 import { ChangeEvent, useRef } from "preact/compat";
-import { User, createUser } from "../api/createUser";
+import { User, createUser } from "@api/createUser";
 import Input from "./Input";
 import Button from "./Button";
 

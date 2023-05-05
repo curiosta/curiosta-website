@@ -1,4 +1,4 @@
-import Card from "../components/Card";
+import Card from "@components/Card";
 
 interface Props {
   products: {
@@ -27,9 +27,8 @@ const ProductSection = ({ products, page }: Props) => {
         </h2>
         <a
           href="/products"
-          class={`hidden text-sm font-medium text-indigo-600 hover:text-indigo-500  ${
-            page !== "Homepage" ? "md:hidden" : "md:block"
-          }`}
+          class={`hidden text-sm font-medium text-indigo-600 hover:text-indigo-500  ${page !== "Homepage" ? "md:hidden" : "md:block"
+            }`}
         >
           View all product
           <span aria-hidden="true"> &rarr;</span>
@@ -37,9 +36,8 @@ const ProductSection = ({ products, page }: Props) => {
       </div>
 
       <div
-        class={`mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 ${
-          page !== "Homepage" ? "md:grid-cols-4" : "md:grid-cols-3"
-        }  lg:gap-x-8`}
+        class={`mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 ${page !== "Homepage" ? "md:grid-cols-4" : "md:grid-cols-3"
+          }  lg:gap-x-8`}
       >
         {products.map((product) => (
           <Card
