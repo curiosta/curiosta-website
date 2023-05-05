@@ -1,7 +1,7 @@
 import { ChangeEvent, useRef } from "preact/compat";
 import { User, createUser } from "@api/createUser";
-import Input from "./Input";
-import Button from "./Button";
+import Input from "@components/Input";
+import Button from "@components/Button";
 
 const SignupForm = () => {
   const formRef = useRef<HTMLFormElement>(null);
@@ -38,6 +38,7 @@ const SignupForm = () => {
           required
           minLength={3}
           maxLength={20}
+          placeholder={"John"}
         />
 
         <Input
@@ -48,6 +49,7 @@ const SignupForm = () => {
           required
           minLength={3}
           maxLength={20}
+          placeholder={"Doe"}
         />
       </div>
 
@@ -57,6 +59,7 @@ const SignupForm = () => {
         label="Email address"
         autocomplete="email"
         required
+        placeholder={"example@gmail.com"}
         pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
       />
 
@@ -67,13 +70,12 @@ const SignupForm = () => {
         autocomplete="current-password"
         required
         minLength={6}
+        placeholder={"********"}
       />
 
-      <Button
-        type="submit"
-        class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        btnLabel="Sign Up"
-      />
+      <Button type="submit" variant={"primary"}>
+        Sign Up
+      </Button>
     </form>
   );
 };

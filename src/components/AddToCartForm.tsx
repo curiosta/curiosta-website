@@ -1,9 +1,12 @@
 import type { ChangeEvent } from "preact/compat";
-import Button from "./Button";
+import Button from "@components/Button";
 import { addItemToCart } from "@store/cartStore";
-import { cartItems } from "@store/cartStore";
-import ProductVariants from "./ProductVariants";
+import { cartItems, cartId } from "@store/cartStore";
+import ProductVariants from "@components/ProductVariants";
 import { Signal, signal } from "@preact/signals";
+import { createCart } from "@api/createCart";
+import { addLineItem } from "@api/addLineItem";
+
 interface Props {
   productId: string;
   productTitle: string;
@@ -26,6 +29,7 @@ interface Props {
 }
 
 const isPopUp = signal(false);
+
 const AddToCartForm = ({
   productId,
   productTitle,
@@ -33,14 +37,25 @@ const AddToCartForm = ({
   productVariants,
   selectedVariant,
 }: Props) => {
-  const handleAddCart = (e: ChangeEvent) => {
+  const handleAddCart = async (e: ChangeEvent) => {
     e.preventDefault();
+    // generate cart id if it does not exists in local storage and save it in. else update the cart with product information
+
+    if (selectedVariant.id.value) {
+      const { cart } = await createCart({
+        variant_id: selectedVariant.id.value,
+        quantity: 1,
+      });
+      console.log(cart);
+      localStorage.setItem("cartId", cart.id);
+    }
     addItemToCart({
       id: productId,
       name: productTitle,
       imageSrc: productImage,
-      variant: selectedVariant && selectedVariant,
+      variant: selectedVariant,
     });
+
     isPopUp.value = true;
   };
   localStorage.setItem("cartItem", JSON.stringify(cartItems.value));
@@ -52,19 +67,17 @@ const AddToCartForm = ({
           productVariants={productVariants}
           selectedVariant={selectedVariant && selectedVariant}
         />
-        <div class="sm:flex-col1 mt-10 flex gap-8">
-          <Button
-            type="submit"
-            class={`flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full`}
-            title="Add to cart"
-            btnLabel={` Add to cart`}
-          />
+        <div class="sm:flex-col1 mt-10 flex gap-8 max-w-xs">
+          <Button type="submit" title="Add to cart" variant={"primary"}>
+            Add to cart
+          </Button>
         </div>
       </form>
       {/* popup */}
       <div
-        class={`fixed right-0 bottom-0  w-full ${isPopUp.value ? "flex" : "hidden "
-          }  justify-center items-center  bg-[#464646c4] p-3   z-20`}
+        class={`fixed right-0 bottom-0  w-full ${
+          isPopUp.value ? "flex" : "hidden "
+        }  justify-center items-center  bg-[#464646c4] p-3   z-20`}
       >
         {/* close popup */}
         <span
