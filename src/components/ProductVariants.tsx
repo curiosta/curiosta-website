@@ -13,7 +13,6 @@ interface Props {
   selectedVariant: {
     id: Signal<string | undefined>;
     title: Signal<string | undefined>;
-    inventoryQty: Signal<number | undefined>;
     price: Signal<number | undefined>;
   };
 }
@@ -22,12 +21,10 @@ const ProductVariants = ({ productVariants, selectedVariant }: Props) => {
   const handleVariant = (
     id: string,
     title: string,
-    prices: { amount: number },
-    inventoryQty: number
+    prices: { amount: number }
   ) => {
     selectedVariant.id.value = id;
     selectedVariant.title.value = title;
-    selectedVariant.inventoryQty.value = inventoryQty;
     selectedVariant.price.value = prices.amount / 100;
   };
 
@@ -53,12 +50,7 @@ const ProductVariants = ({ productVariants, selectedVariant }: Props) => {
                 value={variant.title}
                 class="sr-only"
                 onInput={() =>
-                  handleVariant(
-                    variant.id,
-                    variant.title,
-                    variant.prices[1],
-                    variant.inventory_quantity
-                  )
+                  handleVariant(variant.id, variant.title, variant.prices[1])
                 }
                 aria-labelledby="variant-choice-0-label"
               />

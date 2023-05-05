@@ -29,7 +29,6 @@ const ProductInfo = ({ product, productId }: Props) => {
   const selectedVariant = {
     id: useSignal(defaultVariant?.id),
     title: useSignal(defaultVariant?.title),
-    inventoryQty: useSignal(defaultVariant?.inventory_quantity),
     price: useSignal(
       defaultVariant?.prices[1].amount && defaultVariant?.prices[1].amount / 100
     ),
