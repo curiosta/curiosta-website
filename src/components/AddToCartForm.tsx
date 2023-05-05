@@ -1,7 +1,6 @@
 import type { ChangeEvent } from "preact/compat";
 import Button from "@components/Button";
-import { addItemToCart } from "@store/cartStore";
-import { cartItems, cartId } from "@store/cartStore";
+import { cart } from "@store/cartStore";
 import ProductVariants from "@components/ProductVariants";
 import { Signal, signal } from "@preact/signals";
 import { createCart } from "@api/createCart";
@@ -23,7 +22,6 @@ interface Props {
   selectedVariant: {
     id: Signal<string | undefined>;
     title: Signal<string | undefined>;
-    inventoryQty: Signal<number | undefined>;
     price: Signal<number | undefined>;
   };
 }
@@ -31,7 +29,6 @@ interface Props {
 const isPopUp = signal(false);
 
 const AddToCartForm = ({
-  productId,
   productTitle,
   productImage,
   productVariants,
@@ -39,33 +36,36 @@ const AddToCartForm = ({
 }: Props) => {
   const handleAddCart = async (e: ChangeEvent) => {
     e.preventDefault();
-    // generate cart id if it does not exists in local storage and save it in. else update the cart with product information
-
+    const localCartId = localStorage.getItem("cartId");
     if (selectedVariant.id.value) {
-      const { cart } = await createCart({
-        variant_id: selectedVariant.id.value,
-        quantity: 1,
-      });
-      console.log(cart);
-      localStorage.setItem("cartId", cart.id);
+      if (localCartId) {
+        const res = await addLineItem({
+          cardId: localCartId,
+          variant_id: selectedVariant.id.value,
+          quantity: 1,
+        });
+        // console.log(res.cart);
+        cart.value = res.cart;
+      } else {
+        const res = await createCart({
+          variant_id: selectedVariant.id.value,
+          quantity: 1,
+        });
+        // console.log(res.cart);
+        localStorage.setItem("cartId", res.cart.id);
+        cart.value = res.cart;
+      }
     }
-    addItemToCart({
-      id: productId,
-      name: productTitle,
-      imageSrc: productImage,
-      variant: selectedVariant,
-    });
 
     isPopUp.value = true;
   };
-  localStorage.setItem("cartItem", JSON.stringify(cartItems.value));
-
+  localStorage.setItem("cart", JSON.stringify(cart.value));
   return (
     <div class="mt-6 ">
       <form onSubmit={handleAddCart}>
         <ProductVariants
           productVariants={productVariants}
-          selectedVariant={selectedVariant && selectedVariant}
+          selectedVariant={selectedVariant}
         />
         <div class="sm:flex-col1 mt-10 flex gap-8 max-w-xs">
           <Button type="submit" title="Add to cart" variant={"primary"}>
