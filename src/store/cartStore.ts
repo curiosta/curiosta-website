@@ -1,84 +1,61 @@
-import { Signal, signal } from "@preact/signals";
+import { removeLineItem } from "@api/removeLineItem";
+import { updateLineItem } from "@api/updateLineItem";
+import { signal } from "@preact/signals";
 
-export type CartItem = {
+export type Cart = {
   id: string;
-  name: string;
-  imageSrc: string;
-  quantity: number;
-  variant: {
-    id: Signal<string | undefined>;
-    title: Signal<string | undefined>;
-    inventoryQty: Signal<number | undefined>;
-    price: Signal<number | undefined>;
-  };
+  items: {
+    id: string;
+    description: string;
+    quantity: number;
+    thumbnail: string;
+    unit_price: number;
+    title: string;
+    variant: {
+      product_id: string;
+    };
+  }[];
+  subtotal: number;
+  shipping_total: number;
+  tax_total: number;
+  total: number;
 };
-
-export type CartItemDisplayInfo = Pick<
-  CartItem,
-  "id" | "name" | "imageSrc" | "variant"
->;
 
 let localData = [];
 if (typeof window !== "undefined") {
-  localData = JSON.parse(localStorage.getItem("cartItem")!);
+  localData = JSON.parse(localStorage.getItem("cart")!);
 }
 
-export const cartItems = signal<CartItem[]>(localData ?? []);
+export const cart = signal<Cart>(localData ?? []);
 
-export function addItemToCart({
-  id,
-  name,
-  imageSrc,
-  variant,
-}: CartItemDisplayInfo) {
-  // checking if product already exists in cart or not
-  const existingCartItem = cartItems.value?.find(
-    (item) => item.id === id && String(item.variant.id) === variant.id.value
-  );
-
-  if (existingCartItem) {
-    // product already exists in cart. Updating it's quantity by 1
-    cartItems.value = cartItems.value.map((item) => item.id === id ? ({ ...item, quantity: item.quantity + 1 }) : item)
-
-  } else {
-
-    // adding new product to cart
-    cartItems.value = [...cartItems.value, { id, name, imageSrc, variant, quantity: 1 }];
-  }
-}
-
-export function increaseCartItem(
-  id: string,
-  variantId: Signal<string | undefined>
+export async function increaseCartItem(
+  cardId: string,
+  line_id: string,
+  quantity: number
 ) {
-  const CartProductIndex = cartItems.value.findIndex(
-    (item) => item.id === id && item.variant.id === variantId
-  );
-
-  if (CartProductIndex === -1) return;
-
-  const updateCartItems = [...cartItems.value];
-
-  updateCartItems[CartProductIndex] = {
-    ...updateCartItems[CartProductIndex],
-    quantity: updateCartItems[CartProductIndex].quantity + 1,
-  };
-  return (cartItems.value = updateCartItems);
+  const updateCart = await updateLineItem({
+    cardId,
+    line_id,
+    quantity: quantity + 1,
+  });
+  cart.value = updateCart.cart;
 }
 
-export function decreaseCartItem(
-  id: string,
-  variantId: Signal<string | undefined>
+export async function decreaseCartItem(
+  cardId: string,
+  line_id: string,
+  quantity: number
 ) {
-  cartItems.value = cartItems.value.map((value) => value.id === id && value.variant.id === variantId ? ({ ...value, quantity: value.quantity - 1 }) : value)
+  const updateCart = await updateLineItem({
+    cardId,
+    line_id,
+    quantity: quantity - 1,
+  });
+  cart.value = updateCart.cart;
 }
 
-export function removeCartItem(
-  id: string,
-  variantId: Signal<string | undefined>
-) {
-  const updateCart = cartItems.value.filter(
-    (item) => item.id !== id || item.variant.id !== variantId
-  );
-  return (cartItems.value = updateCart);
+export async function removeCartItem(cardId: string, line_id: string) {
+  const updateCart = await removeLineItem({ cardId, line_id });
+  cart.value = updateCart.cart;
+  console.log(updateCart);
 }
