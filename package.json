@@ -13,6 +13,12 @@
     "react": "npm:@preact/compat@latest",
     "react-dom": "npm:@preact/compat@latest"
   },
+  "pnpm": {
+    "overrides": {
+      "react": "npm:@preact/compat@latest",
+      "react-dom": "npm:@preact/compat@latest"
+    }
+  },
   "dependencies": {
     "@astro-aws/adapter": "^0.3.0",
     "@astrojs/image": "^0.16.6",
