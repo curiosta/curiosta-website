@@ -1,11 +1,12 @@
 import type { HTMLAttributes } from "preact/compat";
+import { useId } from "preact/compat";
 
 interface Props extends HTMLAttributes<HTMLInputElement> {
   label: string;
 }
 
 const Input = ({ label, ...rest }: Props) => {
-  const id = label.replaceAll(" ", "-").toLowerCase();
+  const id = useId();
 
   return (
     <div>
