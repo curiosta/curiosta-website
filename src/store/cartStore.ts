@@ -36,7 +36,7 @@ export async function increaseCartItem(
   const updateCart = await updateLineItem({
     cardId,
     line_id,
-    quantity: quantity + 1,
+    quantity: quantity + 1 >= 10 ? 10 : quantity + 1,
   });
   cart.value = updateCart.cart;
 }
@@ -49,7 +49,7 @@ export async function decreaseCartItem(
   const updateCart = await updateLineItem({
     cardId,
     line_id,
-    quantity: quantity - 1,
+    quantity: quantity - 1 <= 1 ? 1 : quantity - 1,
   });
   cart.value = updateCart.cart;
 }
@@ -57,5 +57,4 @@ export async function decreaseCartItem(
 export async function removeCartItem(cardId: string, line_id: string) {
   const updateCart = await removeLineItem({ cardId, line_id });
   cart.value = updateCart.cart;
-  console.log(updateCart);
 }
