@@ -1,3 +1,4 @@
+import Button from "@components/Button";
 import { cartItems } from "@store/cartStore";
 
 const OrderSection = () => {
@@ -14,8 +15,9 @@ const OrderSection = () => {
   return (
     <section
       aria-labelledby="summary-heading"
-      class={`mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8 ${!cartItems.value.length ? "hidden" : ""
-        }`}
+      class={`mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8 ${
+        !cartItems.value.length ? "hidden" : ""
+      }`}
     >
       <h2 id="summary-heading" class="text-lg font-medium text-gray-900">
         Order summary
@@ -85,12 +87,9 @@ const OrderSection = () => {
       </dl>
 
       <div class="mt-6">
-        <button
-          type="submit"
-          class="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
-        >
+        <Button type="submit" title={"checkout"} variant={"primary"}>
           Checkout
-        </button>
+        </Button>
       </div>
     </section>
   );
