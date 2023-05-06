@@ -1,11 +1,8 @@
 import type { ChangeEvent } from "preact/compat";
 import Button from "@components/Button";
-import { addItemToCart } from "@store/cartStore";
-import { cartItems, cartId } from "@store/cartStore";
+import { addItemToCart, cartItems } from "@store/cartStore";
 import ProductVariants from "@components/ProductVariants";
 import { Signal, signal } from "@preact/signals";
-import { createCart } from "@api/createCart";
-import { addLineItem } from "@api/addLineItem";
 
 interface Props {
   productId: string;
@@ -41,14 +38,6 @@ const AddToCartForm = ({
     e.preventDefault();
     // generate cart id if it does not exists in local storage and save it in. else update the cart with product information
 
-    if (selectedVariant.id.value) {
-      const { cart } = await createCart({
-        variant_id: selectedVariant.id.value,
-        quantity: 1,
-      });
-      console.log(cart);
-      localStorage.setItem("cartId", cart.id);
-    }
     addItemToCart({
       id: productId,
       name: productTitle,
@@ -59,13 +48,12 @@ const AddToCartForm = ({
     isPopUp.value = true;
   };
   localStorage.setItem("cartItem", JSON.stringify(cartItems.value));
-
   return (
     <div class="mt-6 ">
       <form onSubmit={handleAddCart}>
         <ProductVariants
           productVariants={productVariants}
-          selectedVariant={selectedVariant && selectedVariant}
+          selectedVariant={selectedVariant}
         />
         <div class="sm:flex-col1 mt-10 flex gap-8 max-w-xs">
           <Button type="submit" title="Add to cart" variant={"primary"}>
