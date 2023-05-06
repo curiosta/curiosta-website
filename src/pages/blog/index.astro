@@ -5,6 +5,7 @@ import Layout from "@layouts/Layout.astro";
 import BlogCard from "@components/BlogCard.astro";
 import { contentfulClient } from "@api/blogs";
 import type { FieldsType } from "contentful";
+import FormControl from "@components/FormControl";
 const ContentfulClientModule = await contentfulClient();
 
 const blogsEntries = await ContentfulClientModule?.getEntries({
@@ -27,6 +28,7 @@ const blogs = blogsEntries?.items.map((item) => {
 
 <Layout title="Blog" description="Curiosta blog">
   <Navbar />
+  <FormControl></FormControl>
   <main class="bg-white py-24 sm:py-32">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div class="mx-auto max-w-2xl text-center">
