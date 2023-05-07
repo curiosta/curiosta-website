@@ -1,4 +1,15 @@
-import { cx } from "class-variance-authority";
+/**
+ * Typography is custom component for h1-h6 and p tag
+ * @function
+ * @param {string} size for styleSize/styleWeight
+ * @param {string} tag for h1-h6 or p tag
+ * @param {string} variant for text color
+ */
+
+import type { FC, HTMLAttributes } from "preact/compat";
+import { VariantProps, cx } from "class-variance-authority";
+import typography from "./typography.cva";
+import { useMemo } from "preact/compat";
 
 const variantsMapping = {
   h1: "h1",
@@ -7,41 +18,66 @@ const variantsMapping = {
   h4: "h4",
   h5: "h5",
   h6: "h6",
-  subheading1: "h6",
-  subheading2: "h6",
+  subheading: "h6",
   body1: "p",
   body2: "p",
 } as const;
 
-const typographyVariants = {
-  h1: "text-6xl font-bold",
-  h2: "text-5xl font-bold",
-  h3: "text-4xl font-bold",
-  h4: "text-3xl font-bold",
-  h5: "text-2xl font-bold",
-  h6: "text-1xl font-bold",
-  subheading1: "text-1xl font-bold",
-  subheading2: "text-1xl font-semibold",
-  body1: "text-base",
-  body2: "text-base font-bold",
-  link: "text-xs text-primaryViolet uppercase underline font-bold",
-};
+type TypographyVariant = VariantProps<typeof typography>;
 
-export type TypographyProps = {
-  variant?: keyof typeof variantsMapping;
-  className?: string;
-  children: string;
-};
+type TypographyProps = Omit<
+  HTMLAttributes<HTMLParagraphElement>,
+  "class" | "size"
+> &
+  Omit<TypographyVariant, "size" | "weight" | "disabled"> & {
+    size?: `${NonNullable<TypographyVariant["size"]>}/${NonNullable<
+      TypographyVariant["weight"]
+    >}`;
+    disabled?: NonNullable<TypographyVariant["disabled"]>;
+    ellipses?: number;
+    tag?: keyof typeof variantsMapping;
+  };
 
-const Typography = ({
-  variant = "body1",
+const Typography: FC<TypographyProps> = ({
   children,
+  tag = "body1",
   className,
+  disabled = false,
+  size,
+  variant,
+  ellipses,
   ...props
-}: TypographyProps) => {
-  const Component = variantsMapping[variant];
+}) => {
+  const Component = variantsMapping[tag];
+
+  // splitting variant name into two section. first will be size and second will be weight
+  const [styleSize, styleWeight] = (size?.split("/") || []) as [
+    TypographyVariant["size"],
+    TypographyVariant["weight"]
+  ];
+
+  const style = useMemo(() => {
+    if (ellipses) {
+      return {
+        display: "-webkit-box",
+        WebkitBoxOrient: "vertical",
+        WebkitLineClamp: ellipses,
+        overflow: "hidden",
+      } as HTMLAttributes<HTMLParagraphElement>["style"];
+    }
+    return {};
+  }, [ellipses]);
+
   return (
-    <Component class={cx(typographyVariants[variant], className)} {...props}>
+    <Component
+      class={cx(
+        typography({ disabled, size: styleSize, weight: styleWeight, variant }),
+        className
+      )}
+      style={style}
+      disabled={disabled}
+      {...props}
+    >
       {children}
     </Component>
   );
