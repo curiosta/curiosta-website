@@ -7,8 +7,6 @@ import Layout from "@layouts/Layout.astro";
 import ProductSection from "@section/ProductSection";
 import ShortIntroSection from "@section/ShortIntroSection.astro";
 import PartnerCompanies from "@section/PartnerCompanies.astro";
-// hybrid rendering
-export const prerender = true
 
 const res = await listProducts();
 const products = res?.products.slice(0, 3);
