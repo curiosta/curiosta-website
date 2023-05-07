@@ -5,13 +5,24 @@ import { cx } from "class-variance-authority";
 
 interface Props
   extends Omit<HTMLAttributes<HTMLButtonElement>, "class">,
-    VariantProps<typeof button> {}
+  VariantProps<typeof button> {
+  link?: string;
+}
 
-const Button = ({ type, className, children, ...rest }: Props) => {
+const Button = ({ type, className, children, disabled, link, ...rest }: Props) => {
+  const classes = cx(button(rest), className);
   return (
-    <button type={type} class={cx(button(rest), className)} {...rest}>
-      {children}
-    </button>
+    <>
+      {link && !disabled ? (
+        <a href={link} className={cx(classes, 'p-0')}>
+          {children}
+        </a>
+      ) : (
+        <button type={type} class={classes} disabled={disabled} {...rest}>
+          {children}
+        </button>
+      )}
+    </>
   );
 };
 
