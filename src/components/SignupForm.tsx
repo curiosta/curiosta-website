@@ -1,52 +1,44 @@
-import { ChangeEvent, useRef } from "preact/compat";
 import { User, createUser } from "@api/createUser";
 import Input from "@components/Input";
 import Button from "@components/Button";
+import FormControl from "./FormControl";
 
 const SignupForm = () => {
-  const formRef = useRef<HTMLFormElement>(null);
-
-  const handleCreateUser = async (e: ChangeEvent) => {
-    e.preventDefault();
+  const handleCreateUser = async (data: User) => {
     try {
-      if (formRef.current) {
-        const formData = new FormData(formRef.current);
-        const { first_name, last_name, email, password } = Object.fromEntries(
-          formData.entries()
-        ) as User;
-        const newUser = await createUser({
-          first_name,
-          last_name,
-          email,
-          password,
-        });
-        console.log(newUser);
-        console.log("user created");
-      }
+      const { first_name, last_name, email, password } = data;
+      const newUser = await createUser({
+        first_name,
+        last_name,
+        email,
+        password,
+      });
+      console.log(newUser);
+      console.log("user created");
     } catch (err) {
       console.log(err);
     }
   };
   return (
-    <form class="space-y-6" onSubmit={handleCreateUser} ref={formRef}>
-      <div class="flex justify-between items-center">
+    <FormControl noValidate mode="onSubmit" className="flex flex-col gap-2" onSubmit={handleCreateUser}>
+      <div class="flex justify-between items-center gap-2">
         <Input
           name="first_name"
           type="text"
           label="First Name"
           autocomplete="given-name"
-          required
-          minLength={3}
+          required={{ message: 'First name is required!', value: true }}
+          minLength={{ message: 'Minimum 3 characters are required!', value: 3 }}
           maxLength={20}
-          placeholder={"John"}
+          placeholder="John"
         />
 
         <Input
           name="last_name"
           type="text"
           label="Last Name"
+          required={{ message: 'Last name is required!', value: true }}
           autocomplete="family-name"
-          required
           minLength={3}
           maxLength={20}
           placeholder={"Doe"}
@@ -58,25 +50,25 @@ const SignupForm = () => {
         type="email"
         label="Email address"
         autocomplete="email"
-        required
+        required={{ message: 'Email is required!', value: true }}
         placeholder={"example@gmail.com"}
-        pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+        validator={(value) => !(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(value)) ? "Invalid email!" : true}
       />
 
       <Input
         name="password"
         type="password"
         label="Password"
+        required={{ message: 'Password is required!', value: true }}
         autocomplete="current-password"
-        required
         minLength={6}
         placeholder={"********"}
       />
 
-      <Button type="submit" variant={"primary"}>
+      <Button type="submit" variant="primary" className="mt-4">
         Sign Up
       </Button>
-    </form>
+    </FormControl>
   );
 };
 
