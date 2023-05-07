@@ -38,12 +38,15 @@ export function addItemToCart({
 
   if (existingCartItem) {
     // product already exists in cart. Updating it's quantity by 1
-    cartItems.value = cartItems.value.map((item) => item.id === id ? ({ ...item, quantity: item.quantity + 1 }) : item)
-
+    cartItems.value = cartItems.value.map((item) =>
+      item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+    );
   } else {
-
     // adding new product to cart
-    cartItems.value = [...cartItems.value, { id, name, imageSrc, variant, quantity: 1 }];
+    cartItems.value = [
+      ...cartItems.value,
+      { id, name, imageSrc, variant, quantity: 1 },
+    ];
   }
 }
 
@@ -70,7 +73,11 @@ export function decreaseCartItem(
   id: string,
   variantId: Signal<string | undefined>
 ) {
-  cartItems.value = cartItems.value.map((value) => value.id === id && value.variant.id === variantId ? ({ ...value, quantity: value.quantity - 1 }) : value)
+  cartItems.value = cartItems.value.map((value) =>
+    value.id === id && value.variant.id === variantId
+      ? { ...value, quantity: value.quantity - 1 }
+      : value
+  );
 }
 
 export function removeCartItem(

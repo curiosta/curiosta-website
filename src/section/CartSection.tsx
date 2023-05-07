@@ -1,3 +1,4 @@
+import Button from "@components/Button";
 import {
   cartItems,
   decreaseCartItem,
@@ -59,11 +60,13 @@ const CartSection = () => {
                       <label for="quantity-0" class="sr-only">
                         Quantity, Basic Tee
                       </label>
-                      <button
+                      <Button
                         type="button"
                         title="Decrease"
-                        class={`rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${item.quantity <= 1 ? "opacity-70" : ""
-                          } `}
+                        variant={"icon"}
+                        className={
+                          "!bg-primary-600 disabled:!bg-primary-200 text-white"
+                        }
                         onClick={() =>
                           decreaseCartItem(item.id, item.variant.id)
                         }
@@ -77,7 +80,7 @@ const CartSection = () => {
                         >
                           <path d="M10.75, 12H4a1, 1,0,0,1,0-2H16a1,1,0,0,1,0,2Z" />
                         </svg>
-                      </button>
+                      </Button>
                       <span
                         id="quantity-0"
                         name="quantity-0"
@@ -85,10 +88,14 @@ const CartSection = () => {
                       >
                         {item.quantity}
                       </span>
-                      <button
+                      <Button
                         type="button"
                         title="Add more"
-                        class="rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        variant={"icon"}
+                        className={
+                          "!bg-primary-600 disabled:!bg-primary-200 text-white"
+                        }
+                        disabled={item.quantity >= 10}
                         onClick={() =>
                           increaseCartItem(item.id, item.variant.id)
                         }
@@ -101,13 +108,13 @@ const CartSection = () => {
                         >
                           <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
                         </svg>
-                      </button>
+                      </Button>
                     </div>
                     <div class="absolute right-0 top-0">
-                      <button
+                      <Button
                         type="button"
                         title="Remove"
-                        class="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500"
+                        variant={"icon"}
                         onClick={() => removeCartItem(item.id, item.variant.id)}
                       >
                         <span class="sr-only">Remove</span>
@@ -119,7 +126,7 @@ const CartSection = () => {
                         >
                           <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"></path>
                         </svg>
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </div>
