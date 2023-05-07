@@ -1,4 +1,5 @@
 import Button from "@components/Button";
+import Typography from "@components/Typography";
 import { cartItems } from "@store/cartStore";
 
 const OrderSection = () => {
@@ -19,9 +20,14 @@ const OrderSection = () => {
         !cartItems.value.length ? "hidden" : ""
       }`}
     >
-      <h2 id="summary-heading" class="text-lg font-medium text-gray-900">
+      <Typography
+        tag="h6"
+        size="h6/medium"
+        variant="primary"
+        id="summary-heading"
+      >
         Order summary
-      </h2>
+      </Typography>
 
       <dl class="mt-6 space-y-4">
         <div class="flex items-center justify-between">

@@ -3,6 +3,7 @@ import Button from "@components/Button";
 import { addItemToCart, cartItems } from "@store/cartStore";
 import ProductVariants from "@components/ProductVariants";
 import { Signal, signal } from "@preact/signals";
+import Typography from "@components/Typography";
 
 interface Props {
   productId: string;
@@ -85,10 +86,12 @@ const AddToCartForm = ({
           <div class="flex  items-center gap-4 mb-4 pt-3 ">
             <img src={productImage} alt="" class={" w-20  object-cover  "} />
             <div>
-              <p class="font-medium ">{productTitle}</p>
-              <p> Variant: {selectedVariant.title}</p>
-              <p>Price: ${selectedVariant.price}</p>
-              <p class="text-green-500 font-medium ">Added to cart</p>
+              <Typography size="body1/medium">{productTitle}</Typography>
+              <Typography> Variant: {selectedVariant.title}</Typography>
+              <Typography> Price: ${selectedVariant.price}</Typography>
+              <Typography size="body1/medium" className="text-green-500 ">
+                Added to cart
+              </Typography>
             </div>
           </div>
           <a

@@ -1,4 +1,5 @@
 import type { Signal } from "@preact/signals";
+import Typography from "@components/Typography";
 
 interface Props {
   productVariants: {
@@ -34,7 +35,9 @@ const ProductVariants = ({ productVariants, selectedVariant }: Props) => {
   return (
     <div>
       <div class="flex items-center justify-between">
-        <h2 class="text-sm font-medium text-gray-900">Variants</h2>
+        <Typography size="body2/medium" variant="primary">
+          Variants
+        </Typography>
       </div>
       <fieldset class="mt-2">
         <legend class="sr-only">Choose a Variant</legend>
