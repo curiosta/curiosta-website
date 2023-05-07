@@ -1,3 +1,4 @@
+import Typography from "@components/Typography";
 import {
   cart,
   decreaseCartItem,
@@ -13,9 +14,9 @@ const CartSection = () => {
 
   return (
     <section aria-labelledby="cart-heading" class="lg:col-span-7">
-      <h2 id="cart-heading" class="sr-only">
+      <Typography id="cart-heading" className="sr-only">
         Items in your shopping cart
-      </h2>
+      </Typography>
 
       <ul
         role="list"
@@ -36,17 +37,17 @@ const CartSection = () => {
                 <div class="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
                   <div>
                     <div class="flex justify-between">
-                      <h3 class="text-sm">
+                      <Typography size="body2/normal">
                         <a
                           href={`/products/${item.variant.product_id}`}
                           class="font-medium text-gray-700 hover:text-gray-800"
                         >
                           {item.title}
                         </a>
-                      </h3>
+                      </Typography>
                     </div>
                     <div class="mt-1 flex text-sm">
-                      <p class="text-gray-500">Sienna</p>
+                      <Typography className="text-gray-500">Sienna</Typography>
 
                       <p class="ml-4 border-l border-gray-200 pl-4 text-gray-500">
                         {item.description}
@@ -65,7 +66,10 @@ const CartSection = () => {
                       <Button
                         type="button"
                         title="Decrease"
-                        variant={"icon-active"}
+                        variant={"icon"}
+                        className={
+                          "!bg-primary-600 disabled:!bg-primary-200 text-white"
+                        }
                         onClick={() =>
                           decreaseCartItem(
                             cart.value.id,
@@ -94,7 +98,11 @@ const CartSection = () => {
                       <Button
                         type="button"
                         title="Add more"
-                        variant={"icon-active"}
+                        variant={"icon"}
+                        className={
+                          "!bg-primary-600 disabled:!bg-primary-200 text-white"
+                        }
+                        disabled={item.quantity >= 10}
                         onClick={() =>
                           increaseCartItem(
                             cart.value.id,
@@ -134,7 +142,10 @@ const CartSection = () => {
                   </div>
                 </div>
 
-                <p class="mt-4 flex space-x-2 text-sm text-gray-700">
+                <Typography
+                  size="body2/normal"
+                  className="mt-4 flex space-x-2 text-gray-700"
+                >
                   <svg
                     class="h-5 w-5 flex-shrink-0 text-green-500"
                     viewBox="0 0 20 20"
@@ -148,7 +159,7 @@ const CartSection = () => {
                     ></path>
                   </svg>
                   <span>In stock</span>
-                </p>
+                </Typography>
               </div>
             </li>
           ))
@@ -168,9 +179,9 @@ const CartSection = () => {
                 d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
               />
             </svg>
-            <span className="text-gray-900 text-sm font-medium">
+            <Typography variant="primary" size="body2/medium">
               Your cart is empty
-            </span>
+            </Typography>
           </div>
         )}
       </ul>

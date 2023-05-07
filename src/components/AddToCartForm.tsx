@@ -3,8 +3,9 @@ import Button from "@components/Button";
 import { cart } from "@store/cartStore";
 import ProductVariants from "@components/ProductVariants";
 import { Signal, signal } from "@preact/signals";
-import { createCart } from "@api/createCart";
+import Typography from "@components/Typography";
 import { addLineItem } from "@api/addLineItem";
+import { createCart } from "@api/createCart";
 
 interface Props {
   productId: string;
@@ -44,14 +45,14 @@ const AddToCartForm = ({
           variant_id: selectedVariant.id.value,
           quantity: 1,
         });
-        // console.log(res.cart);
+
         cart.value = res.cart;
       } else {
         const res = await createCart({
           variant_id: selectedVariant.id.value,
           quantity: 1,
         });
-        // console.log(res.cart);
+
         localStorage.setItem("cartId", res.cart.id);
         cart.value = res.cart;
       }
@@ -97,10 +98,12 @@ const AddToCartForm = ({
           <div class="flex  items-center gap-4 mb-4 pt-3 ">
             <img src={productImage} alt="" class={" w-20  object-cover  "} />
             <div>
-              <p class="font-medium ">{productTitle}</p>
-              <p> Variant: {selectedVariant.title}</p>
-              <p>Price: ${selectedVariant.price}</p>
-              <p class="text-green-500 font-medium ">Added to cart</p>
+              <Typography size="body1/medium">{productTitle}</Typography>
+              <Typography> Variant: {selectedVariant.title}</Typography>
+              <Typography> Price: ${selectedVariant.price}</Typography>
+              <Typography size="body1/medium" className="text-green-500 ">
+                Added to cart
+              </Typography>
             </div>
           </div>
           <a

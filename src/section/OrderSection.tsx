@@ -1,3 +1,5 @@
+import Button from "@components/Button";
+import Typography from "@components/Typography";
 import { cart } from "@store/cartStore";
 
 const OrderSection = () => {
@@ -8,9 +10,14 @@ const OrderSection = () => {
         !cart.value.items?.length ? "hidden" : ""
       }`}
     >
-      <h2 id="summary-heading" class="text-lg font-medium text-gray-900">
+      <Typography
+        tag="h6"
+        size="h6/medium"
+        variant="primary"
+        id="summary-heading"
+      >
         Order summary
-      </h2>
+      </Typography>
 
       <dl class="mt-6 space-y-4">
         <div class="flex items-center justify-between">
@@ -84,12 +91,9 @@ const OrderSection = () => {
       </dl>
 
       <div class="mt-6">
-        <button
-          type="submit"
-          class="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
-        >
+        <Button type="submit" title={"checkout"} variant={"primary"}>
           Checkout
-        </button>
+        </Button>
       </div>
     </section>
   );
