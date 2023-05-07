@@ -7,6 +7,9 @@ module.exports = {
       colors: {
         primary: colors.indigo,
       },
+      textColor: {
+        primary: colors.gray,
+      },
     },
   },
   plugins: [],
