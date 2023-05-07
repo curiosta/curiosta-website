@@ -1,7 +1,34 @@
-const FormControl = () => {
-  return (
-    <div>Component Not Ready!</div>
-  )
-}
+import { createContext, forwardRef, HTMLAttributes, useContext } from 'preact/compat';
+import { FormProvider, useForm } from 'react-hook-form';
+const FormControlContext = createContext({});
 
-export default FormControl
+export const useFormControl = () => useContext(FormControlContext);
+
+export type TFormControlProps = Omit<HTMLAttributes<HTMLFormElement>, 'onSubmit'> & {
+  onSubmit?: (data: any) => void;
+};
+const FormControl = forwardRef<HTMLFormElement, TFormControlProps>(
+  ({ children, ...props }, ref) => {
+    const form = useForm({ mode: 'onChange' });
+
+    return (
+      <>
+        <FormProvider {...form}>
+          <form
+            ref={ref}
+            method="GET"
+            {...props}
+            onSubmit={
+              props.onSubmit ? form.handleSubmit(props.onSubmit) : (e) => e.preventDefault()
+            }>
+            {children}
+          </form>
+        </FormProvider>
+      </>
+    );
+  }
+);
+
+FormControl.displayName = 'FormControl';
+
+export default FormControl;

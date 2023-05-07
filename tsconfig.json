@@ -12,7 +12,7 @@
       "@pages/*": ["./src/pages/*"],
       "@section/*": ["./src/section/*"],
       "@store/*": ["./src/store/*"],
-      "@public/*": ["./public/*"],
+      "@public/*": ["./public/*"]
     }
   }
 }
