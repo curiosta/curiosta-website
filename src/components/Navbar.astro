@@ -1,4 +1,5 @@
 ---
+import Button from "@components/Button";
 import NavCartItem from "./NavCartItem";
 
 const navLinks = [
@@ -81,12 +82,20 @@ const navLinks = [
       }
     </div>
     <div class="hidden lg:flex lg:items-center lg:flex-1 lg:justify-end">
-      <a
-        href="/signup"
-        class="text-sm font-semibold leading-6 px-2 py-1 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white"
+      <Button
+        link="/signup"
+        className="leading-6 !bg-transparent !text-primary-900 !shadow-none  !px-2 !py-1 !w-fit rounded-md mr-3"
       >
-        Join Now
-      </a>
+        Sign Up
+      </Button>
+      <Button
+        link="/login"
+        variant="primary"
+        className="leading-6 !px-2 !py-1 !w-fit rounded-md"
+      >
+        Login
+      </Button>
+
       <!-- Cart -->
       <NavCartItem client:load />
     </div>
@@ -146,10 +155,16 @@ const navLinks = [
           </div>
           <div class="py-6">
             <a
+              href="/login"
+              class="-mx-3 block rounded-lg px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+            >
+              Login
+            </a>
+            <a
               href="/signup"
               class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
             >
-              Join Now
+              Sign Up
             </a>
 
             <!-- Cart -->
