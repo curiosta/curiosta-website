@@ -1,4 +1,4 @@
-import Medusa from "@medusajs/medusa-js";
+import medusa from "@api/medusa";
 export type User = {
   first_name: string;
   last_name: string;
@@ -12,10 +12,6 @@ export const createUser = ({
   email,
   password,
 }: User) => {
-  const medusa = new Medusa({
-    baseUrl: import.meta.env.PUBLIC_BASE_URL,
-    maxRetries: 3,
-  });
   return medusa.customers.create({
     first_name,
     last_name,

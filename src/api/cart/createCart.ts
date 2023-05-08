@@ -1,4 +1,4 @@
-import Medusa from "@medusajs/medusa-js";
+import medusa from "@api/medusa";
 export type CreateCart = {
   country_code?: string;
   variant_id: string;
@@ -9,10 +9,6 @@ export const createCart = async ({
   variant_id,
   quantity,
 }: CreateCart) => {
-  const medusa = new Medusa({
-    baseUrl: import.meta.env.PUBLIC_BASE_URL,
-    maxRetries: 3,
-  });
   return medusa.carts.create({
     items: [{ variant_id, quantity }],
   });
