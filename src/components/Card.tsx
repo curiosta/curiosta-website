@@ -1,3 +1,5 @@
+import Typography from "@components/Typography";
+
 interface Props {
   title: string;
   shortDescription: string;
@@ -24,18 +26,18 @@ const Card = ({ id, imageSrc, title, shortDescription, variants }: Props) => {
             class="h-full w-full object-cover object-center"
           />
         </div>
-        <h3 class="mt-4 text-sm text-gray-700">
+        <Typography size="body2/medium" variant="secondary" className="mt-4 ">
           <a href={`/products/${id}`}>
             <span class="absolute inset-0"></span>
             {title}
           </a>
-        </h3>
-        <p class="mt-1 text-sm text-gray-500">
+        </Typography>
+        <Typography size="body2/normal" variant="secondary" className="mt-1 ">
           {shortDescription.slice(0, 30) + "..."}
-        </p>
-        <p class="mt-1 text-sm font-medium text-gray-900">
+        </Typography>
+        <Typography size="body2/medium" variant="primary" className="mt-1 ">
           ${variants[0].prices[1].amount / 100}
-        </p>
+        </Typography>
       </div>
     </div>
   );

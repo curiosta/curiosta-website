@@ -1,6 +1,4 @@
-/// <reference types="astro/client" />
-
-declare module '*.svg' {
-  const src: { src: string, width: number, height: number };
-  export default src;
+/// <reference types="astro/image/client" />
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
 }

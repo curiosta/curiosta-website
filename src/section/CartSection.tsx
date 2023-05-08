@@ -1,30 +1,34 @@
+import Typography from "@components/Typography";
 import {
-  cartItems,
+  cart,
   decreaseCartItem,
   increaseCartItem,
   removeCartItem,
 } from "@store/cartStore";
+import Button from "@components/Button";
 
 const CartSection = () => {
-  localStorage.setItem("cartItem", JSON.stringify(cartItems.value));
+  localStorage.setItem("cart", JSON.stringify(cart.value));
+
+  // console.log(cart.value);
 
   return (
     <section aria-labelledby="cart-heading" class="lg:col-span-7">
-      <h2 id="cart-heading" class="sr-only">
+      <Typography id="cart-heading" className="sr-only">
         Items in your shopping cart
-      </h2>
+      </Typography>
 
       <ul
         role="list"
         class="divide-y divide-gray-200 border-b border-t border-gray-200"
       >
-        {cartItems.value.length ? (
-          cartItems.value.map((item) => (
+        {cart.value.items?.length ? (
+          cart.value?.items.map((item) => (
             <li class="flex py-6 sm:py-10">
               <div class="flex-shrink-0">
                 <img
-                  src={item.imageSrc}
-                  alt={item.name}
+                  src={item.thumbnail}
+                  alt={item.title}
                   class="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48"
                 />
               </div>
@@ -33,24 +37,24 @@ const CartSection = () => {
                 <div class="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
                   <div>
                     <div class="flex justify-between">
-                      <h3 class="text-sm">
+                      <Typography size="body2/normal">
                         <a
-                          href={`/products/${item.id}`}
+                          href={`/products/${item.variant.product_id}`}
                           class="font-medium text-gray-700 hover:text-gray-800"
                         >
-                          {item.name}
+                          {item.title}
                         </a>
-                      </h3>
+                      </Typography>
                     </div>
                     <div class="mt-1 flex text-sm">
-                      <p class="text-gray-500">Sienna</p>
+                      <Typography className="text-gray-500">Sienna</Typography>
 
                       <p class="ml-4 border-l border-gray-200 pl-4 text-gray-500">
-                        {item.variant.title}
+                        {item.description}
                       </p>
                     </div>
                     <p class="mt-1 text-sm font-medium text-gray-900">
-                      ${item.variant.price}
+                      ${item.unit_price}
                     </p>
                   </div>
 
@@ -59,13 +63,19 @@ const CartSection = () => {
                       <label for="quantity-0" class="sr-only">
                         Quantity, Basic Tee
                       </label>
-                      <button
+                      <Button
                         type="button"
                         title="Decrease"
-                        class={`rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${item.quantity <= 1 ? "opacity-70" : ""
-                          } `}
+                        variant={"icon"}
+                        className={
+                          "!bg-primary-600 disabled:!bg-primary-200 text-white"
+                        }
                         onClick={() =>
-                          decreaseCartItem(item.id, item.variant.id)
+                          decreaseCartItem(
+                            cart.value.id,
+                            item.id,
+                            item.quantity
+                          )
                         }
                         disabled={item.quantity <= 1}
                       >
@@ -77,7 +87,7 @@ const CartSection = () => {
                         >
                           <path d="M10.75, 12H4a1, 1,0,0,1,0-2H16a1,1,0,0,1,0,2Z" />
                         </svg>
-                      </button>
+                      </Button>
                       <span
                         id="quantity-0"
                         name="quantity-0"
@@ -85,12 +95,20 @@ const CartSection = () => {
                       >
                         {item.quantity}
                       </span>
-                      <button
+                      <Button
                         type="button"
                         title="Add more"
-                        class="rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        variant={"icon"}
+                        className={
+                          "!bg-primary-600 disabled:!bg-primary-200 text-white"
+                        }
+                        disabled={item.quantity >= 10}
                         onClick={() =>
-                          increaseCartItem(item.id, item.variant.id)
+                          increaseCartItem(
+                            cart.value.id,
+                            item.id,
+                            item.quantity
+                          )
                         }
                       >
                         <svg
@@ -101,14 +119,14 @@ const CartSection = () => {
                         >
                           <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
                         </svg>
-                      </button>
+                      </Button>
                     </div>
                     <div class="absolute right-0 top-0">
-                      <button
+                      <Button
                         type="button"
                         title="Remove"
-                        class="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500"
-                        onClick={() => removeCartItem(item.id, item.variant.id)}
+                        variant={"icon"}
+                        onClick={() => removeCartItem(cart.value.id, item.id)}
                       >
                         <span class="sr-only">Remove</span>
                         <svg
@@ -119,12 +137,15 @@ const CartSection = () => {
                         >
                           <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"></path>
                         </svg>
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </div>
 
-                <p class="mt-4 flex space-x-2 text-sm text-gray-700">
+                <Typography
+                  size="body2/normal"
+                  className="mt-4 flex space-x-2 text-gray-700"
+                >
                   <svg
                     class="h-5 w-5 flex-shrink-0 text-green-500"
                     viewBox="0 0 20 20"
@@ -138,7 +159,7 @@ const CartSection = () => {
                     ></path>
                   </svg>
                   <span>In stock</span>
-                </p>
+                </Typography>
               </div>
             </li>
           ))
@@ -158,9 +179,9 @@ const CartSection = () => {
                 d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
               />
             </svg>
-            <span className="text-gray-900 text-sm font-medium">
+            <Typography variant="primary" size="body2/medium">
               Your cart is empty
-            </span>
+            </Typography>
           </div>
         )}
       </ul>

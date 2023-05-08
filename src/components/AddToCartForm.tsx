@@ -1,9 +1,11 @@
 import type { ChangeEvent } from "preact/compat";
-import Button from "./Button";
-import { addItemToCart } from "@store/cartStore";
-import { cartItems } from "@store/cartStore";
-import ProductVariants from "./ProductVariants";
+import Button from "@components/Button";
+import { cart } from "@store/cartStore";
+import ProductVariants from "@components/ProductVariants";
 import { Signal, signal } from "@preact/signals";
+import Typography from "@components/Typography";
+import { addLineItem } from "@api/addLineItem";
+import { createCart } from "@api/createCart";
 
 interface Props {
   productId: string;
@@ -21,45 +23,55 @@ interface Props {
   selectedVariant: {
     id: Signal<string | undefined>;
     title: Signal<string | undefined>;
-    inventoryQty: Signal<number | undefined>;
     price: Signal<number | undefined>;
   };
 }
 
 const isPopUp = signal(false);
+
 const AddToCartForm = ({
-  productId,
   productTitle,
   productImage,
   productVariants,
   selectedVariant,
 }: Props) => {
-  const handleAddCart = (e: ChangeEvent) => {
+  const handleAddCart = async (e: ChangeEvent) => {
     e.preventDefault();
-    addItemToCart({
-      id: productId,
-      name: productTitle,
-      imageSrc: productImage,
-      variant: selectedVariant && selectedVariant,
-    });
+    const localCartId = localStorage.getItem("cartId");
+    if (selectedVariant.id.value) {
+      if (localCartId) {
+        const res = await addLineItem({
+          cardId: localCartId,
+          variant_id: selectedVariant.id.value,
+          quantity: 1,
+        });
+
+        cart.value = res.cart;
+      } else {
+        const res = await createCart({
+          variant_id: selectedVariant.id.value,
+          quantity: 1,
+        });
+
+        localStorage.setItem("cartId", res.cart.id);
+        cart.value = res.cart;
+      }
+    }
+
     isPopUp.value = true;
   };
-  localStorage.setItem("cartItem", JSON.stringify(cartItems.value));
-
+  localStorage.setItem("cart", JSON.stringify(cart.value));
   return (
     <div class="mt-6 ">
       <form onSubmit={handleAddCart}>
         <ProductVariants
           productVariants={productVariants}
-          selectedVariant={selectedVariant && selectedVariant}
+          selectedVariant={selectedVariant}
         />
-        <div class="sm:flex-col1 mt-10 flex gap-8">
-          <Button
-            type="submit"
-            class={`flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full`}
-            title="Add to cart"
-            btnLabel={` Add to cart`}
-          />
+        <div class="sm:flex-col1 mt-10 flex gap-8 max-w-xs">
+          <Button type="submit" title="Add to cart" variant={"primary"}>
+            Add to cart
+          </Button>
         </div>
       </form>
       {/* popup */}
@@ -85,10 +97,12 @@ const AddToCartForm = ({
           <div class="flex  items-center gap-4 mb-4 pt-3 ">
             <img src={productImage} alt="" class={" w-20  object-cover  "} />
             <div>
-              <p class="font-medium ">{productTitle}</p>
-              <p> Variant: {selectedVariant.title}</p>
-              <p>Price: ${selectedVariant.price}</p>
-              <p class="text-green-500 font-medium ">Added to cart</p>
+              <Typography size="body1/medium">{productTitle}</Typography>
+              <Typography> Variant: {selectedVariant.title}</Typography>
+              <Typography> Price: ${selectedVariant.price}</Typography>
+              <Typography size="body1/medium" className="text-green-500 ">
+                Added to cart
+              </Typography>
             </div>
           </div>
           <a

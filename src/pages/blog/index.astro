@@ -3,14 +3,14 @@ import Footer from "@components/Footer.astro";
 import Navbar from "@components/Navbar.astro";
 import Layout from "@layouts/Layout.astro";
 import BlogCard from "@components/BlogCard.astro";
-import { contentfulClient } from "@api/blogs";
+import contentful from "@api/blogs";
 import type { FieldsType } from "contentful";
 
-const blogsEntries = await (await contentfulClient()).getEntries({
+const blogsEntries = await contentful.getEntries({
   content_type: "pageBlogPost",
 });
 
-const blogs = blogsEntries.items.map((item) => {
+const blogs = blogsEntries?.items.map((item) => {
   const { title, shortDescription, slug, publishedDate, featuredImage } =
     item.fields as FieldsType;
   return {

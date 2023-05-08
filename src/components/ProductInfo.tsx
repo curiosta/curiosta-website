@@ -1,5 +1,6 @@
 import { useSignal } from "@preact/signals";
-import AddToCartForm from "./AddToCartForm";
+import AddToCartForm from "@components/AddToCartForm";
+import Typography from "@components/Typography";
 
 interface Props {
   productId: string;
@@ -29,7 +30,6 @@ const ProductInfo = ({ product, productId }: Props) => {
   const selectedVariant = {
     id: useSignal(defaultVariant?.id),
     title: useSignal(defaultVariant?.title),
-    inventoryQty: useSignal(defaultVariant?.inventory_quantity),
     price: useSignal(
       defaultVariant?.prices[1].amount && defaultVariant?.prices[1].amount / 100
     ),
@@ -37,18 +37,28 @@ const ProductInfo = ({ product, productId }: Props) => {
 
   return (
     <div class="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
-      <h1 class="text-3xl font-bold tracking-tight text-gray-900">
+      <Typography
+        tag="h3"
+        size="h3/bold"
+        variant="primary"
+        className="tracking-tight"
+      >
         {product.title}
-      </h1>
+      </Typography>
       <div class="mt-3">
-        <h2 class="sr-only">Product information</h2>
-        <p class="text-3xl tracking-tight text-gray-900">
+        <Typography className="sr-only">Product information</Typography>
+        <Typography
+          tag="h3"
+          size="h3/normal"
+          variant="primary"
+          className="tracking-tight"
+        >
           ${selectedVariant.price.value}
-        </p>
+        </Typography>
       </div>
       {/* Reviews  */}
       <div class="mt-3">
-        <h3 class="sr-only">Reviews</h3>
+        <Typography className="sr-only">Reviews</Typography>
         <div class="flex items-center">
           <div class="flex items-center">
             {Array(5)
@@ -70,14 +80,14 @@ const ProductInfo = ({ product, productId }: Props) => {
                 </svg>
               ))}
           </div>
-          <p class="sr-only">4 out of 5 stars</p>
+          <Typography className="sr-only">4 out of 5 stars</Typography>
         </div>
       </div>
       <div class="mt-6">
-        <h3 class="sr-only">Description</h3>
+        <Typography className="sr-only">Description</Typography>
 
         <div class="space-y-6 text-base text-gray-700">
-          <p>{product.description}</p>
+          <Typography>{product.description}</Typography>
         </div>
       </div>
 
@@ -90,13 +100,13 @@ const ProductInfo = ({ product, productId }: Props) => {
       />
 
       <section aria-labelledby="details-heading" class="mt-12">
-        <h2 id="details-heading" class="sr-only">
+        <Typography id="details-heading" className="sr-only">
           Additional details
-        </h2>
+        </Typography>
 
         <div class="divide-y divide-gray-200 border-t">
           <div>
-            <h3>
+            <Typography size="h3/bold">
               <button
                 type="button"
                 class="group relative flex w-full items-center justify-between py-6 text-left"
@@ -136,7 +146,7 @@ const ProductInfo = ({ product, productId }: Props) => {
                   </svg>
                 </span>
               </button>
-            </h3>
+            </Typography>
             <div class="prose prose-sm pb-6" id="disclosure-1">
               <ul role="list">
                 <li>Multiple strap configurations</li>
