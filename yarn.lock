@@ -126,7 +126,7 @@
     undici "^5.22.0"
     which-pm-runs "^1.1.0"
 
-"@astrojs/webapi@^2.0.1", "@astrojs/webapi@^2.1.1":
+"@astrojs/webapi@^2.0.1", "@astrojs/webapi@^2.1.0", "@astrojs/webapi@^2.1.1":
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/@astrojs/webapi/-/webapi-2.1.1.tgz#965bcc35a72ca40e60e1ed4c2e4350f215bee179"
   integrity sha512-mHZ7VgPNMeV3TYIw3SGHTKaJosBxA8bTzZ3QhNw509qvCJca4Lkjes8JywimuwTn+TMjEiv7ksNfwRluad3jqA==
@@ -579,10 +579,10 @@
   resolved "https://registry.yarnpkg.com/@ljharb/has-package-exports-patterns/-/has-package-exports-patterns-0.0.2.tgz#c1718939b65efa1f45f53686c2fcfa992b9fb68f"
   integrity sha512-4/RWEeXDO6bocPONheFe6gX/oQdP/bEpv0oL4HqjPP5DCenBSt0mHgahppY49N0CpsaqffdwPq+TlX9CYOq2Dw==
 
-"@medusajs/medusa-js@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@medusajs/medusa-js/-/medusa-js-3.0.0.tgz#0ccacbede0f64f826c51d1d5406484ca5b56863c"
-  integrity sha512-oYcHyJ3RCOdQscZVBXGG8JO/GcGs/8kV2UxQy1T5tF6V+HHzazI90zeldxGYtq6XEugb70pLrzsgiPxxSQ2KMw==
+"@medusajs/medusa-js@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@medusajs/medusa-js/-/medusa-js-4.0.0.tgz#f6d6441a8ebdfca9b4e465c15ababeb0913f0232"
+  integrity sha512-UiN8sf49o0Q/lfvzPltV2bLZnJi8EYNuyTGDDdZg/673molRIJiC6CyXKOIcuBVDkCz30Os2FNXiZrbSKgXDUg==
   dependencies:
     axios "^0.24.0"
     qs "^6.10.3"
@@ -1001,6 +1001,13 @@ astro-eslint-parser@^0.13.1:
     eslint-visitor-keys "^3.0.0"
     espree "^9.0.0"
     semver "^7.3.8"
+
+astro-sst@^2.8.6:
+  version "2.8.7"
+  resolved "https://registry.yarnpkg.com/astro-sst/-/astro-sst-2.8.7.tgz#f6f352edb56034d0081fd0ceab6cdd8cf44da09d"
+  integrity sha512-MRqB07pk/D+/zNhT05m/vn0Nj51LeKlYIN56b8v/UccEDyCvNFzvkAWXx3ZmgKSTpkf6fjUfh6W2EwdYYUy4Ug==
+  dependencies:
+    "@astrojs/webapi" "^2.1.0"
 
 astro@^2.3.0:
   version "2.4.2"
