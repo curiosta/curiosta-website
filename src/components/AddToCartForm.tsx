@@ -106,12 +106,9 @@ const AddToCartForm = ({
               </Typography>
             </div>
           </div>
-          <a
-            href="/cart"
-            class={` text-white text-center bg-indigo-700 py-1 px-1 rounded-md `}
-          >
+          <Button link="/cart" className="text-center py-1 px-1 rounded-md">
             Go to cart
-          </a>
+          </Button>
         </div>
       </div>
     </div>
