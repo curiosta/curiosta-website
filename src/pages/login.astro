@@ -1,0 +1,37 @@
+---
+import LoginForm from "@components/LoginForm";
+import Typography from "@components/Typography";
+import Layout from "@layouts/Layout.astro";
+import { pageTitleDesc } from "content";
+---
+
+<Layout
+  title={pageTitleDesc.login.title}
+  description={pageTitleDesc.login.description}
+>
+  <main>
+    <div class="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div class="sm:mx-auto sm:w-full sm:max-w-md">
+        <img
+          class="mx-auto h-10 w-auto"
+          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+          alt="Curiosta"
+        />
+        <Typography
+          tag="h2"
+          size="h5/bold"
+          variant="primary"
+          className="mt-6 text-center  leading-9 tracking-tight"
+        >
+          Log in to your account
+        </Typography>
+      </div>
+
+      <div class="mt-6 sm:mx-auto sm:w-full sm:max-w-[480px]">
+        <div class="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
+          <LoginForm client:load />
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
