@@ -9,5 +9,8 @@ export default defineConfig({
   output: 'server',
   site: 'https://curiosta.com/',
   adapter: astroAWSFunctions(),
-  integrations: [tailwind(), preact({compat: true}), image()]
+  integrations: [tailwind(), preact({ compat: true }), image()],
+  server: {
+    // port: 8000
+  }
 })
