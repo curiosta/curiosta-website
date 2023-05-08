@@ -10,8 +10,6 @@ import Button from "@components/Button";
 const CartSection = () => {
   localStorage.setItem("cart", JSON.stringify(cart.value));
 
-  // console.log(cart.value);
-
   return (
     <section aria-labelledby="cart-heading" class="lg:col-span-7">
       <Typography id="cart-heading" className="sr-only">
@@ -49,13 +47,17 @@ const CartSection = () => {
                     <div class="mt-1 flex text-sm">
                       <Typography className="text-gray-500">Sienna</Typography>
 
-                      <p class="ml-4 border-l border-gray-200 pl-4 text-gray-500">
+                      <Typography className="ml-4 border-l border-gray-200 pl-4 text-gray-500">
                         {item.description}
-                      </p>
+                      </Typography>
                     </div>
-                    <p class="mt-1 text-sm font-medium text-gray-900">
+                    <Typography
+                      variant="primary"
+                      size="body2/medium"
+                      className="mt-1"
+                    >
                       ${item.unit_price}
-                    </p>
+                    </Typography>
                   </div>
 
                   <div class="mt-4 sm:mt-0 sm:pr-9">

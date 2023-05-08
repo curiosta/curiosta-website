@@ -8,7 +8,6 @@ import ProductInfo from "@components/ProductInfo";
 
 const productId = Astro.params.id;
 const { product } = productId ? await getProduct(productId) : null;
-// console.log(product);
 ---
 
 <Layout
