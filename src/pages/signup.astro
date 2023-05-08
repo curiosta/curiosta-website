@@ -1,9 +1,14 @@
 ---
 import SignupForm from "@components/SignupForm";
+import Typography from "@components/Typography";
 import Layout from "@layouts/Layout.astro";
+import { pageTitleDesc } from "content";
 ---
 
-<Layout title="Create account" description="create account">
+<Layout
+  title={pageTitleDesc.signup.title}
+  description={pageTitleDesc.signup.description}
+>
   <main>
     <div class="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div class="sm:mx-auto sm:w-full sm:max-w-md">
@@ -12,11 +17,14 @@ import Layout from "@layouts/Layout.astro";
           src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
           alt="Curiosta"
         />
-        <h2
-          class="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900"
+        <Typography
+          tag="h2"
+          size="h5/bold"
+          variant="primary"
+          className="mt-6 text-center  leading-9 tracking-tight"
         >
           Create new account
-        </h2>
+        </Typography>
       </div>
 
       <div class="mt-6 sm:mx-auto sm:w-full sm:max-w-[480px]">
