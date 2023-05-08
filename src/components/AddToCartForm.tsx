@@ -4,8 +4,8 @@ import { cart } from "@store/cartStore";
 import ProductVariants from "@components/ProductVariants";
 import { Signal, signal } from "@preact/signals";
 import Typography from "@components/Typography";
-import { addLineItem } from "@api/addLineItem";
-import { createCart } from "@api/createCart";
+import { addLineItem } from "@api/cart/addLineItem";
+import { createCart } from "@api/cart/createCart";
 
 interface Props {
   productId: string;
@@ -76,8 +76,9 @@ const AddToCartForm = ({
       </form>
       {/* popup */}
       <div
-        class={`fixed right-0 bottom-0  w-full ${isPopUp.value ? "flex" : "hidden "
-          }  justify-center items-center  bg-[#464646c4] p-3   z-20`}
+        class={`fixed right-0 bottom-0  w-full ${
+          isPopUp.value ? "flex" : "hidden "
+        }  justify-center items-center  bg-[#464646c4] p-3   z-20`}
       >
         {/* close popup */}
         <span

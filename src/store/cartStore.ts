@@ -1,5 +1,5 @@
-import { removeLineItem } from "@api/removeLineItem";
-import { updateLineItem } from "@api/updateLineItem";
+import { removeLineItem } from "@api/cart/removeLineItem";
+import { updateLineItem } from "@api/cart/updateLineItem";
 import { signal } from "@preact/signals";
 
 export type Cart = {
