@@ -6,6 +6,7 @@ module.exports = {
     extend: {
       colors: {
         primary: colors.indigo,
+        danger: colors.red,
       },
       textColor: {
         primary: colors.gray,

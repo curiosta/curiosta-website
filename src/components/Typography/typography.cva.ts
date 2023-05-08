@@ -6,6 +6,7 @@ const typography = cva("", {
       primary: ["text-primary-900"],
       secondary: ["text-primary-600"],
       button: ["text-white font-semibold"],
+      error: ["text-xs text-danger-600"],
     },
     size: {
       h1: "text-6xl",

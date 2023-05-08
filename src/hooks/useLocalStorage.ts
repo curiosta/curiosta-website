@@ -1,5 +1,5 @@
 // NOTE: explicitly add keys here so that app does not set or get data from local storage 'accidentally'.
-type LocalStorageKeys = '';
+type LocalStorageKeys = 'cartId';
 
 
 /**
@@ -30,3 +30,5 @@ const useLocalStorage = () => {
 
   return { get: getLocalStorage, set: setLocalStorage };
 };
+
+export default useLocalStorage;

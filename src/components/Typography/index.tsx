@@ -1,11 +1,3 @@
-/**
- * Typography is custom component for h1-h6 and p tag
- * @function
- * @param {string} size for styleSize/styleWeight
- * @param {string} tag for h1-h6 or p tag
- * @param {string} variant for text color
- */
-
 import type { FC, HTMLAttributes } from "preact/compat";
 import { VariantProps, cx } from "class-variance-authority";
 import typography from "./typography.cva";
@@ -37,6 +29,14 @@ type TypographyProps = Omit<
     ellipses?: number;
     tag?: keyof typeof variantsMapping;
   };
+
+/**
+ * Typography is custom component for h1-h6 and p tag
+ * @function
+ * @param {string} size for styleSize/styleWeight
+ * @param {string} tag for h1-h6 or p tag
+ * @param {string} variant for text color
+ */
 
 const Typography: FC<TypographyProps> = ({
   children,

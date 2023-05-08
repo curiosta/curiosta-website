@@ -1,26 +1,49 @@
-import type { HTMLAttributes } from "preact/compat";
-import { useId } from "preact/compat";
+import { Controller, RegisterOptions, ValidationRule, useFormContext } from 'react-hook-form';
+import { forwardRef, useEffect } from 'preact/compat';
+import InputCore, { BaseInputProps } from './core';
 
-interface Props extends HTMLAttributes<HTMLInputElement> {
-  label: string;
-}
 
-const Input = ({ label, ...rest }: Props) => {
-  const id = useId();
-
-  return (
-    <div>
-      <label for={id} class="block text-sm font-medium leading-6 text-gray-900">
-        {label}
-      </label>
-
-      <input
-        id={id}
-        class="block w-full rounded-md border-0 mt-2 p-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-        {...rest}
-      />
-    </div>
-  );
+export type TInputProps = BaseInputProps & Omit<RegisterOptions, 'validate' | 'required'> & {
+  required?: ValidationRule<boolean>;
 };
+
+const Input = forwardRef<HTMLInputElement, TInputProps>(
+  (
+    {
+      rules,
+      value,
+      validator,
+      ...props
+    },
+    ref
+  ) => {
+    const controller = useFormContext();
+
+    useEffect(() => {
+      if (value !== undefined && value !== null && controller && props.name) {
+        controller.setValue(props.name, value, { shouldValidate: true });
+      }
+    }, [value]);
+
+
+    if (!controller) {
+      return <InputCore value={value} {...props} ref={ref} />
+    }
+
+    return (
+      <>
+        <Controller
+          defaultValue=''
+          control={controller.control}
+          name={props.name || ''}
+          rules={{ ...rules, ...props, validate: validator }}
+          render={({ field, fieldState: { error } }) => (
+            <InputCore error={error} {...field} {...props} value={value} rules={rules} ref={ref} />
+          )} />
+      </>
+    );
+  }
+);
+Input.displayName = 'Input';
 
 export default Input;
