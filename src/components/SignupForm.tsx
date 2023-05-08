@@ -15,6 +15,7 @@ const SignupForm = () => {
       });
       console.log(newUser);
       console.log("user created");
+      location.href = "/";
     } catch (err) {
       console.log(err);
     }
