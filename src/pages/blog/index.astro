@@ -3,13 +3,12 @@ import Footer from "@components/Footer.astro";
 import Navbar from "@components/Navbar.astro";
 import Layout from "@layouts/Layout.astro";
 import BlogCard from "@components/BlogCard.astro";
-import { contentfulClient } from "@api/blogs";
+import contentful from "@api/blogs";
 import type { FieldsType } from "contentful";
 import { blogPage, pageTitleDesc } from "content";
 import Typography from "@components/Typography";
-const ContentfulClientModule = await contentfulClient();
 
-const blogsEntries = await ContentfulClientModule?.getEntries({
+const blogsEntries = await contentful.getEntries({
   content_type: "pageBlogPost",
 });
 
