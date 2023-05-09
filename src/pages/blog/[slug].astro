@@ -1,6 +1,6 @@
 ---
 import type { EntrySkeletonType, FieldsType } from "contentful";
-import { contentfulClient } from "@api/blogs";
+import contentful from "@api/blogs";
 import BlogCard from "@components/BlogCard.astro";
 import Footer from "@components/Footer.astro";
 import Navbar from "@components/Navbar.astro";
@@ -12,12 +12,7 @@ import Typography from "@components/Typography";
 const { slug } = Astro.params;
 let post;
 try {
-  const ContentfulClientModule = await contentfulClient();
-
-  const data = await ContentfulClientModule.getEntries<
-    EntrySkeletonType,
-    string
-  >({
+  const data = await contentful.getEntries<EntrySkeletonType, string>({
     content_type: "pageBlogPost",
     "fields.slug": slug,
   });
