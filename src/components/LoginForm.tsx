@@ -13,11 +13,7 @@ const LoginForm = () => {
     try {
       const { email, password } = data;
       const user = await loginUser({ email, password });
-      console.log(user);
       set("custId", user.customer.id);
-      medusa.auth.getSession().then(({ customer }) => {
-        console.log(customer.id);
-      });
       // location.href = "/";
     } catch (error) {
       console.log(error);

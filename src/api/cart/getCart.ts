@@ -4,10 +4,9 @@ import useLocalStorage from "src/hooks/useLocalStorage";
 const getCart = async () => {
   const { get } = useLocalStorage();
 
-  const cartId = get<string>("cartId");
+  const cartId: string = get("cartId");
   if (!cartId) return null;
-  const result = await medusa.carts.retrieve(cartId);
-  console.log(result, "res");
+  await medusa.carts.retrieve(cartId);
 };
 
 export default getCart;

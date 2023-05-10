@@ -7,14 +7,12 @@ const SignupForm = () => {
   const handleCreateUser = async (data: User) => {
     try {
       const { first_name, last_name, email, password } = data;
-      const newUser = await createUser({
+      await createUser({
         first_name,
         last_name,
         email,
         password,
       });
-      console.log(newUser);
-      console.log("user created");
       location.href = "/";
     } catch (err) {
       console.log(err);
