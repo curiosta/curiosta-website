@@ -18,6 +18,7 @@ const typography = cva("", {
       subheading: "text-xl",
       body1: "text-base",
       body2: "text-sm",
+      small: 'text-xs'
     },
     weight: {
       light: ["font-thin"],

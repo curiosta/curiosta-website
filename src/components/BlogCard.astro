@@ -1,4 +1,6 @@
 ---
+import Chip from "./Chip";
+import Tooltip from "./Tooltip";
 const { title, slug, date, description, image } = Astro.props;
 ---
 
@@ -19,8 +21,13 @@ const { title, slug, date, description, image } = Astro.props;
       <time datetime="2020-03-16" class="text-gray-500">{date}</time>
       <a
         href={`/blog/${slug}`}
-        class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100"
-        >Marketing</a
+        >
+        <Tooltip client:only="preact" content={title}>
+          <Chip>
+            Marketing
+          </Chip>
+        </Tooltip>
+        </a
       >
     </div>
     <div class="group relative">
