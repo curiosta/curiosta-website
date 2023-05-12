@@ -61,32 +61,32 @@ interface Variants {
 export interface Product {
   id: string;
   title: string;
-  subtitle: string;
-  status: string;
-  external_id: string | null;
-  description: string;
-  handle: string;
-  is_giftcard: boolean;
-  discountable: boolean;
-  thumbnail: string | null;
-  profile_id: string;
-  collection_id: string | null;
-  type_id: string | null;
-  weight: number | null;
-  length: number | null;
-  height: number | null;
-  width: number | null;
-  hs_code: string | null;
-  origin_country: string | null;
-  mid_code: string | null;
-  material: string;
-  created_at: string;
-  updated_at: string;
-  deleted_at: string | null;
-  metadata: any | null;
+  subtitle?: string;
+  status?: string;
+  external_id?: string | null;
+  description?: string;
+  handle?: string;
+  is_giftcard?: boolean;
+  discountable?: boolean;
+  thumbnail?: string;
+  profile_id?: string;
+  collection_id?: string | null;
+  type_id?: string | null;
+  weight?: number | null;
+  length?: number | null;
+  height?: number | null;
+  width?: number | null;
+  hs_code?: string | null;
+  origin_country?: string | null;
+  mid_code?: string | null;
+  material?: string;
+  created_at?: string;
+  updated_at?: string;
+  deleted_at?: string | null;
+  metadata?: any | null;
   variants: Variants[];
-  options: any[];
-  images: {
+  options?: any[];
+  images?: {
     id: string;
     created_at: string;
     updated_at: string;
@@ -94,7 +94,7 @@ export interface Product {
     url: string;
     metadata: any | null;
   }[];
-  tags: string[];
-  collection: any;
-  type: any;
+  tags?: string[];
+  collection?: any;
+  type?: any;
 }
