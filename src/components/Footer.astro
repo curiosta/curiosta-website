@@ -1,6 +1,40 @@
 ---
 import { companyInfo, socialLinks } from "content";
 import Typography from "./Typography";
+
+const aboutPages = [
+  {
+    title: "About Us",
+    link: "/about",
+  },
+  {
+    title: "Contact Us",
+    link: "/about/contact",
+  },
+];
+
+const legalPages = [
+  {
+    title: "Shipping policy",
+    link: "/legal/shipping-policy",
+  },
+  {
+    title: "Privacy Policy",
+    link: "/lega;/privacy-policy",
+  },
+  {
+    title: "Return policy",
+    link: "/legal/return-policy",
+  },
+  {
+    title: "Terms and condition",
+    link: "/legal/terms",
+  },
+  {
+    title: "Refund and Cancellation",
+    link: "/legal/refund-cancellation",
+  },
+];
 ---
 
 <footer class="bg-[#fbfbfb]" aria-labelledby="footer-heading">
@@ -122,136 +156,21 @@ import Typography from "./Typography";
               variant="primary"
               className=" leading-6"
             >
-              Solutions
+              About
             </Typography>
-            <ul role="list" class="mt-6 space-y-4">
-              <li>
-                <a
-                  href="#"
-                  class="text-sm leading-6 text-gray-600 hover:text-gray-900"
-                  >Marketing</a
-                >
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  class="text-sm leading-6 text-gray-600 hover:text-gray-900"
-                  >Analytics</a
-                >
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  class="text-sm leading-6 text-gray-600 hover:text-gray-900"
-                  >Commerce</a
-                >
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  class="text-sm leading-6 text-gray-600 hover:text-gray-900"
-                  >Insights</a
-                >
-              </li>
-            </ul>
-          </div>
-          <div class="mt-10 md:mt-0">
-            <Typography
-              tag="h3"
-              size="body2/semi-bold"
-              variant="primary"
-              className=" leading-6"
-            >
-              Support
-            </Typography>
-            <ul role="list" class="mt-6 space-y-4">
-              <li>
-                <a
-                  href="#"
-                  class="text-sm leading-6 text-gray-600 hover:text-gray-900"
-                  >Pricing</a
-                >
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  class="text-sm leading-6 text-gray-600 hover:text-gray-900"
-                  >Documentation</a
-                >
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  class="text-sm leading-6 text-gray-600 hover:text-gray-900"
-                  >Guides</a
-                >
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  class="text-sm leading-6 text-gray-600 hover:text-gray-900"
-                  >API Status</a
-                >
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="md:grid md:grid-cols-2 md:gap-8">
-          <div>
-            <Typography
-              tag="h3"
-              size="body2/semi-bold"
-              variant="primary"
-              className=" leading-6"
-            >
-              Company
-            </Typography>
-            <ul role="list" class="mt-6 space-y-4">
-              <li>
-                <a
-                  href="#"
-                  class="text-sm leading-6 text-gray-600 hover:text-gray-900"
-                  >About</a
-                >
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  class="text-sm leading-6 text-gray-600 hover:text-gray-900"
-                  >Blog</a
-                >
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  class="text-sm leading-6 text-gray-600 hover:text-gray-900"
-                  >Jobs</a
-                >
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  class="text-sm leading-6 text-gray-600 hover:text-gray-900"
-                  >Press</a
-                >
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  class="text-sm leading-6 text-gray-600 hover:text-gray-900"
-                  >Partners</a
-                >
-              </li>
+            <ul role="list" class="mt-4 space-y-2">
+              {
+                aboutPages.map((page) => (
+                  <li>
+                    <a
+                      href={page.link}
+                      class="text-sm leading-6 text-gray-600 hover:text-gray-900"
+                    >
+                      {page.title}
+                    </a>
+                  </li>
+                ))
+              }
             </ul>
           </div>
           <div class="mt-10 md:mt-0">
@@ -263,30 +182,19 @@ import Typography from "./Typography";
             >
               Legal
             </Typography>
-            <ul role="list" class="mt-6 space-y-4">
-              <li>
-                <a
-                  href="#"
-                  class="text-sm leading-6 text-gray-600 hover:text-gray-900"
-                  >Claim</a
-                >
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  class="text-sm leading-6 text-gray-600 hover:text-gray-900"
-                  >Privacy</a
-                >
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  class="text-sm leading-6 text-gray-600 hover:text-gray-900"
-                  >Terms</a
-                >
-              </li>
+            <ul role="list" class="mt-4 space-y-2">
+              {
+                legalPages.map((page) => (
+                  <li>
+                    <a
+                      href={page.link}
+                      class="text-sm leading-6 text-gray-600 hover:text-gray-900"
+                    >
+                      {page.title}
+                    </a>
+                  </li>
+                ))
+              }
             </ul>
           </div>
         </div>
