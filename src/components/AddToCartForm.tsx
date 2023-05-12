@@ -6,20 +6,12 @@ import { Signal, signal } from "@preact/signals";
 import Typography from "@components/Typography";
 import { addLineItem } from "@api/cart/addLineItem";
 import { createCart } from "@api/cart/createCart";
+import type { Product } from "@api/product/index.d";
+import { getUser } from "@api/user/getUser";
+import useLocalStorage from "@hooks/useLocalStorage";
 
 interface Props {
-  productId: string;
-  productTitle: string;
-  productImage: string;
-  productVariants: {
-    id: string;
-    title: string;
-    inventory_quantity: number;
-    prices: {
-      currency_code: string;
-      amount: number;
-    }[];
-  }[];
+  product: Product;
   selectedVariant: {
     id: Signal<string | undefined>;
     title: Signal<string | undefined>;
@@ -29,15 +21,14 @@ interface Props {
 
 const isPopUp = signal(false);
 
-const AddToCartForm = ({
-  productTitle,
-  productImage,
-  productVariants,
-  selectedVariant,
-}: Props) => {
+const AddToCartForm = ({ product, selectedVariant }: Props) => {
+  const { get, set } = useLocalStorage();
+
   const handleAddCart = async (e: ChangeEvent) => {
     e.preventDefault();
-    const localCartId = localStorage.getItem("cartId");
+    await getUser();
+    const localCartId: string = get("cartId");
+    const localRegion = get("region");
     if (selectedVariant.id.value) {
       if (localCartId) {
         const res = await addLineItem({
@@ -49,11 +40,12 @@ const AddToCartForm = ({
         cart.value = res.cart;
       } else {
         const res = await createCart({
+          region_id: localRegion?.id,
           variant_id: selectedVariant.id.value,
           quantity: 1,
         });
 
-        localStorage.setItem("cartId", res.cart.id);
+        set("cartId", res.cart.id);
         cart.value = res.cart;
       }
     }
@@ -65,7 +57,7 @@ const AddToCartForm = ({
     <div class="mt-6 ">
       <form onSubmit={handleAddCart}>
         <ProductVariants
-          productVariants={productVariants}
+          productVariants={product.variants}
           selectedVariant={selectedVariant}
         />
         <div class="sm:flex-col1 mt-10 flex gap-8 max-w-xs">
@@ -96,9 +88,13 @@ const AddToCartForm = ({
         </span>
         <div class="flex flex-col bg-white w-1/2 p-3 rounded-md ">
           <div class="flex  items-center gap-4 mb-4 pt-3 ">
-            <img src={productImage} alt="" class={" w-20  object-cover  "} />
+            <img
+              src={product.thumbnail ?? undefined}
+              alt=""
+              class={" w-20  object-cover  "}
+            />
             <div>
-              <Typography size="body1/medium">{productTitle}</Typography>
+              <Typography size="body1/medium">{product.title}</Typography>
               <Typography> Variant: {selectedVariant.title}</Typography>
               <Typography> Price: ${selectedVariant.price}</Typography>
               <Typography size="body1/medium" className="text-green-500 ">
