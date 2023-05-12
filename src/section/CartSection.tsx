@@ -6,9 +6,14 @@ import {
   removeCartItem,
 } from "@store/cartStore";
 import Button from "@components/Button";
+import useLocalStorage from "@hooks/useLocalStorage";
+import { CurrencyMap, currencyMap } from "@components/CurrencyMap";
 
 const CartSection = () => {
-  localStorage.setItem("cart", JSON.stringify(cart.value));
+  const { set } = useLocalStorage();
+  set("cart", cart.value);
+
+  const currency = cart.value.region?.currency_code as keyof CurrencyMap;
 
   return (
     <section aria-labelledby="cart-heading" class="lg:col-span-7">
@@ -56,7 +61,8 @@ const CartSection = () => {
                       size="body2/medium"
                       className="mt-1"
                     >
-                      ${item.unit_price}
+                      {currencyMap[currency]}
+                      {(item.unit_price / 100).toFixed(2)}
                     </Typography>
                   </div>
 

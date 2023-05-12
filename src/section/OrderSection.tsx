@@ -1,8 +1,10 @@
 import Button from "@components/Button";
+import { CurrencyMap, currencyMap } from "@components/CurrencyMap";
 import Typography from "@components/Typography";
 import { cart } from "@store/cartStore";
 
 const OrderSection = () => {
+  const currency = cart.value.region?.currency_code as keyof CurrencyMap;
   return (
     <section
       aria-labelledby="summary-heading"
@@ -23,7 +25,8 @@ const OrderSection = () => {
         <div class="flex items-center justify-between">
           <dt class="text-sm text-gray-600">Subtotal</dt>
           <dd class="text-sm font-medium text-gray-900">
-            ${cart.value.subtotal}
+            {currencyMap[currency]}
+            {(cart.value.subtotal / 100).toFixed(2)}
           </dd>
         </div>
         <div class="flex items-center justify-between border-t border-gray-200 pt-4">
@@ -51,7 +54,8 @@ const OrderSection = () => {
             </a>
           </dt>
           <dd class="text-sm font-medium text-gray-900">
-            ${cart.value.shipping_total}
+            {currencyMap[currency]}
+            {(cart.value.shipping_total / 100).toFixed(2)}
           </dd>
         </div>
         <div class="flex items-center justify-between border-t border-gray-200 pt-4">
@@ -79,13 +83,15 @@ const OrderSection = () => {
             </a>
           </dt>
           <dd class="text-sm font-medium text-gray-900">
-            ${cart.value.tax_total}
+            {currencyMap[currency]}
+            {(cart.value.tax_total / 100).toFixed(2)}
           </dd>
         </div>
         <div class="flex items-center justify-between border-t border-gray-200 pt-4">
           <dt class="text-base font-medium text-gray-900">Order total</dt>
           <dd class="text-base font-medium text-gray-900">
-            ${cart.value.total}
+            {currencyMap[currency]}
+            {(cart.value.total / 100).toFixed(2)}
           </dd>
         </div>
       </dl>

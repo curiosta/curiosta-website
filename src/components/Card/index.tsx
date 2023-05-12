@@ -1,27 +1,22 @@
 import Typography from "@components/Typography";
+import type { Product } from "@api/product/index.d";
+import { CurrencyMap, currencyMap } from "@components/CurrencyMap";
+import useLocalStorage from "@hooks/useLocalStorage";
 
-interface Props {
-  title: string;
-  shortDescription: string;
-  imageSrc: string;
-  id: string;
-  variants: {
-    id: string;
-    title: string;
-    prices: {
-      currency_code: string;
-      amount: number;
-    }[];
-  }[];
-}
+const Card = ({ id, thumbnail, title, description, variants }: Product) => {
+  const { get } = useLocalStorage();
+  const localRegion = get("region");
+  const amount = variants[0].prices.find(
+    (item) => item.currency_code === localRegion?.curr_code
+  )?.amount;
+  const currency = localRegion?.curr_code as keyof CurrencyMap;
 
-const Card = ({ id, imageSrc, title, shortDescription, variants }: Props) => {
   return (
     <div class="card">
       <div class="group relative">
         <div class="h-56 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:h-72 xl:h-80">
           <img
-            src={imageSrc}
+            src={thumbnail ?? undefined}
             alt={title}
             class="h-full w-full object-cover object-center"
           />
@@ -33,10 +28,11 @@ const Card = ({ id, imageSrc, title, shortDescription, variants }: Props) => {
           </a>
         </Typography>
         <Typography size="body2/normal" variant="secondary" className="mt-1 ">
-          {shortDescription.slice(0, 30) + "..."}
+          {description?.slice(0, 30) + "..." || "N/A"}
         </Typography>
         <Typography size="body2/medium" variant="primary" className="mt-1 ">
-          ${variants[0].prices[1].amount / 100}
+          {currencyMap[currency]}
+          {amount ? (amount / 100).toFixed(2) : "N/A"}
         </Typography>
       </div>
     </div>

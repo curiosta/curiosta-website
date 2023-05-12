@@ -1,38 +1,28 @@
 import { useSignal } from "@preact/signals";
 import AddToCartForm from "@components/AddToCartForm";
 import Typography from "@components/Typography";
+import type { Product } from "@api/product/index.d";
+import useLocalStorage from "@hooks/useLocalStorage";
+import { CurrencyMap, currencyMap } from "./CurrencyMap";
 
 interface Props {
-  productId: string;
-  product: {
-    title: string;
-    description: string;
-    imageSrc: string;
-    id: string;
-    images: {
-      url: string;
-    }[];
-    variants: {
-      id: string;
-      title: string;
-      inventory_quantity: number;
-      prices: {
-        currency_code: string;
-        amount: number;
-      }[];
-    }[];
-  };
+  product: Product;
 }
 
-const ProductInfo = ({ product, productId }: Props) => {
-  const defaultVariant = product.variants.at(0);
+const ProductInfo = ({ product }: Props) => {
+  const defaultVariant = product?.variants?.at(0);
+  const { get } = useLocalStorage();
+  const localRegion = get("region");
+
+  const amount = defaultVariant?.prices.find(
+    (item) => item.currency_code === localRegion?.curr_code
+  )?.amount;
+  const currency = localRegion?.curr_code as keyof CurrencyMap;
 
   const selectedVariant = {
     id: useSignal(defaultVariant?.id),
     title: useSignal(defaultVariant?.title),
-    price: useSignal(
-      defaultVariant?.prices[1].amount && defaultVariant?.prices[1].amount / 100
-    ),
+    price: useSignal(amount),
   };
 
   return (
@@ -43,7 +33,7 @@ const ProductInfo = ({ product, productId }: Props) => {
         variant="primary"
         className="tracking-tight"
       >
-        {product.title}
+        {product?.title || "N/A"}
       </Typography>
       <div class="mt-3">
         <Typography className="sr-only">Product information</Typography>
@@ -53,7 +43,10 @@ const ProductInfo = ({ product, productId }: Props) => {
           variant="primary"
           className="tracking-tight"
         >
-          ${selectedVariant.price.value}
+          {currencyMap[currency]}
+          {selectedVariant.price.value
+            ? (selectedVariant.price?.value / 100).toFixed(2)
+            : "N/A"}
         </Typography>
       </div>
       {/* Reviews  */}
@@ -87,17 +80,13 @@ const ProductInfo = ({ product, productId }: Props) => {
         <Typography className="sr-only">Description</Typography>
 
         <div class="space-y-6 text-base text-gray-700">
-          <Typography>{product.description}</Typography>
+          <Typography>
+            {product?.description || "Description not available!"}
+          </Typography>
         </div>
       </div>
 
-      <AddToCartForm
-        productId={productId}
-        productTitle={product.title}
-        productImage={product.images[0].url}
-        productVariants={product.variants}
-        selectedVariant={selectedVariant}
-      />
+      <AddToCartForm product={product} selectedVariant={selectedVariant} />
 
       <section aria-labelledby="details-heading" class="mt-12">
         <Typography id="details-heading" className="sr-only">
