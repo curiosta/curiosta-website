@@ -1,0 +1,14 @@
+---
+import Layout from "./Layout.astro";
+import Navbar from "@components/Navbar.astro";
+import Footer from "@components/Footer.astro";
+const { frontmatter } = Astro.props;
+---
+
+<Layout title={frontmatter.title} description={frontmatter.description}>
+  <Navbar />
+  <main class="bg-white py-24 sm:py-32 mx-auto max-w-[80%] px-6 lg:px-8">
+    <slot />
+  </main>
+  <Footer />
+</Layout>
