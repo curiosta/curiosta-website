@@ -88,7 +88,7 @@ const navLinks = [
         Join Now
       </a>
       <!-- Cart -->
-      <NavCartItem client:load />
+      <NavCartItem client:only="preact" />
     </div>
   </nav>
   {/* Mobile menu, show/hide based on menu open state. */}
@@ -153,7 +153,7 @@ const navLinks = [
             </a>
 
             <!-- Cart -->
-            <NavCartItem client:load />
+            <NavCartItem client:only="preact" />
           </div>
         </div>
       </div>

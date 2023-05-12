@@ -1,39 +1,29 @@
 import Typography from '@components/Typography';
+import type { VariantProps } from 'class-variance-authority';
 import type { h } from 'preact';
-import { useEffect, useRef } from 'preact/hooks';
+import tooltip from './tooltip.cva';
+import { cx } from 'class-variance-authority';
+import { createPortal } from 'preact/compat';
 
-type TooltipProps = {
+type TooltipProps = VariantProps<typeof tooltip> & {
   children: h.JSX.Element;
   content: string;
 }
 
-const TOOLTIP_OFFSET = 5;
-
-const Tooltip = ({ children, content }: TooltipProps) => {
-  const tooltipRef = useRef<HTMLSpanElement>(null)
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const onMouseEnter = (event: MouseEvent) => {
-    if (!containerRef.current || !tooltipRef.current) return;
-    const { left, top, width: containerWidth, height: containerHeight } = containerRef.current.getBoundingClientRect();
-    const { width } = tooltipRef.current.getBoundingClientRect();
-
-    let finalLeft = undefined;
-    let finalTop = undefined;
-    if (width + left > window.innerWidth) {
-      finalLeft = (-(left + width));
-    }
-    finalLeft && (tooltipRef.current.style.left = finalLeft + 'px')
-  }
+const Tooltip = ({ children, content, placement }: TooltipProps) => {
 
   return (
-    <div ref={containerRef} onMouseEnter={onMouseEnter} className="group relative">
+    <div className="group relative">
       {children}
-      <span ref={tooltipRef} className="absolute px-4 py-2 pointer-events-none opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all bg-gray-900 text-white rounded-md z-50">
-        <Typography className="whitespace-pre" size='small/normal'>
-          {content}
-        </Typography>
-      </span>
+      {createPortal(
+        <span className={cx(tooltip({ placement }))}>
+          <Typography className="whitespace-pre" size='small/normal'>
+            {content}
+          </Typography>
+          <svg class="absolute text-black h-2 w-full left-0 top-full" x="0px" y="0px" viewBox="0 0 255 255" xmlSpace="preserve"><polygon class="fill-current" points="0,0 127.5,127.5 255,0" /></svg>
+        </span>,
+        document.body
+      )}
     </div>
   );
 };
