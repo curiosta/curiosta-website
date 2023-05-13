@@ -15,7 +15,7 @@ const products = res?.products;
 >
   <Navbar />
   <main class="bg-white">
-    <ProductSection products={products} page={"Productpage"} />
+    <ProductSection products={products} page={"Productpage"} client:load />
   </main>
   <Footer />
 </Layout>
