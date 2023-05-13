@@ -15,6 +15,9 @@ export type Cart = {
       product_id: string;
     };
   }[];
+  region: {
+    currency_code: string;
+  };
   subtotal: number;
   shipping_total: number;
   tax_total: number;
