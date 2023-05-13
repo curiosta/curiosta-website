@@ -1,5 +1,5 @@
 // NOTE: explicitly add keys here so that app does not set or get data from local storage 'accidentally'.
-type LocalStorageKeys = "cartId" | "custId";
+type LocalStorageKeys = "cartId" | "cart" | "custId" | "region";
 
 /**
  * A custom hook to simplify the usage of the local storage.
