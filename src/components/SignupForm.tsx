@@ -1,9 +1,11 @@
 import { User, createUser } from "@api/user/createUser";
 import Input from "@components/Input";
 import Button from "@components/Button";
-import FormControl from "./FormControl";
+import FormControl from "@components/FormControl";
+import useLocalStorage from "@hooks/useLocalStorage";
 
 const SignupForm = () => {
+  const { set } = useLocalStorage();
   const handleCreateUser = async (data: User) => {
     try {
       const { first_name, last_name, email, password } = data;
@@ -13,9 +15,8 @@ const SignupForm = () => {
         email,
         password,
       });
-      console.log(newUser);
-      console.log("user created");
-      location.href = "/";
+      set("custId", newUser.customer.id);
+      history.back();
     } catch (err) {
       console.log(err);
     }

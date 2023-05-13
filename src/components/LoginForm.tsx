@@ -4,7 +4,6 @@ import Checkbox from "@components/Checkbox";
 import FormControl from "@components/FormControl";
 import { LoginUser, loginUser } from "@api/user/loginUser";
 import useLocalStorage from "@hooks/useLocalStorage";
-import medusa from "@api/medusa";
 
 const LoginForm = () => {
   const { set } = useLocalStorage();
@@ -13,12 +12,8 @@ const LoginForm = () => {
     try {
       const { email, password } = data;
       const user = await loginUser({ email, password });
-      console.log(user);
       set("custId", user.customer.id);
-      medusa.auth.getSession().then(({ customer }) => {
-        console.log(customer.id);
-      });
-      // location.href = "/";
+      history.back();
     } catch (error) {
       console.log(error);
     }
