@@ -1,21 +1,9 @@
 import Card from "@components/Card";
 import Typography from "@components/Typography";
+import type { Product } from "@api/product/index.d";
 
 interface Props {
-  products: {
-    title: string;
-    thumbnail: string;
-    description: string;
-    id: string;
-    variants: {
-      id: string;
-      title: string;
-      prices: {
-        currency_code: string;
-        amount: number;
-      }[];
-    }[];
-  }[];
+  products: Product[];
   page: "Homepage" | "Productpage";
 }
 
@@ -50,9 +38,9 @@ const ProductSection = ({ products, page }: Props) => {
         {products.map((product) => (
           <Card
             id={product.id}
-            imageSrc={product.thumbnail}
+            thumbnail={product.thumbnail}
             title={product.title}
-            shortDescription={product.description}
+            description={product.description}
             variants={product.variants}
           />
         ))}
