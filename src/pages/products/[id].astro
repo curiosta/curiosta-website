@@ -25,7 +25,7 @@ const { product } = productId ? await getProduct(productId) : null;
         <!-- Product info -->
         {
           productId ? (
-            <ProductInfo productId={productId} product={product} client:load />
+            <ProductInfo product={product} client:load />
           ) : (
             "No product found"
           )
