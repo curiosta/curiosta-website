@@ -5,9 +5,13 @@ import Footer from "@components/Footer.astro";
 import CartSection from "@section/CartSection";
 import OrderSection from "@section/OrderSection";
 import Typography from "@components/Typography";
+import { pageTitleDesc } from "content";
 ---
 
-<Layout title="Cart" description="Cart page">
+<Layout
+  title={pageTitleDesc.cart.title}
+  description={pageTitleDesc.cart.description}
+>
   <Navbar />
   <main class="bg-white">
     <div

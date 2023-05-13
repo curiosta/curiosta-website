@@ -48,6 +48,10 @@ export const pageTitleDesc = {
     title: "Curiosta....",
     description: "where inovation begines",
   },
+  cart: {
+    title: "Cart",
+    description: "Cart page",
+  },
   blog: {
     title: "blog",
     description: "Curiosta blog",
