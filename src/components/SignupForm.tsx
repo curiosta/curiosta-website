@@ -76,7 +76,7 @@ const SignupForm = () => {
         required={{ message: "Password is required!", value: true }}
         autocomplete="current-password"
         minLength={6}
-        placeholder={"********"}
+        placeholder="Enter password"
       />
 
       <Button type="submit" variant="primary" className="mt-4">
