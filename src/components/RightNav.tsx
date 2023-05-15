@@ -1,14 +1,16 @@
 import { cart } from "@store/cartStore";
 import Button from "./Button";
 import { logoutUser } from "@api/user/logoutUser";
+import useLocalStorage from "@hooks/useLocalStorage";
 
 const RightNav = () => {
+  const { get } = useLocalStorage();
   const totalCartItems = cart.value?.items?.reduce(
     (acc, curVal) => acc + curVal.quantity,
     0
   );
 
-  const localCustId = localStorage.getItem("custId");
+  const localCustId = get("custId");
 
   const handleLogout = async () => {
     await logoutUser();

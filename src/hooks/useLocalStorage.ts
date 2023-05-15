@@ -18,10 +18,18 @@ const useLocalStorage = () => {
     }
   };
 
-  const getLocalStorage = (key: LocalStorageKeys) => {
+  const getLocalStorage = <ReturnPayloadType = string>(
+    key: LocalStorageKeys
+  ) => {
     try {
-      const value = localStorage.getItem(key);
-      return value ? JSON.parse(value) : null;
+      let value = localStorage.getItem(key);
+      if (value === null) {
+        return null;
+      }
+      try {
+        value = JSON.parse(value);
+      } catch (error) {}
+      return value as ReturnPayloadType | null;
     } catch (error) {
       console.warn(`Error getting local storage key "${key}": `, error);
       return null;
