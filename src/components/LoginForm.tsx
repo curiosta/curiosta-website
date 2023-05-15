@@ -47,7 +47,7 @@ const LoginForm = () => {
         autocomplete="current-password"
         required
         minLength={6}
-        placeholder={"********"}
+        placeholder="Your Curiosta password"
       />
       <div class="flex items-center justify-between">
         <Checkbox name="remember-me" type="checkbox" label="Remember me" />

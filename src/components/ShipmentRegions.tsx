@@ -25,7 +25,7 @@ const ShipmentRegions = ({ regions }: Props) => {
   });
 
   return (
-    <div class="flex items-center gap-2">
+    <div class="hidden lg:flex items-center gap-2">
       <label
         htmlFor="location"
         className="block text-sm font-medium leading-6 text-gray-900"
