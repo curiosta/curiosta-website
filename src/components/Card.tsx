@@ -1,5 +1,4 @@
 import Typography from "@components/Typography";
-import Tooltip from "./Tooltip";
 
 interface Props {
   title: string;
