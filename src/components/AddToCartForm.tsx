@@ -103,7 +103,7 @@ const AddToCartForm = ({ product, selectedVariant }: Props) => {
                 Price: {currencyMap[currency]}
                 {selectedVariant.price.value
                   ? (selectedVariant.price?.value / 100).toFixed(2)
-                  : "N/A"}
+                  : "Price not available"}
               </Typography>
               <Typography size="body1/medium" className="text-green-500 ">
                 Added to cart

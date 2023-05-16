@@ -33,7 +33,7 @@ const ProductInfo = ({ product }: Props) => {
         variant="primary"
         className="tracking-tight"
       >
-        {product?.title || "N/A"}
+        {product?.title || "Product has no title"}
       </Typography>
       <div class="mt-3">
         <Typography className="sr-only">Product information</Typography>
@@ -46,7 +46,7 @@ const ProductInfo = ({ product }: Props) => {
           {currencyMap[currency]}
           {selectedVariant.price.value
             ? (selectedVariant.price?.value / 100).toFixed(2)
-            : "N/A"}
+            : "Price not available"}
         </Typography>
       </div>
       {/* Reviews  */}
