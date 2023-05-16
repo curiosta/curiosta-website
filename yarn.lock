@@ -579,10 +579,10 @@
   resolved "https://registry.yarnpkg.com/@ljharb/has-package-exports-patterns/-/has-package-exports-patterns-0.0.2.tgz#c1718939b65efa1f45f53686c2fcfa992b9fb68f"
   integrity sha512-4/RWEeXDO6bocPONheFe6gX/oQdP/bEpv0oL4HqjPP5DCenBSt0mHgahppY49N0CpsaqffdwPq+TlX9CYOq2Dw==
 
-"@medusajs/medusa-js@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@medusajs/medusa-js/-/medusa-js-3.0.0.tgz#0ccacbede0f64f826c51d1d5406484ca5b56863c"
-  integrity sha512-oYcHyJ3RCOdQscZVBXGG8JO/GcGs/8kV2UxQy1T5tF6V+HHzazI90zeldxGYtq6XEugb70pLrzsgiPxxSQ2KMw==
+"@medusajs/medusa-js@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@medusajs/medusa-js/-/medusa-js-5.0.0.tgz#2e93deda5701bd8385209d6fda510aa58e4f1d46"
+  integrity sha512-LAqfazDSIs2LIqlq8Q/fF+WYTYmDlfh3aIWwqHVwFOLHbkYKh17FGFVtdKqmcviGazUmtLe0VhBTfGt7gz7tZA==
   dependencies:
     axios "^0.24.0"
     qs "^6.10.3"
