@@ -9,7 +9,8 @@ module.exports = {
         danger: colors.red
       },
       textColor: {
-        primary: colors.gray
+        primary: colors.gray,
+        'app-primary': colors.indigo
       }
     }
   },

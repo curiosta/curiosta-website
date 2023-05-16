@@ -2,19 +2,21 @@ import { removeLineItem } from "@api/removeLineItem";
 import { updateLineItem } from "@api/updateLineItem";
 import { signal } from "@preact/signals";
 
+export type CartItem = {
+  id: string;
+  description: string;
+  quantity: number;
+  thumbnail: string;
+  unit_price: number;
+  title: string;
+  variant: {
+    product_id: string;
+  };
+}
+
 export type Cart = {
   id: string;
-  items: {
-    id: string;
-    description: string;
-    quantity: number;
-    thumbnail: string;
-    unit_price: number;
-    title: string;
-    variant: {
-      product_id: string;
-    };
-  }[];
+  items: CartItem[];
   subtotal: number;
   shipping_total: number;
   tax_total: number;
@@ -27,6 +29,7 @@ if (typeof window !== "undefined") {
 }
 
 export const cart = signal<Cart>(localData ?? []);
+export const cartOpen = signal<boolean>(false);
 
 export async function increaseCartItem(
   cardId: string,

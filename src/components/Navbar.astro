@@ -1,5 +1,6 @@
 ---
 import NavCartItem from "./NavCartItem";
+import CartDrawer from "./CartDrawer";
 
 const navLinks = [
   {
@@ -89,6 +90,7 @@ const navLinks = [
       </a>
       <!-- Cart -->
       <NavCartItem client:only="preact" />
+      <CartDrawer client:only="preact" />
     </div>
   </nav>
   {/* Mobile menu, show/hide based on menu open state. */}
@@ -172,4 +174,5 @@ const navLinks = [
   closeMenu.addEventListener("click", () => {
     navLinks.style.display = "none";
   });
+  
 </script>

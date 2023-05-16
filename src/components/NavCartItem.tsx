@@ -1,13 +1,15 @@
-import { cart } from "@store/cartStore";
+import { cart, cartOpen } from "@store/cartStore";
+
 const NavCartItem = () => {
   const totalCartItems = cart.value?.items?.reduce(
     (acc, curVal) => acc + curVal.quantity,
     0
   );
 
+
   return (
     <div class="ml-4 flow-root lg:ml-6">
-      <a href="/cart" class="group -m-2 flex items-center p-2">
+      <a href="#" class="group -m-2 flex items-center p-2" onClick={(e) => { e.preventDefault(); cartOpen.value = true }}>
         <svg
           class="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
           fill="none"
@@ -27,7 +29,7 @@ const NavCartItem = () => {
         </span>
         <span class="sr-only">items in cart, view bag</span>
       </a>
-    </div>
+    </div >
   );
 };
 
