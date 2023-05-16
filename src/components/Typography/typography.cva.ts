@@ -16,7 +16,7 @@ const typography = cva("", {
       h4: "text-3xl",
       h5: "text-2xl",
       h6: "text-xl",
-      subheading: "text-xl",
+      subheading: "text-lg",
       body1: "text-base",
       body2: "text-sm",
       small: 'text-xs'
@@ -26,6 +26,7 @@ const typography = cva("", {
       normal: ["font-normal"],
       medium: ["font-medium"],
       bold: ["font-bold"],
+      "semi-bold": ["font-semibold"],
     },
     disabled: {
       true: ["text-neutral-400 italic"],

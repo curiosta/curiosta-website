@@ -1,12 +1,17 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import CartSection from "@section/CartSection";
-import OrderSection from "@section/OrderSection";
 import Typography from "@components/Typography";
+import { pageTitleDesc } from "content";
+import ProductCart from "@components/ProductCart";
+import OrderSummary from "@components/OrderSummary";
+import Navbar from "@components/Navbar.astro";
 ---
 
-<Layout title="Cart" description="Cart page">
-  <!-- <Navbar /> -->
+<Layout
+  title={pageTitleDesc.cart.title}
+  description={pageTitleDesc.cart.description}
+>
+  <Navbar />
   <main class="bg-white">
     <div
       class="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8"
@@ -22,11 +27,9 @@ import Typography from "@components/Typography";
       <div
         class="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16"
       >
-        <CartSection client:load />
-        <!-- Order summary -->
-        <OrderSection client:load />
+        <ProductCart client:load />
+        <OrderSummary client:load />
       </div>
     </div>
   </main>
-  <!-- <Footer /> -->
 </Layout>

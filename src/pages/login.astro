@@ -1,13 +1,13 @@
 ---
-import SignupForm from "@components/SignupForm";
+import LoginForm from "@components/LoginForm";
 import Typography from "@components/Typography";
 import Layout from "@layouts/Layout.astro";
 import { pageTitleDesc } from "content";
 ---
 
 <Layout
-  title={pageTitleDesc.signup.title}
-  description={pageTitleDesc.signup.description}
+  title={pageTitleDesc.login.title}
+  description={pageTitleDesc.login.description}
 >
   <main>
     <div class="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -23,13 +23,13 @@ import { pageTitleDesc } from "content";
           variant="primary"
           className="mt-6 text-center  leading-9 tracking-tight"
         >
-          Create new account
+          Log in to your account
         </Typography>
       </div>
 
       <div class="mt-6 sm:mx-auto sm:w-full sm:max-w-[480px]">
         <div class="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
-          <SignupForm client:load />
+          <LoginForm client:load />
         </div>
       </div>
     </div>

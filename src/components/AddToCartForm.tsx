@@ -3,22 +3,15 @@ import Button from "@components/Button";
 import { cart, cartOpen } from "@store/cartStore";
 import ProductVariants from "@components/ProductVariants";
 import { Signal, signal } from "@preact/signals";
-import { addLineItem } from "@api/addLineItem";
-import { createCart } from "@api/createCart";
+import { addLineItem } from "@api/cart/addLineItem";
+import { createCart } from "@api/cart/createCart";
+import type { Product } from "@api/product/index.d";
+import { getUser } from "@api/user/getUser";
+import useLocalStorage from "@hooks/useLocalStorage";
+import type { CurrencyMap } from "./CurrencyMap";
 
 interface Props {
-  productId: string;
-  productTitle: string;
-  productImage: string;
-  productVariants: {
-    id: string;
-    title: string;
-    inventory_quantity: number;
-    prices: {
-      currency_code: string;
-      amount: number;
-    }[];
-  }[];
+  product: Product;
   selectedVariant: {
     id: Signal<string | undefined>;
     title: Signal<string | undefined>;
@@ -27,13 +20,16 @@ interface Props {
 }
 const loadingSignal = signal<boolean>(false);
 
-const AddToCartForm = ({
-  productVariants,
-  selectedVariant,
-}: Props) => {
+const AddToCartForm = ({ product, selectedVariant }: Props) => {
+  const { get, set } = useLocalStorage();
+  const localRegion = get<{ id?: string; curr_code?: string }>("region");
+  const currency = localRegion?.curr_code as keyof CurrencyMap;
+  console.log(currency);
   const handleAddCart = async (e: ChangeEvent) => {
     e.preventDefault();
-    const localCartId = localStorage.getItem("cartId");
+    await getUser();
+    const localCartId = get("cartId");
+
     if (selectedVariant.id.value) {
       try {
         loadingSignal.value = true
@@ -47,17 +43,16 @@ const AddToCartForm = ({
           cart.value = res.cart;
         } else {
           const res = await createCart({
+            region_id: localRegion?.id,
             variant_id: selectedVariant.id.value,
             quantity: 1,
           });
 
-          localStorage.setItem("cartId", res.cart.id);
+          set("cartId", res.cart.id);
           cart.value = res.cart;
         }
-        cartOpen.value = true
-      } catch { /* */ } finally {
-        loadingSignal.value = false
-      }
+        cartOpen.value = true;
+      } catch { } finally { loadingSignal.value = false }
     }
   };
   localStorage.setItem("cart", JSON.stringify(cart.value));
@@ -65,7 +60,7 @@ const AddToCartForm = ({
     <div class="mt-6">
       <form onSubmit={handleAddCart}>
         <ProductVariants
-          productVariants={productVariants}
+          productVariants={product.variants}
           selectedVariant={selectedVariant}
         />
         <div class="sm:flex-col1 mt-10 flex gap-8 max-w-xs">

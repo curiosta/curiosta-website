@@ -1,13 +1,12 @@
 ---
-import { listProducts } from "@api/listProducts";
+import { listProducts } from "@api/product/listProducts";
 import Footer from "@components/Footer.astro";
 import Navbar from "@components/Navbar.astro";
+import ProductContainer from "@components/ProductContainer";
 import Layout from "@layouts/Layout.astro";
-import ProductSection from "@section/ProductSection";
 
 const res = await listProducts();
 const products = res?.products;
-// console.log(products);
 ---
 
 <Layout
@@ -16,7 +15,7 @@ const products = res?.products;
 >
   <Navbar />
   <main class="bg-white">
-    <ProductSection products={products} page={"Productpage"} />
+    <ProductContainer products={products} page={"Productpage"} client:load />
   </main>
   <Footer />
 </Layout>

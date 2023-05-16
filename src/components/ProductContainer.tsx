@@ -1,25 +1,13 @@
 import Card from "@components/Card";
 import Typography from "@components/Typography";
+import type { Product } from "@api/product/index.d";
 
 interface Props {
-  products: {
-    title: string;
-    thumbnail: string;
-    description: string;
-    id: string;
-    variants: {
-      id: string;
-      title: string;
-      prices: {
-        currency_code: string;
-        amount: number;
-      }[];
-    }[];
-  }[];
+  products: Product[];
   page: "Homepage" | "Productpage";
 }
 
-const ProductSection = ({ products, page }: Props) => {
+const ProductContainer = ({ products, page }: Props) => {
   return (
     <div class="mx-auto  px-4 py-16 sm:px-6 lg:max-w-7xl lg:px-8">
       <div class="md:flex md:items-center md:justify-between">
@@ -27,7 +15,7 @@ const ProductSection = ({ products, page }: Props) => {
           tag="h5"
           size="h5/bold"
           variant="primary"
-          className=" tracking-tigh"
+          className=" mt-4 tracking-tigh"
         >
           Trending products
         </Typography>
@@ -50,9 +38,9 @@ const ProductSection = ({ products, page }: Props) => {
         {products.map((product) => (
           <Card
             id={product.id}
-            imageSrc={product.thumbnail}
+            thumbnail={product.thumbnail}
             title={product.title}
-            shortDescription={product.description}
+            description={product.description}
             variants={product.variants}
           />
         ))}
@@ -61,4 +49,4 @@ const ProductSection = ({ products, page }: Props) => {
   );
 };
 
-export default ProductSection;
+export default ProductContainer;
