@@ -5,6 +5,15 @@ import { cart } from "@store/cartStore";
 
 const OrderSummary = () => {
   const currency = cart.value.region?.currency_code as keyof CurrencyMap;
+
+  const handleRedirect = () => {
+    if (cart.value.shipping_address_id) {
+      location.href = "/checkout";
+    } else {
+      location.href = "/newAddress";
+    }
+  };
+
   return (
     <section
       aria-labelledby="summary-heading"
@@ -97,7 +106,12 @@ const OrderSummary = () => {
       </dl>
 
       <div class="mt-6">
-        <Button type="submit" title={"checkout"} variant={"primary"}>
+        <Button
+          type="button"
+          title={"checkout"}
+          variant={"primary"}
+          onClick={handleRedirect}
+        >
           Checkout
         </Button>
       </div>
