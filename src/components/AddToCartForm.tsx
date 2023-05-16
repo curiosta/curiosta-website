@@ -24,7 +24,6 @@ const AddToCartForm = ({ product, selectedVariant }: Props) => {
   const { get, set } = useLocalStorage();
   const localRegion = get<{ id?: string; curr_code?: string }>("region");
   const currency = localRegion?.curr_code as keyof CurrencyMap;
-  console.log(currency);
   const handleAddCart = async (e: ChangeEvent) => {
     e.preventDefault();
     await getUser();

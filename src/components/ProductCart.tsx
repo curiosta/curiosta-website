@@ -129,6 +129,7 @@ const ProductCart = () => {
                         </svg>
                       </Button>
                     </div>
+                    {/* remove product from cart */}
                     <div class="absolute right-0 top-0">
                       <Button
                         type="button"

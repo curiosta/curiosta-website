@@ -16,14 +16,14 @@ export type CartItem = {
 
 export type Cart = {
   id: string;
-  items: CartItem[];
-  region: {
+  items?: CartItem[];
+  region?: {
     currency_code: string;
   };
-  subtotal: number;
-  shipping_total: number;
-  tax_total: number;
-  total: number;
+  subtotal?: number;
+  shipping_total?: number;
+  tax_total?: number;
+  total?: number;
 };
 
 let localData = [];

@@ -1,8 +1,5 @@
-export interface CurrencyMap {
-  usd: string;
-  eur: string;
-  inr: string;
-}
+export type SupportedCurrencies = 'usd' | 'eur' | 'inr';
+export type CurrencyMap = Record<SupportedCurrencies, string>
 
 export const currencyMap: CurrencyMap = {
   usd: "$",
