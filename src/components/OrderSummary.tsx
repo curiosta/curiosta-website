@@ -3,7 +3,7 @@ import { CurrencyMap, currencyMap } from "@components/CurrencyMap";
 import Typography from "@components/Typography";
 import { cart } from "@store/cartStore";
 
-const OrderSection = () => {
+const OrderSummary = () => {
   const currency = cart.value.region?.currency_code as keyof CurrencyMap;
   return (
     <section
@@ -105,4 +105,4 @@ const OrderSection = () => {
   );
 };
 
-export default OrderSection;
+export default OrderSummary;

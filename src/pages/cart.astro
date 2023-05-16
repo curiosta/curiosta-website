@@ -2,10 +2,10 @@
 import Navbar from "@components/Navbar.astro";
 import Layout from "@layouts/Layout.astro";
 import Footer from "@components/Footer.astro";
-import CartSection from "@section/CartSection";
-import OrderSection from "@section/OrderSection";
 import Typography from "@components/Typography";
 import { pageTitleDesc } from "content";
+import ProductCart from "@components/ProductCart";
+import OrderSummary from "@components/OrderSummary";
 ---
 
 <Layout
@@ -28,9 +28,8 @@ import { pageTitleDesc } from "content";
       <div
         class="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16"
       >
-        <CartSection client:load />
-        <!-- Order summary -->
-        <OrderSection client:load />
+        <ProductCart client:load />
+        <OrderSummary client:load />
       </div>
     </div>
   </main>

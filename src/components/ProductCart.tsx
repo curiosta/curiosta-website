@@ -9,7 +9,7 @@ import Button from "@components/Button";
 import useLocalStorage from "@hooks/useLocalStorage";
 import { CurrencyMap, currencyMap } from "@components/CurrencyMap";
 
-const CartSection = () => {
+const ProductCart = () => {
   const { set } = useLocalStorage();
   set("cart", cart.value);
 
@@ -197,4 +197,4 @@ const CartSection = () => {
   );
 };
 
-export default CartSection;
+export default ProductCart;
