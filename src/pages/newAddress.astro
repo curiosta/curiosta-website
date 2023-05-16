@@ -1,0 +1,14 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Navbar from "@components/Navbar.astro";
+import Footer from "@components/Footer.astro";
+import ShippingForm from "@components/ShippingForm";
+---
+
+<Layout title="checkout" description="checkout">
+  <Navbar />
+  <main class="bg-white py-24 sm:py-32">
+    <ShippingForm client:load />
+  </main>
+  <Footer />
+</Layout>

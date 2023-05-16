@@ -18,8 +18,8 @@ const ShipmentRegions = ({ regions }: Props) => {
   }>("region");
 
   const selectedRegion = {
-    id: useSignal(localRegion?.id ?? countries[0].region_id),
-    curr_code: useSignal(localRegion?.curr_code ?? ""),
+    id: useSignal(localRegion?.id),
+    curr_code: useSignal(localRegion?.curr_code),
     countryId: useSignal(localRegion?.countryId ?? countries[0].id),
   };
 
@@ -30,12 +30,15 @@ const ShipmentRegions = ({ regions }: Props) => {
         .includes(selectedRegion?.countryId.value)
     )?.currency_code || regions[0].currency_code;
 
+  selectedRegion.id.value = countries.find(
+    (country) => country.id === selectedRegion.countryId.value
+  )?.region_id;
+
   set("region", {
     id: selectedRegion.id.value,
     countryId: selectedRegion.countryId.value,
     curr_code: selectedRegion.curr_code.value,
   });
-
   return (
     <div class="hidden lg:flex items-center gap-2">
       <label

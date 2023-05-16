@@ -20,6 +20,8 @@ export type Cart = {
   region?: {
     currency_code: string;
   };
+  shipping_address: string[];
+  shipping_address_id: string | null;
   subtotal?: number;
   shipping_total?: number;
   tax_total?: number;
