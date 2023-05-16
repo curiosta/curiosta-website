@@ -1,6 +1,5 @@
 ---
 import Chip from "./Chip";
-import Tooltip from "./Tooltip";
 const { title, slug, date, description, image } = Astro.props;
 ---
 
@@ -22,11 +21,9 @@ const { title, slug, date, description, image } = Astro.props;
       <a
         href={`/blog/${slug}`}
         >
-        <Tooltip client:only="preact" content={title}>
           <Chip>
             Marketing
           </Chip>
-        </Tooltip>
         </a
       >
     </div>
