@@ -7,7 +7,7 @@ interface Props {
   page: "Homepage" | "Productpage";
 }
 
-const ProductSection = ({ products, page }: Props) => {
+const ProductContainer = ({ products, page }: Props) => {
   return (
     <div class="mx-auto  px-4 py-16 sm:px-6 lg:max-w-7xl lg:px-8">
       <div class="md:flex md:items-center md:justify-between">
@@ -15,7 +15,7 @@ const ProductSection = ({ products, page }: Props) => {
           tag="h5"
           size="h5/bold"
           variant="primary"
-          className=" tracking-tigh"
+          className=" mt-4 tracking-tigh"
         >
           Trending products
         </Typography>
@@ -49,4 +49,4 @@ const ProductSection = ({ products, page }: Props) => {
   );
 };
 
-export default ProductSection;
+export default ProductContainer;
