@@ -8,19 +8,31 @@ interface Props {
 
 const ShipmentRegions = ({ regions }: Props) => {
   const { set, get } = useLocalStorage();
+
   const countries = regions?.map((region) => region.countries).flat(1);
-  const localRegion = get("region");
+
+  const localRegion = get<{
+    id?: string;
+    curr_code?: string;
+    countryId?: number;
+  }>("region");
+
   const selectedRegion = {
     id: useSignal(localRegion?.id ?? countries[0].region_id),
     curr_code: useSignal(localRegion?.curr_code ?? ""),
+    countryId: useSignal(localRegion?.countryId ?? countries[0].id),
   };
 
-  selectedRegion.curr_code.value = regions.find(
-    (region) => region?.id === selectedRegion?.id.value
-  )?.currency_code;
+  selectedRegion.curr_code.value =
+    regions.find((region) =>
+      region?.countries
+        .map((item) => item.id)
+        .includes(selectedRegion?.countryId.value)
+    )?.currency_code || regions[0].currency_code;
 
   set("region", {
     id: selectedRegion.id.value,
+    countryId: selectedRegion.countryId.value,
     curr_code: selectedRegion.curr_code.value,
   });
 
@@ -37,13 +49,13 @@ const ShipmentRegions = ({ regions }: Props) => {
         name="location"
         className=" block rounded-md border-0 py-1.5  text-gray-900 ring-1 ring-inset ring-gray-300  focus:ring-indigo-600 sm:text-sm sm:leading-6"
         onChange={(e) => {
-          selectedRegion.id.value = e.currentTarget.value;
+          selectedRegion.countryId.value = parseInt(e.currentTarget.value);
           location.reload();
         }}
-        value={selectedRegion.id.value}
+        value={selectedRegion.countryId.value}
       >
         {countries?.map((country) => (
-          <option value={country.region_id}>{country.name}</option>
+          <option value={country.id}>{country.name}</option>
         ))}
       </select>
     </div>
