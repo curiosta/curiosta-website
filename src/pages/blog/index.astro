@@ -5,6 +5,8 @@ import Layout from "@layouts/Layout.astro";
 import BlogCard from "@components/BlogCard.astro";
 import contentful from "@api/blogs";
 import type { FieldsType } from "contentful";
+import { blogPage, pageTitleDesc } from "content";
+import Typography from "@components/Typography";
 
 const blogsEntries = await contentful.getEntries({
   content_type: "pageBlogPost",
@@ -23,17 +25,29 @@ const blogs = blogsEntries?.items.map((item) => {
 });
 ---
 
-<Layout title="Blog" description="Curiosta blog">
+<Layout
+  title={pageTitleDesc.blog.title}
+  description={pageTitleDesc.blog.description}
+>
   <Navbar />
   <main class="bg-white py-24 sm:py-32">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div class="mx-auto max-w-2xl text-center">
-        <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-          Curiosta blog
-        </h2>
-        <p class="mt-2 text-lg leading-8 text-gray-600">
-          Learn how to grow your business with our expert advice.
-        </p>
+        <Typography
+          tag="h3"
+          size="h3/bold"
+          variant="primary"
+          className=" tracking-tight sm:text-4xl"
+        >
+          {blogPage.heading}
+        </Typography>
+        <Typography
+          size="subheading/normal"
+          variant="secondary"
+          className="mt-2  leading-8"
+        >
+          {blogPage.description}
+        </Typography>
       </div>
       <div
         class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3"

@@ -1,5 +1,5 @@
-import { removeLineItem } from "@api/removeLineItem";
-import { updateLineItem } from "@api/updateLineItem";
+import { removeLineItem } from "@api/cart/removeLineItem";
+import { updateLineItem } from "@api/cart/updateLineItem";
 import { signal } from "@preact/signals";
 
 export type Cart = {
@@ -15,6 +15,9 @@ export type Cart = {
       product_id: string;
     };
   }[];
+  region: {
+    currency_code: string;
+  };
   subtotal: number;
   shipping_total: number;
   tax_total: number;

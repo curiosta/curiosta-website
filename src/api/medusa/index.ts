@@ -1,4 +1,4 @@
-import Medusa from '@medusajs/medusa-js';
+import Medusa from "@medusajs/medusa-js";
 
 const medusa = new Medusa({
   baseUrl: import.meta.env.PUBLIC_BASE_URL,

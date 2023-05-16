@@ -1,8 +1,9 @@
 import type { Signal } from "@preact/signals";
 import Typography from "@components/Typography";
+import useLocalStorage from "@hooks/useLocalStorage";
 
 interface Props {
-  productVariants: {
+  productVariants?: {
     id: string;
     title: string;
     inventory_quantity: number;
@@ -19,14 +20,19 @@ interface Props {
 }
 
 const ProductVariants = ({ productVariants, selectedVariant }: Props) => {
+  const { get } = useLocalStorage();
+  const localRegion = get<{ curr_code?: string }>("region");
+
   const handleVariant = (
     id: string,
     title: string,
-    prices: { amount: number }
+    prices: { currency_code: string; amount: number }[]
   ) => {
     selectedVariant.id.value = id;
     selectedVariant.title.value = title;
-    selectedVariant.price.value = prices.amount / 100;
+    selectedVariant.price.value = prices.find(
+      (item) => item.currency_code === localRegion?.curr_code
+    )?.amount;
   };
 
   return (
@@ -39,7 +45,7 @@ const ProductVariants = ({ productVariants, selectedVariant }: Props) => {
       <fieldset class="mt-2">
         <legend class="sr-only">Choose a Variant</legend>
         <div class="grid grid-cols-3 gap-3 sm:grid-cols-6">
-          {productVariants.map((variant) => (
+          {(productVariants || []).map((variant) => (
             <label
               class={`flex items-center ${
                 variant.title === selectedVariant.title.value
@@ -53,7 +59,7 @@ const ProductVariants = ({ productVariants, selectedVariant }: Props) => {
                 value={variant.title}
                 class="sr-only"
                 onInput={() =>
-                  handleVariant(variant.id, variant.title, variant.prices[1])
+                  handleVariant(variant.id, variant.title, variant.prices)
                 }
                 aria-labelledby="variant-choice-0-label"
               />

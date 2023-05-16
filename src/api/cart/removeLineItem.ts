@@ -1,4 +1,4 @@
-import Medusa from "@medusajs/medusa-js";
+import medusa from "@api/medusa";
 
 export type Item = {
   cardId: string;
@@ -6,9 +6,5 @@ export type Item = {
 };
 
 export const removeLineItem = async ({ cardId, line_id }: Item) => {
-  const medusa = new Medusa({
-    baseUrl: import.meta.env.PUBLIC_BASE_URL,
-    maxRetries: 3,
-  });
   return medusa.carts.lineItems.delete(cardId, line_id);
 };

@@ -6,11 +6,14 @@ import {
   removeCartItem,
 } from "@store/cartStore";
 import Button from "@components/Button";
+import useLocalStorage from "@hooks/useLocalStorage";
+import { CurrencyMap, currencyMap } from "@components/CurrencyMap";
 
-const CartSection = () => {
-  localStorage.setItem("cart", JSON.stringify(cart.value));
+const ProductCart = () => {
+  const { set } = useLocalStorage();
+  set("cart", cart.value);
 
-  // console.log(cart.value);
+  const currency = cart.value.region?.currency_code as keyof CurrencyMap;
 
   return (
     <section aria-labelledby="cart-heading" class="lg:col-span-7">
@@ -49,13 +52,18 @@ const CartSection = () => {
                     <div class="mt-1 flex text-sm">
                       <Typography className="text-gray-500">Sienna</Typography>
 
-                      <p class="ml-4 border-l border-gray-200 pl-4 text-gray-500">
+                      <Typography className="ml-4 border-l border-gray-200 pl-4 text-gray-500">
                         {item.description}
-                      </p>
+                      </Typography>
                     </div>
-                    <p class="mt-1 text-sm font-medium text-gray-900">
-                      ${item.unit_price}
-                    </p>
+                    <Typography
+                      variant="primary"
+                      size="body2/medium"
+                      className="mt-1"
+                    >
+                      {currencyMap[currency]}
+                      {(item.unit_price / 100).toFixed(2)}
+                    </Typography>
                   </div>
 
                   <div class="mt-4 sm:mt-0 sm:pr-9">
@@ -189,4 +197,4 @@ const CartSection = () => {
   );
 };
 
-export default CartSection;
+export default ProductCart;

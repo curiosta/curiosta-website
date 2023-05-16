@@ -1,5 +1,8 @@
 ---
-import NavCartItem from "./NavCartItem";
+import Button from "@components/Button";
+import RightNav from "@components/RightNav";
+import ShipmentRegions from "./ShipmentRegions";
+import { regionList } from "@api/region/regionList";
 
 const navLinks = [
   {
@@ -28,6 +31,8 @@ const navLinks = [
     link: "/blog",
   },
 ];
+
+const { regions } = await regionList();
 ---
 
 <header class="absolute inset-x-0 top-0 z-10">
@@ -35,20 +40,20 @@ const navLinks = [
     class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
     aria-label="Global"
   >
-    <div class="flex lg:flex-1">
+    <div class="flex">
       <a href="/" class="-m-1.5 p-1.5">
-        <span class="sr-only">Your Company</span>
         <img
-          class="h-8 w-auto"
-          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-          alt=""
+          class="h-12 w-auto"
+          src="/images/curiostaLogo.jpg"
+          alt="Curiosta"
         />
       </a>
     </div>
     <div class="flex lg:hidden">
-      <button
+      <Button
         type="button"
-        class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+        variant={"icon"}
+        className="-m-2.5 !w-auto !border-none inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
         id="open-menu"
       >
         <span class="sr-only">Open main menu</span>
@@ -65,7 +70,7 @@ const navLinks = [
             stroke-linejoin="round"
             d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
         </svg>
-      </button>
+      </Button>
     </div>
     <div class="hidden lg:flex lg:gap-x-12">
       {
@@ -80,16 +85,9 @@ const navLinks = [
         ))
       }
     </div>
-    <div class="hidden lg:flex lg:items-center lg:flex-1 lg:justify-end">
-      <a
-        href="/signup"
-        class="text-sm font-semibold leading-6 px-2 py-1 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white"
-      >
-        Join Now
-      </a>
-      <!-- Cart -->
-      <NavCartItem client:load />
-    </div>
+    <ShipmentRegions regions={regions} client:load />
+    <!-- Right Nav -->
+    <RightNav client:load />
   </nav>
   {/* Mobile menu, show/hide based on menu open state. */}
   <div class="lg:hidden" role="dialog" aria-modal="true">
@@ -101,11 +99,10 @@ const navLinks = [
     >
       <div class="flex items-center justify-between">
         <a href="/" class="-m-1.5 p-1.5">
-          <span class="sr-only">Your Company</span>
           <img
-            class="h-8 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-            alt=""
+            class="h-12 w-auto"
+            src="/images/curiostaLogo.jpg"
+            alt="Curiosta"
           />
         </a>
         <button
@@ -146,14 +143,19 @@ const navLinks = [
           </div>
           <div class="py-6">
             <a
+              href="/login"
+              class="-mx-3 block rounded-lg px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+            >
+              Login
+            </a>
+            <a
               href="/signup"
               class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
             >
-              Join Now
+              Sign Up
             </a>
 
             <!-- Cart -->
-            <NavCartItem client:load />
           </div>
         </div>
       </div>

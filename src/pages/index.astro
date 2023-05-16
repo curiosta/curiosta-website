@@ -1,20 +1,21 @@
 ---
-import { listProducts } from "@api/listProducts";
+import { listProducts } from "@api/product/listProducts";
 import Footer from "@components/Footer.astro";
 import HeroSection from "@section/HeroSection.astro";
 import Navbar from "@components/Navbar.astro";
 import Layout from "@layouts/Layout.astro";
-import ProductSection from "@section/ProductSection";
 import ShortIntroSection from "@section/ShortIntroSection.astro";
 import PartnerCompanies from "@section/PartnerCompanies.astro";
+import { pageTitleDesc } from "content";
+import ProductContainer from "@components/ProductContainer";
 
 const res = await listProducts();
 const products = res?.products.slice(0, 3);
 ---
 
 <Layout
-  title="Curiosta - A global platform for local making "
-  description="Curiosta - A global platform for local making"
+  title={pageTitleDesc.home.title}
+  description={pageTitleDesc.home.description}
 >
   <Navbar />
   <HeroSection />
@@ -23,7 +24,7 @@ const products = res?.products.slice(0, 3);
   <ShortIntroSection />
 
   <!-- Feature Products -->
-  <ProductSection products={products} page={"Homepage"} />
+  <ProductContainer products={products} page={"Homepage"} client:load />
 
   <!-- Partner company Logo cloud -->
   <PartnerCompanies />
