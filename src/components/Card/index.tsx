@@ -28,11 +28,11 @@ const Card = ({ id, thumbnail, title, description, variants }: Product) => {
           </a>
         </Typography>
         <Typography size="body2/normal" variant="secondary" className="mt-1 ">
-          {description?.slice(0, 30) + "..." || "N/A"}
+          {description?.slice(0, 30) + "..." || "Description not available"}
         </Typography>
         <Typography size="body2/medium" variant="primary" className="mt-1 ">
           {currencyMap[currency]}
-          {amount ? (amount / 100).toFixed(2) : "N/A"}
+          {amount ? (amount / 100).toFixed(2) : "Price not available"}
         </Typography>
       </div>
     </div>
