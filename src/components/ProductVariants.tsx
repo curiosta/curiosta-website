@@ -21,7 +21,7 @@ interface Props {
 
 const ProductVariants = ({ productVariants, selectedVariant }: Props) => {
   const { get } = useLocalStorage();
-  const localRegion = get("region");
+  const localRegion = get<{ curr_code?: string }>("region");
 
   const handleVariant = (
     id: string,
