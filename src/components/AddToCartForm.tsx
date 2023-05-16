@@ -9,6 +9,7 @@ import { createCart } from "@api/cart/createCart";
 import type { Product } from "@api/product/index.d";
 import { getUser } from "@api/user/getUser";
 import useLocalStorage from "@hooks/useLocalStorage";
+import { CurrencyMap, currencyMap } from "./CurrencyMap";
 
 interface Props {
   product: Product;
@@ -23,12 +24,14 @@ const isPopUp = signal(false);
 
 const AddToCartForm = ({ product, selectedVariant }: Props) => {
   const { get, set } = useLocalStorage();
+  const localRegion = get<{ id?: string; curr_code?: string }>("region");
+  const currency = localRegion?.curr_code as keyof CurrencyMap;
 
   const handleAddCart = async (e: ChangeEvent) => {
     e.preventDefault();
     await getUser();
     const localCartId = get("cartId");
-    const localRegion = get<{ id?: string }>("region");
+
     if (selectedVariant.id.value) {
       if (localCartId) {
         const res = await addLineItem({
@@ -96,7 +99,12 @@ const AddToCartForm = ({ product, selectedVariant }: Props) => {
             <div>
               <Typography size="body1/medium">{product.title}</Typography>
               <Typography> Variant: {selectedVariant.title}</Typography>
-              <Typography> Price: ${selectedVariant.price}</Typography>
+              <Typography>
+                Price: {currencyMap[currency]}
+                {selectedVariant.price.value
+                  ? (selectedVariant.price?.value / 100).toFixed(2)
+                  : "N/A"}
+              </Typography>
               <Typography size="body1/medium" className="text-green-500 ">
                 Added to cart
               </Typography>
