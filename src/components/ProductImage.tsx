@@ -5,11 +5,12 @@ interface Props {
     id: string;
     url: string;
   }[];
+  productTitle: string;
 }
 
 const activeIndex = signal(0);
 
-const ProductImage = ({ productImages }: Props) => {
+const ProductImage = ({ productImages, productTitle }: Props) => {
   return (
     // Image gallery
     <div class="flex flex-col-reverse">
@@ -33,8 +34,8 @@ const ProductImage = ({ productImages }: Props) => {
               <span class="sr-only"> Angled view</span>
               <span class="absolute inset-0 overflow-hidden rounded-md">
                 <img
-                  src={image.url}
-                  alt="product"
+                  src={image.url || undefined}
+                  alt={productTitle}
                   class="h-full w-full object-cover object-center"
                 />
               </span>
@@ -58,8 +59,8 @@ const ProductImage = ({ productImages }: Props) => {
           class="h-[450px]"
         >
           <img
-            src={productImages[activeIndex.value].url}
-            alt="Angled front view with bag zipped and handles upright."
+            src={productImages[activeIndex.value]?.url}
+            alt={productTitle}
             class="h-full w-full object-cover object-center sm:rounded-lg"
           />
         </div>
