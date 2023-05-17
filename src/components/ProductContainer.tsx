@@ -17,7 +17,7 @@ const ProductContainer = ({ products, page }: Props) => {
           variant="primary"
           className=" mt-4 tracking-tigh"
         >
-          Trending products
+          {page === "Homepage" ? "Feature products" : "Products"}
         </Typography>
         <a
           href="/products"
