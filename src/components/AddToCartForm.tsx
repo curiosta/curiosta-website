@@ -51,9 +51,10 @@ const AddToCartForm = ({ product, selectedVariant }: Props) => {
         set("cartId", res.cart.id);
         cart.value = res.cart;
       }
+      isPopUp.value = true;
+    } else {
+      alert(" can't add to card because variant id not found");
     }
-
-    isPopUp.value = true;
   };
   localStorage.setItem("cart", JSON.stringify(cart.value));
   return (

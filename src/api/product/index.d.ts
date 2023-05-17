@@ -84,7 +84,7 @@ export interface Product {
   updated_at?: string;
   deleted_at?: string | null;
   metadata?: any | null;
-  variants: Variants[];
+  variants?: Variants[];
   options?: any[];
   images?: {
     id: string;
