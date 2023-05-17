@@ -3,7 +3,11 @@ import Button from "./Button";
 import { logoutUser } from "@api/user/logoutUser";
 import useLocalStorage from "@hooks/useLocalStorage";
 
-const RightNav = () => {
+interface Props {
+  screen?: "mobile";
+}
+
+const RightNav = ({ screen }: Props) => {
   const { get } = useLocalStorage();
   const totalCartItems = cart.value?.items?.reduce(
     (acc, curVal) => acc + curVal.quantity,
@@ -15,11 +19,16 @@ const RightNav = () => {
   const handleLogout = async () => {
     await logoutUser();
     localStorage.removeItem("custId");
+    localStorage.removeItem("cartId");
     location.reload();
   };
 
   return (
-    <div class="hidden lg:flex lg:items-center  lg:justify-end">
+    <div
+      class={` lg:flex lg:items-center  lg:justify-end ${
+        screen === "mobile" ? "flex flex-col gap-4 mt-4" : "hidden"
+      }`}
+    >
       {localCustId ? (
         <Button
           variant="primary"
@@ -32,7 +41,7 @@ const RightNav = () => {
         <>
           <Button
             link="/signup"
-            className="leading-6 !bg-transparent !text-primary-900 !shadow-none  !px-2 !py-1 !w-fit rounded-md mr-3"
+            className="leading-6 !bg-transparent !text-primary-900 !shadow-none !px-0 lg:!px-2 !py-1 !w-fit rounded-md mr-3"
           >
             Sign Up
           </Button>
@@ -47,7 +56,7 @@ const RightNav = () => {
         </>
       )}
 
-      <div class="ml-4 flow-root lg:ml-6">
+      <div class=" flow-root lg:ml-6">
         <a href="/cart" class="group -m-2 flex items-center p-2">
           <svg
             class="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
