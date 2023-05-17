@@ -1,5 +1,5 @@
 import medusa from "@api/medusa";
 
-export const listProducts = async () => {
-  return medusa.products.list();
+export const listProducts = async (limit?: number) => {
+  return medusa.products.list({ limit });
 };

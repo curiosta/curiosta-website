@@ -9,8 +9,8 @@ import PartnerCompanies from "@section/PartnerCompanies.astro";
 import { pageTitleDesc } from "content";
 import ProductContainer from "@components/ProductContainer";
 
-const res = await listProducts();
-const products = res?.products.slice(0, 3);
+const res = await listProducts(3);
+const products = res?.products;
 ---
 
 <Layout
