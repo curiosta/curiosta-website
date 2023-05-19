@@ -13,7 +13,8 @@
       "@section/*": ["./src/section/*"],
       "@store/*": ["./src/store/*"],
       "@public/*": ["./public/*"],
-      "@hooks/*": ["./src/hooks/*"]
+      "@hooks/*": ["./src/hooks/*"],
+      "@utils/*": ["./src/utils/*"]
     }
   }
 }

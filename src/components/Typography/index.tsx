@@ -13,6 +13,7 @@ const variantsMapping = {
   subheading: "h6",
   body1: "p",
   body2: "p",
+  small: "p",
 } as const;
 
 type TypographyVariant = VariantProps<typeof typography>;
