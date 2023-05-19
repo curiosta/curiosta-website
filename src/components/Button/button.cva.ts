@@ -24,14 +24,13 @@ const button = cva(
           "text-white",
         ],
         icon: [
-          "bg-transparent",
-          "!rounded-full w-8 h-8 items-center justify-center flex !shadow-none",
+          'p-2 !shadow-none'
         ],
         "icon-active": [
           "bg-primary-600",
           "text-white",
           "fill-white",
-          "!rounded-full w-8 h-8 items-center justify-center flex",
+          "p-2 w-max items-center justify-center flex",
         ],
       },
     },

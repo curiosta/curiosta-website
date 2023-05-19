@@ -1,3 +1,4 @@
+import cart from "@api/cart";
 import type { Regions } from "@api/region/index.d";
 import useLocalStorage from "@hooks/useLocalStorage";
 import { useSignal } from "@preact/signals";
