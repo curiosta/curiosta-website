@@ -5,9 +5,10 @@ import { useSignal } from "@preact/signals";
 
 interface Props {
   regions: Regions[];
+  screen?: "mobile";
 }
 
-const ShipmentRegions = ({ regions }: Props) => {
+const ShipmentRegions = ({ regions, screen }: Props) => {
   const { set, get } = useLocalStorage();
 
   const countries = regions?.map((region) => region.countries).flat(1);
@@ -41,7 +42,11 @@ const ShipmentRegions = ({ regions }: Props) => {
     curr_code: selectedRegion.curr_code.value,
   });
   return (
-    <div class="hidden lg:flex items-center gap-2">
+    <div
+      class={`${
+        screen === "mobile" ? "flex" : "hidden"
+      } lg:flex items-center gap-2`}
+    >
       <label
         htmlFor="location"
         className="block text-sm font-medium leading-6 text-gray-900"

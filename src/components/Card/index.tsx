@@ -6,9 +6,11 @@ import useLocalStorage from "@hooks/useLocalStorage";
 const Card = ({ id, thumbnail, title, description, variants }: Product) => {
   const { get } = useLocalStorage();
   const localRegion = get<{ curr_code?: string }>("region");
-  const amount = variants[0].prices.find(
-    (item) => item.currency_code === localRegion?.curr_code
-  )?.amount;
+  const amount = variants
+    ? variants[0]?.prices?.find(
+        (item) => item.currency_code === localRegion?.curr_code
+      )?.amount
+    : undefined;
   const currency = localRegion?.curr_code as keyof CurrencyMap;
 
   return (

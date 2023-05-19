@@ -8,7 +8,6 @@ import { createCart } from "@api/cart/createCart";
 import type { Product } from "@api/product/index.d";
 import { getUser } from "@api/user/getUser";
 import useLocalStorage from "@hooks/useLocalStorage";
-import type { CurrencyMap } from "./CurrencyMap";
 
 interface Props {
   product: Product;
@@ -23,7 +22,6 @@ const loadingSignal = signal<boolean>(false);
 const AddToCartForm = ({ product, selectedVariant }: Props) => {
   const { get, set } = useLocalStorage();
   const localRegion = get<{ id?: string; curr_code?: string }>("region");
-  const currency = localRegion?.curr_code as keyof CurrencyMap;
 
 
   const handleAddCart = async (e: ChangeEvent) => {
@@ -54,6 +52,8 @@ const AddToCartForm = ({ product, selectedVariant }: Props) => {
         }
         cartOpen.value = true;
       } catch { } finally { loadingSignal.value = false }
+    } else {
+      alert("Can't add to card because variant id not found");
     }
   };
   localStorage.setItem("cart", JSON.stringify(cart.value));
