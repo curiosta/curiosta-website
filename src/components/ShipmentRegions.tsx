@@ -1,4 +1,3 @@
-import cart from "@api/cart";
 import type { Regions } from "@api/region/index.d";
 import useLocalStorage from "@hooks/useLocalStorage";
 import { useSignal } from "@preact/signals";
@@ -43,9 +42,8 @@ const ShipmentRegions = ({ regions, screen }: Props) => {
   });
   return (
     <div
-      class={`${
-        screen === "mobile" ? "flex" : "hidden"
-      } lg:flex items-center gap-2`}
+      class={`${screen === "mobile" ? "flex" : "hidden"
+        } lg:flex items-center gap-2`}
     >
       <label
         htmlFor="location"
