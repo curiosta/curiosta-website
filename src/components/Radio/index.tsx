@@ -5,13 +5,13 @@ interface Props extends HTMLAttributes<HTMLInputElement> {
   label: string;
 }
 
-const Checkbox = ({ label, ...rest }: Props) => {
+const Radio = ({ label, ...rest }: Props) => {
   const id = useId();
 
   return (
     <div class="flex items-center">
       <input
-        type="checkbox"
+        type="radio"
         id={id}
         class="h-4 w-4 rounded border-gray-300 accent-current text-indigo-600 focus:ring-indigo-600"
         {...rest}
@@ -23,4 +23,4 @@ const Checkbox = ({ label, ...rest }: Props) => {
   );
 };
 
-export default Checkbox;
+export default Radio;

@@ -9,7 +9,11 @@ interface Props {
 
 const ProductContainer = ({ products, page }: Props) => {
   return (
-    <div class="mx-auto  px-4 py-16 sm:px-6 lg:max-w-7xl lg:px-8">
+    <div
+      class={`mx-auto  px-4 ${
+        page === "Productpage" ? "p-0" : "py-16"
+      } sm:px-6 lg:max-w-7xl lg:px-8`}
+    >
       <div class="md:flex md:items-center md:justify-between">
         <Typography
           tag="h5"
@@ -31,19 +35,19 @@ const ProductContainer = ({ products, page }: Props) => {
       </div>
 
       <div
-        class={`mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 ${
-          page !== "Homepage" ? "md:grid-cols-4" : "md:grid-cols-3"
-        }  lg:gap-x-8`}
+        class={`mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-3 lg:gap-x-8`}
       >
-        {products.map((product) => (
-          <Card
-            id={product.id}
-            thumbnail={product.thumbnail}
-            title={product.title}
-            description={product.description}
-            variants={product.variants}
-          />
-        ))}
+        {products.length
+          ? products.map((product) => (
+              <Card
+                id={product.id}
+                thumbnail={product.thumbnail}
+                title={product.title}
+                description={product.description}
+                variants={product.variants}
+              />
+            ))
+          : "Product not available"}
       </div>
     </div>
   );

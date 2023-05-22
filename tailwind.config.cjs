@@ -7,6 +7,7 @@ module.exports = {
       colors: {
         primary: colors.indigo,
         danger: colors.red,
+        secondray: colors.white,
       },
       textColor: {
         primary: colors.gray,
