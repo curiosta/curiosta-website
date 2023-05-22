@@ -1,5 +1,5 @@
 import Button from "@components/Button";
-import { CurrencyMap, currencyMap } from "@components/CurrencyMap";
+import { CurrencyMap, currencyMap } from "@utils/CurrencyMap";
 import Typography from "@components/Typography";
 import { cart } from "@store/cartStore";
 

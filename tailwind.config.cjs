@@ -11,6 +11,7 @@ module.exports = {
       },
       textColor: {
         primary: colors.gray,
+        "app-primary": colors.indigo,
       },
     },
   },

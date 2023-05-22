@@ -1,6 +1,6 @@
 import Typography from "@components/Typography";
 import type { Product } from "@api/product/index.d";
-import { CurrencyMap, currencyMap } from "@components/CurrencyMap";
+import { CurrencyMap, currencyMap } from "@utils/CurrencyMap";
 import useLocalStorage from "@hooks/useLocalStorage";
 
 const Card = ({ id, thumbnail, title, description, variants }: Product) => {

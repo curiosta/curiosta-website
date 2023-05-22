@@ -7,7 +7,7 @@ import {
 } from "@store/cartStore";
 import Button from "@components/Button";
 import useLocalStorage from "@hooks/useLocalStorage";
-import { CurrencyMap, currencyMap } from "@components/CurrencyMap";
+import { CurrencyMap, currencyMap } from "@utils/CurrencyMap";
 
 const ProductCart = () => {
   const { set } = useLocalStorage();
@@ -129,6 +129,7 @@ const ProductCart = () => {
                         </svg>
                       </Button>
                     </div>
+                    {/* remove product from cart */}
                     <div class="absolute right-0 top-0">
                       <Button
                         type="button"

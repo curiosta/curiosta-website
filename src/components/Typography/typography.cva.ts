@@ -7,6 +7,7 @@ const typography = cva("", {
       secondary: ["text-primary-600"],
       button: ["text-white font-semibold"],
       error: ["text-xs text-danger-600"],
+      'app-primary': ["text-app-primary-600"],
     },
     size: {
       h1: "text-6xl",
@@ -18,6 +19,7 @@ const typography = cva("", {
       subheading: "text-lg",
       body1: "text-base",
       body2: "text-sm",
+      small: 'text-xs'
     },
     weight: {
       light: ["font-thin"],

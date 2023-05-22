@@ -32,14 +32,13 @@ const button = cva(
           "text-white",
         ],
         icon: [
-          "bg-transparent",
-          "!rounded-full w-8 h-8 items-center justify-center flex border border-gray-400",
+          'p-2 !shadow-none'
         ],
         "icon-active": [
           "bg-primary-600",
           "text-white",
           "fill-white",
-          "!rounded-full w-8 h-8 items-center justify-center flex border border-gray-400",
+          "p-2 w-max items-center justify-center flex",
         ],
       },
     },

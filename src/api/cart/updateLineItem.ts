@@ -1,12 +1,12 @@
 import medusa from "@api/medusa";
 export type Item = {
-  cardId: string;
+  cartId: string;
   line_id: string;
   quantity: number;
 };
 
-export const updateLineItem = async ({ cardId, line_id, quantity }: Item) => {
-  return medusa.carts.lineItems.update(cardId, line_id, {
+export const updateLineItem = async ({ cartId, line_id, quantity }: Item) => {
+  return medusa.carts.lineItems.update(cartId, line_id, {
     quantity,
   });
 };

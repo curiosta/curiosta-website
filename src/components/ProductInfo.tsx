@@ -3,7 +3,7 @@ import AddToCartForm from "@components/AddToCartForm";
 import Typography from "@components/Typography";
 import type { Product } from "@api/product/index.d";
 import useLocalStorage from "@hooks/useLocalStorage";
-import { CurrencyMap, currencyMap } from "./CurrencyMap";
+import { CurrencyMap, currencyMap } from "@utils/CurrencyMap";
 
 interface Props {
   product: Product;
