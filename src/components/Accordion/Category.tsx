@@ -1,31 +1,19 @@
-import type { CategoriesList } from "@api/product/categoriesList";
-import Button from "@components/Button";
 import Checkbox from "@components/Checkbox";
+import Typography from "@components/Typography";
+import type { ProductCategory } from "@medusajs/medusa";
 import { useSignal } from "@preact/signals";
 import { selectedCategoriesIds } from "@store/productStore";
+import { cx } from "class-variance-authority";
 import type { ChangeEvent } from "preact/compat";
 
 interface Props {
-  category: CategoriesList;
+  category: ProductCategory;
+  depth: number;
 }
 
-const Category = ({ category }: Props) => {
+const Category = ({ category, depth }: Props) => {
   const activeCategory = useSignal<string | null>(null);
-
-  const hanldeAccordion = () => {
-    if (activeCategory.value === category.id) {
-      activeCategory.value = null;
-      selectedCategoriesIds.value = selectedCategoriesIds.value.filter(
-        (id) => id !== category.id
-      );
-    } else {
-      activeCategory.value = category.id;
-      selectedCategoriesIds.value = [
-        ...selectedCategoriesIds.value,
-        category.id,
-      ];
-    }
-  };
+  const isDisable = useSignal(false);
 
   // select categories
   const handleCheck = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -39,59 +27,105 @@ const Category = ({ category }: Props) => {
     }
   };
 
+  const disabled =
+    category.parent_category_id &&
+    selectedCategoriesIds.value.includes(category.parent_category_id);
+
+  const handleAccordion = () => {
+    if (disabled) return;
+    if (activeCategory.value === category.id) {
+      activeCategory.value = null;
+    } else {
+      activeCategory.value = category.id;
+    }
+  };
+
   return (
     <ul>
       <li>
-        <div>
-          <Button
-            type="button"
-            variant="icon"
-            className={`!w-auto !shadow-none !border-none ${
-              activeCategory.value ? "!font-semibold" : "!font-normal"
-            } `}
-            onClick={hanldeAccordion}
+        <div
+          class={`flex item-center my-1 rounded-md p-2 ${
+            activeCategory.value === category.id
+              ? "bg-gray-50"
+              : "bg-transparent"
+          }`}
+        >
+          <Checkbox
+            name={category.name}
+            onChange={handleCheck}
+            value={category.id}
+            className={`${disabled ? "text-disabled" : ""}`}
+            checked={
+              disabled || selectedCategoriesIds.value.includes(category.id)
+            }
+            disabled={!!disabled}
+          />
+          <div
+            class={`flex justify-between w-full cursor-pointer `}
+            onClick={handleAccordion}
           >
-            <svg
-              class={`text-gray-400 h-5 w-5 shrink-0 ${
-                activeCategory.value
-                  ? selectedCategoriesIds.value.includes(activeCategory.value)
-                    ? "rotate-90"
-                    : "rotate-0"
-                  : null
-              }`}
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
+            <Typography
+              className={cx(
+                category.category_children.length || depth === 0
+                  ? "font-semibold"
+                  : "font-normal",
+                disabled && "text-disabled"
+              )}
+              style={{
+                paddingLeft: `${depth + 1}rem`,
+              }}
             >
-              <path
-                fill-rule="evenodd"
-                d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            {category.name}
-          </Button>
+              {category.name}
+            </Typography>
+
+            {disabled || !activeCategory.value ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class={`text-gray-400 h-5 w-5 shrink-0  ${
+                  category.category_children.length ? "block" : "hidden"
+                } `}
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M8.25 4.5l7.5 7.5-7.5 7.5"
+                />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class={`text-gray-400 h-5 w-5 shrink-0 
+           ${category.category_children.length ? "block" : "hidden"} `}
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                />
+              </svg>
+            )}
+          </div>
         </div>
         <div
           className={`${
-            activeCategory.value === category.id ? "block" : "hidden"
-          } pl-6`}
+            disabled || activeCategory.value !== category.id
+              ? "hidden"
+              : "block"
+          }`}
         >
-          {category.category_children.length ? (
-            category.category_children.map((child_cate) => (
-              <div class="flex items-center gap-2 ">
-                <Checkbox
-                  name={child_cate.name}
-                  label={child_cate.name}
-                  onChange={handleCheck}
-                  value={child_cate.id}
-                  checked={selectedCategoriesIds.value.includes(child_cate.id)}
-                />
-              </div>
-            ))
-          ) : (
-            <span class="text-sm">No sub categories</span>
-          )}
+          {category.category_children.length
+            ? category.category_children.map((child_cate) => (
+                <Category category={child_cate} depth={depth + 1} />
+              ))
+            : ""}
         </div>
       </li>
     </ul>

@@ -1,10 +1,8 @@
 import ProductContainer from "./ProductContainer";
-import type { CategoriesList } from "@api/product/categoriesList";
 import { useEffect } from "preact/compat";
 import { useSignal } from "@preact/signals";
 import { listProducts } from "@api/product/listProducts";
 import Typography from "./Typography";
-import useLocalStorage from "@hooks/useLocalStorage";
 import Button from "@components/Button";
 import CategoriesOpt from "./CategoriesOpt";
 import {
@@ -16,17 +14,19 @@ import {
 } from "@store/productStore";
 
 import Pagination from "@components/Pagination";
+import type { ProductCategory } from "@medusajs/medusa";
 
 interface Props {
-  categories: CategoriesList[];
+  categories: ProductCategory[];
 }
 
 const ProductFilter = ({ categories }: Props) => {
   const isSortPopUp = useSignal(false);
-  const isLoading = useSignal(true);
+  const isLoading = useSignal(false);
 
   const productsList = async () => {
     try {
+      isLoading.value = true;
       const res = await listProducts({
         category_id: selectedCategoriesIds.value,
         limit: limit.value,
@@ -81,18 +81,10 @@ const ProductFilter = ({ categories }: Props) => {
             } absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none`}
           >
             <div class="py-1" role="none">
-              <Button
-                variant="secondary"
-                className="!font-normal  "
-                id="menu-item-3"
-              >
+              <Button variant="secondary" className="!font-normal">
                 Price: Low to High
               </Button>
-              <Button
-                variant="secondary"
-                className="!font-normal"
-                id="menu-item-4"
-              >
+              <Button variant="secondary" className="!font-normal">
                 Price: High to Low
               </Button>
             </div>

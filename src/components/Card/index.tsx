@@ -1,9 +1,15 @@
 import Typography from "@components/Typography";
-import type { Product } from "@api/product/index.d";
 import { CurrencyMap, currencyMap } from "@utils/CurrencyMap";
 import useLocalStorage from "@hooks/useLocalStorage";
+import type { PricedProduct } from "@medusajs/medusa/dist/types/pricing";
 
-const Card = ({ id, thumbnail, title, description, variants }: Product) => {
+const Card = ({
+  id,
+  thumbnail,
+  title,
+  description,
+  variants,
+}: PricedProduct) => {
   const { get } = useLocalStorage();
   const localRegion = get<{ curr_code?: string }>("region");
   const amount = variants

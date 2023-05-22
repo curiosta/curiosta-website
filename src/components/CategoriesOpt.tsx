@@ -1,11 +1,11 @@
-import type { CategoriesList } from "@api/product/categoriesList";
 import Button from "@components/Button";
 import Typography from "@components/Typography";
 import { useSignal } from "@preact/signals";
 import Category from "./Accordion/Category";
+import type { ProductCategory } from "@medusajs/medusa";
 
 interface Props {
-  categories: CategoriesList[];
+  categories: ProductCategory[];
 }
 
 const CategoriesOpt = ({ categories }: Props) => {
@@ -47,13 +47,13 @@ const CategoriesOpt = ({ categories }: Props) => {
           <form class="space-y-4 divide-y divide-gray-200">
             <div class="pt-10">
               <fieldset>
-                <Typography size="body2/medium" className="block">
+                <Typography size="body1/semi-bold" className="block">
                   Category
                 </Typography>
 
-                <div class="space-y-3 pt-6">
+                <div class="space-y-2 pt-6">
                   {topCategories?.map((category) => (
-                    <Category category={category} />
+                    <Category category={category} depth={0} />
                   ))}
                 </div>
               </fieldset>

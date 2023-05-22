@@ -1,9 +1,10 @@
 import Card from "@components/Card";
 import Typography from "@components/Typography";
 import type { Product } from "@api/product/index.d";
+import type { PricedProduct } from "@medusajs/medusa/dist/types/pricing";
 
 interface Props {
-  products: Product[];
+  products: PricedProduct[];
   page: "Homepage" | "Productpage";
 }
 
