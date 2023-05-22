@@ -1,9 +1,9 @@
-import type { Regions } from "@api/region/index.d";
 import useLocalStorage from "@hooks/useLocalStorage";
+import type { Region } from "@medusajs/medusa";
 import { useSignal } from "@preact/signals";
 
 interface Props {
-  regions: Regions[];
+  regions: Region[];
   screen?: "mobile";
 }
 
@@ -33,7 +33,7 @@ const ShipmentRegions = ({ regions, screen }: Props) => {
 
   selectedRegion.id.value = countries.find(
     (country) => country.id === selectedRegion.countryId.value
-  )?.region_id;
+  )?.region_id || undefined;
 
   set("region", {
     id: selectedRegion.id.value,
