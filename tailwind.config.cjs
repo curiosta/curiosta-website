@@ -12,8 +12,9 @@ module.exports = {
       textColor: {
         primary: colors.gray,
         "app-primary": colors.indigo,
+        disabled: colors.gray[400],
       },
     },
   },
-  plugins: [require("@tailwindcss/typography")],
+  plugins: [require("@tailwindcss/typography"), require("@tailwindcss/forms")],
 };
