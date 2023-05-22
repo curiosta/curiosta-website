@@ -1515,10 +1515,10 @@ astro-eslint-parser@^0.13.1:
     espree "^9.0.0"
     semver "^7.3.8"
 
-astro-sst@^2.8.6:
-  version "2.8.12"
-  resolved "https://registry.yarnpkg.com/astro-sst/-/astro-sst-2.8.12.tgz#0e794347212166250268b8ab0c7d7ee29d06e789"
-  integrity sha512-2XEiWqKIIntmtzyN8NjeY1/U/uOMBltZo5NnvJKSK9gRi7F7e/WyysGGQaakHCgL4NeWsC+WATIkm3uSbZ6GvQ==
+astro-sst@^2.8.27:
+  version "2.8.27"
+  resolved "https://registry.yarnpkg.com/astro-sst/-/astro-sst-2.8.27.tgz#9b77ef6341871e4928c149ea9f0b0b41e6b6d418"
+  integrity sha512-kvG4C/0LcaaDC4GkyuJQqqbeYD6AgMIbXveGDLY1vQdoq/AY/tGsCIvwAt1cB2w25fyMBFn5umsEVZ/wUL2uWg==
   dependencies:
     "@astrojs/webapi" "^2.1.0"
 
