@@ -5,6 +5,9 @@ import { pageTitleDesc } from "content";
 import ProductCart from "@components/ProductCart";
 import OrderSummary from "@components/OrderSummary";
 import Navbar from "@components/Navbar.astro";
+
+// debugging import only should not be in production!.
+import PaymentHandler from "@components/PaymentHandler";
 ---
 
 <Layout title={pageTitleDesc.cart.title} description={pageTitleDesc.cart.description}>
@@ -19,5 +22,6 @@ import Navbar from "@components/Navbar.astro";
         <OrderSummary client:load />
       </div>
     </div>
+    <PaymentHandler client:only='preact' />
   </main>
 </Layout>
