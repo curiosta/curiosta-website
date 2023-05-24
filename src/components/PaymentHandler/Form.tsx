@@ -14,22 +14,23 @@ export default function Form({ clientSecret, cartId }: { clientSecret: string, c
     e.preventDefault()
     if (!stripe || !elements) return;
 
-    // const element = elements.getElement(CardElement);
-    // if (!element) return;    
+    const element = elements.getElement(CardElement);
+    if (!element) return;
 
-    // stripe?.confirmCardPayment(clientSecret, {
-    //   payment_method: {
-    const { error } = await stripe.confirmPayment({ clientSecret, confirmParams: { return_url: `${window.location.origin}/success` } })
-    //     card: (element as unknown as StripeCardElement) /** StripeCardElement is correct type for this element. */,
-    //   },
-    // }).then(({ error, paymentIntent }) => {
-    //   // TODO handle errors
-    //   medusa.carts.complete(cartId).then(
-    //     (resp) => console.log(resp, 'response')
-    //   );
-    //   console.log(error, paymentIntent);
+    stripe?.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: (element as unknown as StripeCardElement) /** StripeCardElement is correct type for this element. */,
+      },
+    }).then(({ error, paymentIntent }) => {
+      // TODO handle errors
+      medusa.carts.complete(cartId).then(
+        (resp) => {
+          console.log('Response:\n', JSON.stringify(resp, undefined, 4));
+        }
+      );
+      console.log(error, paymentIntent);
 
-    // })
+    })
   }
 
   return (
