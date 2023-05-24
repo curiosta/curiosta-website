@@ -5,20 +5,27 @@ import { useSignal } from "@preact/signals";
 import { selectedCategoriesIds } from "@store/productStore";
 import { cx } from "class-variance-authority";
 import type { ChangeEvent } from "preact/compat";
-
+import removeSelectedChildrenCategories from "@utils/mapCategoryListIds";
 interface Props {
   category: ProductCategory;
   depth: number;
+  categories: ProductCategory[];
 }
 
-const Category = ({ category, depth }: Props) => {
+const Category = ({ category, depth, categories }: Props) => {
   const activeCategory = useSignal<string | null>(null);
-  const isDisable = useSignal(false);
 
   // select categories
   const handleCheck = async (e: ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.currentTarget;
     if (checked) {
+      const result = removeSelectedChildrenCategories(
+        selectedCategoriesIds.value,
+        value,
+        category
+      );
+
+      console.log("result", result);
       selectedCategoriesIds.value = [...selectedCategoriesIds.value, value];
     } else {
       selectedCategoriesIds.value = selectedCategoriesIds.value.filter(
@@ -27,14 +34,41 @@ const Category = ({ category, depth }: Props) => {
     }
   };
 
+  // select categories
+  // const handleCheck = async (e: ChangeEvent<HTMLInputElement>) => {
+  //   const { value, checked } = e.currentTarget;
+  //   if (checked) {
+  //     const result = removeSelectedChildrenCategories(
+  //       selectedCategoriesIds.value,
+  //       value,
+  //       category
+  //     );
+  //     selectedCategoriesIds.value = [
+  //       ...selectedCategoriesIds.value.filter((id) => !result.includes(id)),
+  //       value,
+  //     ];
+  //   } else {
+  //     const valuesToRemove = Array.isArray(value) ? value : [value];
+  //     selectedCategoriesIds.value = selectedCategoriesIds.value.filter(
+  //       (id) => !valuesToRemove.includes(id)
+  //     );
+  //   }
+  // };
+
   const disabled =
     category.parent_category_id &&
     selectedCategoriesIds.value.includes(category.parent_category_id);
 
   const handleAccordion = () => {
-    if (disabled) return;
+    if (disabled || !category.category_children.length) return;
     if (activeCategory.value === category.id) {
       activeCategory.value = null;
+      const result = removeSelectedChildrenCategories(
+        selectedCategoriesIds.value,
+        category.id,
+        category
+      );
+      console.log(result);
     } else {
       activeCategory.value = category.id;
     }
@@ -54,7 +88,7 @@ const Category = ({ category, depth }: Props) => {
             name={category.name}
             onChange={handleCheck}
             value={category.id}
-            className={`${disabled ? "text-disabled" : ""}`}
+            className={`${disabled ? "!text-disabled" : ""}`}
             checked={
               disabled || selectedCategoriesIds.value.includes(category.id)
             }
@@ -77,6 +111,16 @@ const Category = ({ category, depth }: Props) => {
             >
               {category.name}
             </Typography>
+
+            <span
+              class={`${
+                selectedCategoriesIds.value.includes(category.id)
+                  ? "block"
+                  : "hidden"
+              }`}
+            >
+              {selectedCategoriesIds.value.length}
+            </span>
 
             {disabled || !activeCategory.value ? (
               <svg
@@ -123,7 +167,11 @@ const Category = ({ category, depth }: Props) => {
         >
           {category.category_children.length
             ? category.category_children.map((child_cate) => (
-                <Category category={child_cate} depth={depth + 1} />
+                <Category
+                  categories={categories}
+                  category={child_cate}
+                  depth={depth + 1}
+                />
               ))
             : ""}
         </div>

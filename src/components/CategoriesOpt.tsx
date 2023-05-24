@@ -53,7 +53,11 @@ const CategoriesOpt = ({ categories }: Props) => {
 
                 <div class="space-y-2 pt-6">
                   {topCategories?.map((category) => (
-                    <Category category={category} depth={0} />
+                    <Category
+                      categories={topCategories}
+                      category={category}
+                      depth={0}
+                    />
                   ))}
                 </div>
               </fieldset>

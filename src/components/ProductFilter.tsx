@@ -1,5 +1,5 @@
 import ProductContainer from "./ProductContainer";
-import { useEffect } from "preact/compat";
+import { useEffect, useRef } from "preact/compat";
 import { useSignal } from "@preact/signals";
 import { listProducts } from "@api/product/listProducts";
 import Typography from "./Typography";
@@ -9,6 +9,7 @@ import {
   count,
   limit,
   offset,
+  order,
   products,
   selectedCategoriesIds,
 } from "@store/productStore";
@@ -24,6 +25,11 @@ const ProductFilter = ({ categories }: Props) => {
   const isSortPopUp = useSignal(false);
   const isLoading = useSignal(false);
 
+  const sortOptions = [
+    { id: 1, title: "Newest", value: "-created_at" },
+    { id: 2, title: "Oldest", value: "created_at" },
+  ];
+
   const productsList = async () => {
     try {
       isLoading.value = true;
@@ -31,6 +37,7 @@ const ProductFilter = ({ categories }: Props) => {
         category_id: selectedCategoriesIds.value,
         limit: limit.value,
         offset: offset.value,
+        order: order.value ? order.value : undefined,
       });
       products.value = res?.products;
       count.value = res?.count;
@@ -43,7 +50,7 @@ const ProductFilter = ({ categories }: Props) => {
 
   useEffect(() => {
     productsList();
-  }, [selectedCategoriesIds.value, offset.value]);
+  }, [selectedCategoriesIds.value, offset.value, order.value]);
 
   return (
     <div class="mx-auto max-w-2xl !pb-0 px-4 py-24 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
@@ -81,12 +88,22 @@ const ProductFilter = ({ categories }: Props) => {
             } absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none`}
           >
             <div class="py-1" role="none">
-              <Button variant="secondary" className="!font-normal">
-                Price: Low to High
-              </Button>
-              <Button variant="secondary" className="!font-normal">
-                Price: High to Low
-              </Button>
+              {sortOptions.map((sortOption) => (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className={` ${
+                    sortOption.value === order.value
+                      ? "bg-gray-50"
+                      : "!font-normal"
+                  }`}
+                  onClick={() => {
+                    order.value = sortOption.value;
+                  }}
+                >
+                  {sortOption.title}
+                </Button>
+              ))}
             </div>
           </div>
         </div>
@@ -95,7 +112,7 @@ const ProductFilter = ({ categories }: Props) => {
         <CategoriesOpt categories={categories} />
 
         {/* <!-- Product grid --> */}
-        <div class="mt-6 lg:col-span-2 lg:mt-0 xl:col-span-3">
+        <div class="mt-6 lg:col-span-2 lg:mt-0 xl:col-span-3 ">
           {!isLoading.value ? (
             <ProductContainer products={products.value} page={"Productpage"} />
           ) : (
@@ -105,11 +122,13 @@ const ProductFilter = ({ categories }: Props) => {
           )}
         </div>
       </div>
-      {count.value ? (
-        <Pagination offset={offset} limit={limit} count={count.value} />
-      ) : (
-        ""
-      )}
+
+      <Pagination
+        isLoading={isLoading}
+        offset={offset}
+        limit={limit}
+        count={count}
+      />
     </div>
   );
 };
