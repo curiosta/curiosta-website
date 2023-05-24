@@ -1,33 +1,32 @@
 import medusa from "@api/medusa";
-
-export interface ShippingAddress {
-  first_name: string;
-  last_name: string;
-  address_1: string;
-  city: string;
-  country_code: string;
-  postal_code: string;
-  phone: string;
-}
+import type { AddressCreatePayload } from "@medusajs/medusa";
 
 export const addShippingAddress = ({
   first_name,
   last_name,
+  phone,
+  metadata,
+  company,
   address_1,
+  address_2,
   city,
   country_code,
+  province,
   postal_code,
-  phone,
-}: ShippingAddress) => {
+}: AddressCreatePayload) => {
   return medusa.customers.addresses.addAddress({
     address: {
       first_name,
       last_name,
+      phone,
+      metadata,
+      company,
       address_1,
+      address_2,
       city,
       country_code,
+      province,
       postal_code,
-      phone,
     },
   });
 };

@@ -5,12 +5,12 @@ import ProductVariants from "@components/ProductVariants";
 import { Signal, signal } from "@preact/signals";
 import { addLineItem } from "@api/cart/addLineItem";
 import { createCart } from "@api/cart/createCart";
-import type { Product } from "@api/product/index.d";
 import { getUser } from "@api/user/getUser";
 import useLocalStorage from "@hooks/useLocalStorage";
+import type { PricedProduct } from "@medusajs/medusa/dist/types/pricing";
 
 interface Props {
-  product: Product;
+  product: PricedProduct;
   selectedVariant: {
     id: Signal<string | undefined>;
     title: Signal<string | undefined>;
@@ -23,7 +23,6 @@ const AddToCartForm = ({ product, selectedVariant }: Props) => {
   const { get, set } = useLocalStorage();
   const localRegion = get<{ id?: string; curr_code?: string }>("region");
 
-
   const handleAddCart = async (e: ChangeEvent) => {
     e.preventDefault();
     await getUser();
@@ -31,7 +30,7 @@ const AddToCartForm = ({ product, selectedVariant }: Props) => {
 
     if (selectedVariant.id.value) {
       try {
-        loadingSignal.value = true
+        loadingSignal.value = true;
         if (localCartId) {
           const res = await addLineItem({
             cardId: localCartId,
@@ -51,7 +50,10 @@ const AddToCartForm = ({ product, selectedVariant }: Props) => {
           cart.value = res.cart;
         }
         cartOpen.value = true;
-      } catch { } finally { loadingSignal.value = false }
+      } catch {
+      } finally {
+        loadingSignal.value = false;
+      }
     } else {
       alert("Can't add to card because variant id not found");
     }
@@ -65,8 +67,13 @@ const AddToCartForm = ({ product, selectedVariant }: Props) => {
           selectedVariant={selectedVariant}
         />
         <div class="sm:flex-col1 mt-10 flex gap-8 max-w-xs">
-          <Button type="submit" title="Add to cart" disabled={loadingSignal.value} variant={"primary"}>
-            {loadingSignal.value ? 'Loading...' : 'Add to cart'}
+          <Button
+            type="submit"
+            title="Add to cart"
+            disabled={loadingSignal.value}
+            variant={"primary"}
+          >
+            {loadingSignal.value ? "Loading..." : "Add to cart"}
           </Button>
         </div>
       </form>

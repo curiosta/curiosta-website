@@ -4,9 +4,10 @@ import Typography from "@components/Typography";
 import type { Product } from "@api/product/index.d";
 import useLocalStorage from "@hooks/useLocalStorage";
 import { CurrencyMap, currencyMap } from "@utils/CurrencyMap";
+import type { PricedProduct } from "@medusajs/medusa/dist/types/pricing";
 
 interface Props {
-  product: Product;
+  product: PricedProduct;
 }
 
 const ProductInfo = ({ product }: Props) => {
