@@ -1,33 +1,39 @@
-import {
-  ShippingAddress,
-  addShippingAddress,
-} from "@api/user/addShippingAddress";
+import { addShippingAddress } from "@api/user/addShippingAddress";
 import Button from "./Button";
 import FormControl from "./FormControl";
 import Input from "./Input";
 import Typography from "./Typography";
+import type { AddressCreatePayload } from "@medusajs/medusa";
 
-const ShippingForm = () => {
-  const handleShippingAddress = async (data: ShippingAddress) => {
+const AddressForm = () => {
+  const handleShippingAddress = async (data: AddressCreatePayload) => {
     try {
       const {
         first_name,
         last_name,
+        phone,
+        metadata,
+        company,
         address_1,
+        address_2,
         city,
         country_code,
+        province,
         postal_code,
-        phone,
       } = data;
 
       const addShipping = await addShippingAddress({
         first_name,
         last_name,
+        phone,
+        metadata,
+        company,
         address_1,
+        address_2,
         city,
         country_code,
+        province,
         postal_code,
-        phone,
       });
       console.log(addShipping);
     } catch (error) {
@@ -36,7 +42,7 @@ const ShippingForm = () => {
   };
 
   return (
-    <div class="bg-white">
+    <div class="bg-white pt-4">
       <div class="relative mx-auto max-w-2xl  lg:px-8 ">
         <FormControl
           class="px-4 sm:px-6 mt-4 flex flex-col gap-5 lg:col-start-1 lg:row-start-1 lg:px-0 lg:pb-16"
@@ -163,4 +169,4 @@ const ShippingForm = () => {
   );
 };
 
-export default ShippingForm;
+export default AddressForm;
