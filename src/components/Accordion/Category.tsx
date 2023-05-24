@@ -9,12 +9,11 @@ import type { ChangeEvent } from "preact/compat";
 interface Props {
   category: ProductCategory;
   depth: number;
-  categories: ProductCategory[];
 }
 
-const Category = ({ category, depth, categories }: Props) => {
+const Category = ({ category, depth }: Props) => {
   const activeCategory = useSignal<string | null>(null);
-  const selectedChildCategoryCount = useSignal<number>(0)
+  const selectedChildCategoryCount = useSignal<number>(0);
   const disabled =
     category.parent_category_id &&
     selectedCategoriesIds.value.includes(category.parent_category_id);
@@ -23,8 +22,16 @@ const Category = ({ category, depth, categories }: Props) => {
   const handleCheck = async (e: ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.currentTarget;
     if (checked) {
-      const childIdsToRemove = getCategorySelectedChildIDs(selectedCategoriesIds.value, category)
-      selectedCategoriesIds.value = [...selectedCategoriesIds.value.filter((id) => !childIdsToRemove.includes(id)), value];
+      const childIdsToRemove = getCategorySelectedChildIDs(
+        selectedCategoriesIds.value,
+        category
+      );
+      selectedCategoriesIds.value = [
+        ...selectedCategoriesIds.value.filter(
+          (id) => !childIdsToRemove.includes(id)
+        ),
+        value,
+      ];
     } else {
       selectedCategoriesIds.value = selectedCategoriesIds.value.filter(
         (id) => id !== value
@@ -38,12 +45,15 @@ const Category = ({ category, depth, categories }: Props) => {
     if (disabled || !category.category_children.length) return;
 
     // reset child category count
-    if (selectedChildCategoryCount.value) selectedChildCategoryCount.value = 0
+    if (selectedChildCategoryCount.value) selectedChildCategoryCount.value = 0;
 
     // toggle accordion state.
     if (activeCategory.value === category.id) {
       // get all current category's selected children count.
-      selectedChildCategoryCount.value = getCategorySelectedChildIDs(selectedCategoriesIds.value, category).length;
+      selectedChildCategoryCount.value = getCategorySelectedChildIDs(
+        selectedCategoriesIds.value,
+        category
+      ).length;
 
       activeCategory.value = null;
     } else {
@@ -55,10 +65,11 @@ const Category = ({ category, depth, categories }: Props) => {
     <ul>
       <li>
         <div
-          class={`flex item-center my-1 rounded-md p-2 ${activeCategory.value === category.id
-            ? "bg-gray-50"
-            : "bg-transparent"
-            }`}
+          class={`flex item-center my-1 rounded-md p-2 ${
+            activeCategory.value === category.id
+              ? "bg-gray-50"
+              : "bg-transparent"
+          }`}
         >
           <Checkbox
             name={category.name}
@@ -87,8 +98,16 @@ const Category = ({ category, depth, categories }: Props) => {
             >
               {category.name}
             </Typography>
-            <div className='flex items-center'>
-              {selectedChildCategoryCount.value ? <Typography size="body2/medium" variant='app-primary' className='bg-primary-600/10 w-6 h-6 flex items-center justify-center rounded-full'>{selectedChildCategoryCount.value}</Typography> : null}
+            <div className="flex items-center">
+              {selectedChildCategoryCount.value ? (
+                <Typography
+                  size="body2/medium"
+                  variant="app-primary"
+                  className="bg-primary-600/10 w-6 h-6 flex items-center justify-center rounded-full"
+                >
+                  {selectedChildCategoryCount.value}
+                </Typography>
+              ) : null}
               {disabled || !activeCategory.value ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -96,8 +115,9 @@ const Category = ({ category, depth, categories }: Props) => {
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  class={`text-gray-400 h-5 w-5 shrink-0  ${category.category_children.length ? "block" : "hidden"
-                    } `}
+                  class={`text-gray-400 h-5 w-5 shrink-0  ${
+                    category.category_children.length ? "block" : "hidden"
+                  } `}
                 >
                   <path
                     stroke-linecap="round"
@@ -126,19 +146,16 @@ const Category = ({ category, depth, categories }: Props) => {
           </div>
         </div>
         <div
-          className={`${disabled || activeCategory.value !== category.id
-            ? "hidden"
-            : "block"
-            }`}
+          className={`${
+            disabled || activeCategory.value !== category.id
+              ? "hidden"
+              : "block"
+          }`}
         >
           {category.category_children.length
             ? category.category_children.map((child_cate) => (
-              <Category
-                categories={categories}
-                category={child_cate}
-                depth={depth + 1}
-              />
-            ))
+                <Category category={child_cate} depth={depth + 1} />
+              ))
             : ""}
         </div>
       </li>
