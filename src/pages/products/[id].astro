@@ -5,7 +5,6 @@ import Footer from "@components/Footer.astro";
 import ProductImage from "@components/ProductImage";
 import Layout from "@layouts/Layout.astro";
 import ProductInfo from "@components/ProductInfo";
-import CheckOutDrawer from "@components/CheckoutDrawer";
 import { signal } from "@preact/signals";
 
 const productId = Astro.params.id;
@@ -43,7 +42,6 @@ export const checkoutOpen = signal<boolean>(false);
         }
       </div>
     </div>
-    <CheckOutDrawer client:only="preact" />
   </main>
   <Footer />
 </Layout>

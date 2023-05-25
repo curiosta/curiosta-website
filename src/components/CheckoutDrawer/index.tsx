@@ -1,6 +1,6 @@
-import AddressCard from "@components/AddressCard";
+import AddressList from "@components/AddressList";
 import Button from "@components/Button";
-import OrderSummary from "@components/orderSummary";
+import OrderSummary from "@components/OrderSummary";
 import { checkoutOpen } from "@store/checkoutStore";
 import { cx } from "class-variance-authority";
 import { createPortal } from "preact/compat";
@@ -46,7 +46,7 @@ const index = () => {
             <div>
               <div class="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
                 <form class="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
-                  <AddressCard />
+                  <AddressList />
                   {/* <!-- Order summary --> */}
                   <div class="mt-10 lg:mt-0">
                     <h2 class="text-lg font-medium text-gray-900">

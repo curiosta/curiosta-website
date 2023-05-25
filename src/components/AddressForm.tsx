@@ -1,43 +1,48 @@
 import { addShippingAddress } from "@api/user/addShippingAddress";
-import Button from "./Button";
-import FormControl from "./FormControl";
-import Input from "./Input";
-import Typography from "./Typography";
+import Button from "@components/Button";
+import FormControl from "@components/FormControl";
+import Input from "@components/Input";
 import type { AddressCreatePayload } from "@medusajs/medusa";
+import useLocalStorage from "@hooks/useLocalStorage";
+import user from "@api/user";
+import { updateCart } from "@api/cart/updateCart";
+import { useSignal } from "@preact/signals";
 
 const AddressForm = () => {
+  const isLoading = useSignal<boolean>(false);
+  const { get } = useLocalStorage();
+  const localRegion = get<{ countryCode: string }>("region");
+  const localCartId = get("cartId");
+
   const handleShippingAddress = async (data: AddressCreatePayload) => {
     try {
-      const {
-        first_name,
-        last_name,
-        phone,
-        metadata,
-        company,
-        address_1,
-        address_2,
-        city,
-        country_code,
-        province,
-        postal_code,
-      } = data;
+      isLoading.value = true;
+      const payloadAddress = { ...data };
+      if (localRegion?.countryCode) {
+        payloadAddress.country_code = localRegion.countryCode;
+      }
 
-      const addShipping = await addShippingAddress({
-        first_name,
-        last_name,
-        phone,
-        metadata,
-        company,
-        address_1,
-        address_2,
-        city,
-        country_code,
-        province,
-        postal_code,
-      });
-      console.log(addShipping);
+      const addShipping = await addShippingAddress(payloadAddress);
+      // add shipping address in cart
+      if (localCartId) {
+        const addCartShipping = await updateCart({
+          cartId: localCartId,
+          shipping_address:
+            addShipping.customer.shipping_addresses[
+              addShipping.customer.shipping_addresses.length - 1
+            ].id,
+          billing_address:
+            addShipping.customer.shipping_addresses[
+              addShipping.customer.shipping_addresses.length - 1
+            ].id,
+        });
+        console.log(addCartShipping);
+      }
+      user.refetch();
     } catch (error) {
       console.log(error);
+    } finally {
+      isLoading.value = false;
     }
   };
 
@@ -45,19 +50,11 @@ const AddressForm = () => {
     <div class="bg-white pt-4">
       <div class="relative mx-auto max-w-2xl  lg:px-8 ">
         <FormControl
-          class="px-4 sm:px-6 mt-4 flex flex-col gap-5 lg:col-start-1 lg:row-start-1 lg:px-0 lg:pb-16"
+          class="px-4 sm:px-6 mt-4 flex flex-col gap-5 lg:col-start-1 lg:row-start-1 lg:px-0 lg:pb-4"
           noValidate
           mode="onSubmit"
           onSubmit={handleShippingAddress}
         >
-          <Typography
-            tag="h5"
-            size="h5/medium"
-            variant="primary"
-            id="summary-heading"
-          >
-            Shipping Address
-          </Typography>
           <div class="flex justify-between items-center gap-2">
             <Input
               name="first_name"
@@ -84,29 +81,7 @@ const AddressForm = () => {
               placeholder={"Doe"}
             />
           </div>
-          <div class="flex justify-between items-center gap-2">
-            <Input
-              name="email"
-              type="email"
-              label="Email address"
-              autocomplete="email"
-              required={{ message: "Email is required!", value: true }}
-              placeholder={"example@gmail.com"}
-              validator={(value) =>
-                !/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(value)
-                  ? "Invalid email!"
-                  : true
-              }
-            />
-            <Input
-              name="phone"
-              type="phone"
-              label="Phone Number"
-              autocomplete="phone"
-              required={{ message: "Phone number is required!", value: true }}
-              placeholder={"1234567890"}
-            />
-          </div>
+
           <Input
             type="text"
             label="Address"
@@ -118,17 +93,9 @@ const AddressForm = () => {
             <Input
               type="text"
               name="city"
-              label="city"
+              label="City"
               autocomplete="address-level2"
               required={{ message: "City is required!", value: true }}
-            />
-
-            <Input
-              type="text"
-              label="State"
-              name="region"
-              required={{ message: "State is required!", value: true }}
-              autocomplete="address-level1"
             />
 
             <Input
@@ -142,14 +109,12 @@ const AddressForm = () => {
               autocomplete="postal-code"
             />
             <Input
-              type="text"
-              name="country_code"
-              label="Country code"
-              required={{
-                message: "Country code is required!",
-                value: true,
-              }}
-              autocomplete="Country-code"
+              name="phone"
+              type="phone"
+              label="Phone Number"
+              autocomplete="phone"
+              required={{ message: "Phone number is required!", value: true }}
+              placeholder={"1234567890"}
             />
           </div>
 
@@ -159,8 +124,9 @@ const AddressForm = () => {
               variant="primary"
               title="Save address"
               className="!w-auto"
+              disabled={isLoading.value}
             >
-              Save Address
+              {isLoading.value ? "Loading..." : "Save Address"}
             </Button>
           </div>
         </FormControl>

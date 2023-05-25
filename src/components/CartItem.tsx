@@ -10,6 +10,7 @@ import { cx } from "class-variance-authority";
 import Typography from "./Typography";
 import priceToCurrency from "@utils/priceToCurrency";
 import Button from "@components/Button";
+import { checkoutOpen } from "@store/checkoutStore";
 
 const CartItem = ({ item }: { item: LineItem }) => {
   const loadingQty = useSignal<boolean>(false);
@@ -38,6 +39,11 @@ const CartItem = ({ item }: { item: LineItem }) => {
     try {
       loadingRemove.value = true;
       await removeCartItem(cart.value.id, item.id);
+      if (!cart.value.items.length) {
+        localStorage.removeItem("cartId");
+        location.reload();
+        checkoutOpen.value = false;
+      }
     } catch (error) {
       // handle error
     } finally {
