@@ -32,7 +32,7 @@ const CartDrawer = () => {
           cartOpen.value && `!translate-x-0`
         )}
       >
-        {!cart.value.items?.length ? (
+        {!cart.value?.items?.length ? (
           <EmptyCart />
         ) : (
           <div className="p-4 pt-6 relative">

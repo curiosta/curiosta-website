@@ -12,7 +12,7 @@ import "@utils/addressList.css";
 
 const AddressList = () => {
   const currentCustomer = user.customer.value;
-  const selectedAddressId = useSignal<string | null>("");
+  const selectedAddressId = useSignal<string | null>(null);
   const isNewAddress = useSignal<boolean>(true);
   const isLoading = useSignal<boolean>(false);
 
@@ -71,11 +71,10 @@ const AddressList = () => {
               onClick={() => (
                 (isNewAddress.value = true), (selectedAddressId.value = null)
               )}
-              className={`flex justify-center w-52 items-center bg-white shadow-sm rounded-lg border ${
-                isNewAddress.value
-                  ? " border-indigo-600 ring-2 ring-indigo-600"
-                  : ""
-              }`}
+              className={`flex justify-center w-52 items-center bg-white shadow-sm rounded-lg border ${isNewAddress.value
+                ? " border-indigo-600 ring-2 ring-indigo-600"
+                : ""
+                }`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -98,24 +97,23 @@ const AddressList = () => {
 
             {currentCustomer?.shipping_addresses.length
               ? currentCustomer.shipping_addresses.map((customer) => (
-                  <AddressCard
-                    customer={customer}
-                    isLoading={isLoading}
-                    selectedAddressId={selectedAddressId}
-                    handleSelectAddress={handleSelectAddress}
-                  />
-                ))
+                <AddressCard
+                  customer={customer}
+                  isLoading={isLoading}
+                  selectedAddressId={selectedAddressId}
+                  handleSelectAddress={handleSelectAddress}
+                />
+              ))
               : ""}
           </div>
         </div>
       </div>
 
       <div
-        class={`${
-          isNewAddress.value || selectedAddressId.value === null
-            ? "block"
-            : "hidden"
-        }`}
+        class={`${isNewAddress.value || selectedAddressId.value === null
+          ? "block"
+          : "hidden"
+          }`}
       >
         <AddressForm />
       </div>

@@ -3,6 +3,7 @@ import { cx } from "class-variance-authority";
 import type { ComponentChildren, FunctionComponent } from "preact";
 import type { HTMLAttributes } from "preact/compat";
 import { useId } from "preact/hooks";
+import './input.css';
 import type {
   FieldError,
   RegisterOptions,

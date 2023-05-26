@@ -36,7 +36,6 @@ const AddressForm = () => {
               addShipping.customer.shipping_addresses.length - 1
             ].id,
         });
-        console.log(addCartShipping);
       }
       user.refetch();
     } catch (error) {
@@ -110,7 +109,7 @@ const AddressForm = () => {
             />
             <Input
               name="phone"
-              type="phone"
+              type="number"
               label="Phone Number"
               autocomplete="phone"
               required={{ message: "Phone number is required!", value: true }}
@@ -118,7 +117,7 @@ const AddressForm = () => {
             />
           </div>
 
-          <div class="mt-5 border-t border-gray-200 pt-6 flex  justify-end ">
+          <div class="mt-5 border-t border-gray-200 pt-6 flex justify-end">
             <Button
               type="submit"
               variant="primary"

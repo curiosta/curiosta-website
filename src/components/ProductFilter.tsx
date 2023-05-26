@@ -3,7 +3,6 @@ import { useEffect } from "preact/compat";
 import { useSignal } from "@preact/signals";
 import { listProducts } from "@api/product/listProducts";
 import Typography from "./Typography";
-import Button from "@components/Button";
 import CategoriesOpt from "./CategoriesOpt";
 import {
   count,
@@ -50,7 +49,7 @@ const ProductFilter = ({ categories }: Props) => {
       <div class="flex items-center justify-end">
         <div class="relative inline-block text-left">
           <div>
-            <Button
+            {/* <Button
               type="button"
               variant="icon"
               className="!border-none"
@@ -72,13 +71,11 @@ const ProductFilter = ({ categories }: Props) => {
                   clip-rule="evenodd"
                 />
               </svg>
-            </Button>
+            </Button> */}
           </div>
-
-          <div
-            class={`${
-              isSortPopUp.value ? "block" : "hidden"
-            } absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none`}
+          {/* <div
+            class={`${isSortPopUp.value ? "block" : "hidden"
+              } absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none`}
           >
             <div class="py-1" role="none">
               <Button variant="secondary" className="!font-normal">
@@ -88,7 +85,7 @@ const ProductFilter = ({ categories }: Props) => {
                 Price: High to Low
               </Button>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
       <div class="lg:grid lg:grid-cols-3 lg:gap-x-8 xl:grid-cols-4">

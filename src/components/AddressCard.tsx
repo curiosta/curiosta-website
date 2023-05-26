@@ -33,11 +33,10 @@ const AddressCard = ({
       }
     >
       <label
-        class={`relative flex w-52 cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none ${
-          selectedAddressId.value === customer.id
+        class={`relative flex w-52 cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none ${selectedAddressId.value === customer.id
             ? " border-indigo-600 ring-2 ring-indigo-600"
             : ""
-        }  ${disabled ? "opacity-80" : "opacity-100"}`}
+          }  ${disabled ? "opacity-80" : "opacity-100"}`}
       >
         <Radio
           name="address"
@@ -81,9 +80,8 @@ const AddressCard = ({
         </span>
         {/* <!-- Not Checked: "invisible" --> */}
         <svg
-          class={`h-5 w-5 text-indigo-600 ${
-            selectedAddressId.value === customer.id ? "block" : "hidden"
-          }`}
+          class={`h-5 w-5 text-indigo-600 ${selectedAddressId.value === customer.id ? "block" : "hidden"
+            }`}
           viewBox="0 0 20 20"
           fill="currentColor"
           aria-hidden="true"
