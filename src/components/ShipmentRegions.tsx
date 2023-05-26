@@ -1,7 +1,6 @@
 import useLocalStorage from "@hooks/useLocalStorage";
 import type { Region } from "@medusajs/medusa";
 import { useSignal } from "@preact/signals";
-import type { ChangeEvent } from "preact/compat";
 
 interface Props {
   regions: Region[];
@@ -52,9 +51,8 @@ const ShipmentRegions = ({ regions, screen }: Props) => {
 
   return (
     <div
-      class={`${
-        screen === "mobile" ? "flex" : "hidden"
-      } lg:flex items-center gap-2`}
+      class={`${screen === "mobile" ? "flex" : "hidden"
+        } lg:flex items-center gap-2`}
     >
       <select
         id="location"

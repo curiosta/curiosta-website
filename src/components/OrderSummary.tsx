@@ -3,6 +3,7 @@ import priceToCurrency from "@utils/priceToCurrency";
 import CartItem from "@components/CartItem";
 
 const OrderSummary = () => {
+  console.log(cart.value);
   return (
     <div>
       <ul role="list" class="divide-y divide-gray-200 p-4">
