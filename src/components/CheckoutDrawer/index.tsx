@@ -44,7 +44,7 @@ const index = () => {
           </div>
           <div className="flex flex-col px-4">
             <div>
-              <div class="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
+              <div class="mx-auto max-w-2xl md:px-4 pb-24 md:pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
                 <form class="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
                   <AddressList />
                   {/* <!-- Order summary --> */}

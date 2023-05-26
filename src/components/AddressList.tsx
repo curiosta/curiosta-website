@@ -9,10 +9,11 @@ import AddressCard from "./AddressCard";
 import { updateCart } from "@api/cart/updateCart";
 import useLocalStorage from "@hooks/useLocalStorage";
 import "@utils/addressList.css";
+import { removeShippingAddress } from "@api/user/removeShippingAddress";
 
 const AddressList = () => {
   const currentCustomer = user.customer.value;
-  const selectedAddressId = useSignal<string | null>("");
+  const selectedAddressId = useSignal<string | null>(null);
   const isNewAddress = useSignal<boolean>(true);
   const isLoading = useSignal<boolean>(false);
 
@@ -23,29 +24,51 @@ const AddressList = () => {
     const { value, checked } = e.currentTarget;
     if (checked) {
       selectedAddressId.value = value;
-      isNewAddress.value = false;
     }
+    isNewAddress.value = false;
   };
 
   // update shipping address
   const updateShippingAddress = async () => {
     try {
-      isLoading.value = true;
+      if (selectedAddressId.value === currentCustomer?.billing_address_id) return;
       if (!localCartId || !selectedAddressId.value) return;
-      const res = await updateCart({
+
+      isLoading.value = true;
+
+      await updateCart({
         cartId: localCartId,
         shipping_address: selectedAddressId.value,
         billing_address: selectedAddressId.value,
       });
-      console.log(res);
+      await user.updateUser({ billing_address: selectedAddressId.value })
     } catch (error) {
     } finally {
       isLoading.value = false;
     }
   };
+
   useEffect(() => {
     updateShippingAddress();
   }, [selectedAddressId.value]);
+
+  useEffect(() => {
+    if (currentCustomer?.billing_address_id && !selectedAddressId.value) {
+      selectedAddressId.value = currentCustomer.billing_address_id;
+      isNewAddress.value = false;
+    }
+  }, [currentCustomer]);
+
+  // address mutations
+
+  const deleteAddress = async (id: string) => {
+    if (confirm('Are you sure you want to delete this address?')) {
+      await removeShippingAddress(id);
+      if (currentCustomer?.billing_address_id === id) {
+        await user.updateUser({ billing_address: undefined })
+      }
+    }
+  }
 
   return (
     <div>
@@ -54,28 +77,28 @@ const AddressList = () => {
         size="h5/medium"
         variant="primary"
         id="summary-heading"
-        className="mb-4"
+        className="mt-4"
       >
         Shipping Address
       </Typography>
       <div>
-        <Typography size="body1/semi-bold" className=" leading-6">
+        <Typography size="body1/semi-bold" className="leading-6 hidden md:block mt-2">
           Select Shipping Address
         </Typography>
-        <div class="address-container overflow-x-auto flex p-2">
-          <div class="my-4 flex gap-4">
+        <div class="address-container md:overflow-x-auto flex justify-center md:justify-normal p-2">
+          <div class="my-4 grid grid-cols-1 sm:grid-cols-2 md:flex gap-4">
             <Button
               type="button"
               variant="icon"
               title="add new address"
-              onClick={() => (
-                (isNewAddress.value = true), (selectedAddressId.value = null)
-              )}
-              className={`flex justify-center w-52 items-center bg-white shadow-sm rounded-lg border ${
-                isNewAddress.value
-                  ? " border-indigo-600 ring-2 ring-indigo-600"
-                  : ""
-              }`}
+              onClick={() => {
+                isNewAddress.value = true;
+                selectedAddressId.value = null;
+              }}
+              className={`flex justify-center w-52 min-h-[10rem] items-center bg-white shadow-sm rounded-lg border ${isNewAddress.value
+                ? " border-indigo-600 ring-2 ring-indigo-600"
+                : ""
+                }`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -96,28 +119,26 @@ const AddressList = () => {
               </svg>
             </Button>
 
-            {currentCustomer?.shipping_addresses.length
-              ? currentCustomer.shipping_addresses.map((customer) => (
-                  <AddressCard
-                    customer={customer}
-                    isLoading={isLoading}
-                    selectedAddressId={selectedAddressId}
-                    handleSelectAddress={handleSelectAddress}
-                  />
-                ))
-              : ""}
+            {currentCustomer?.shipping_addresses?.map((address) => (
+              <AddressCard
+                address={address}
+                isLoading={isLoading}
+                selectedAddressId={selectedAddressId}
+                handleSelectAddress={handleSelectAddress}
+                deleteAddress={deleteAddress}
+              />
+            ))}
           </div>
         </div>
       </div>
 
       <div
-        class={`${
-          isNewAddress.value || selectedAddressId.value === null
-            ? "block"
-            : "hidden"
-        }`}
+        class={`${isNewAddress.value || selectedAddressId.value === null
+          ? "block"
+          : "hidden"
+          }`}
       >
-        <AddressForm />
+        <AddressForm selectedAddressId={selectedAddressId} isNewAddress={isNewAddress} />
       </div>
     </div>
   );
