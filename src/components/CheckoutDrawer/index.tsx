@@ -1,13 +1,19 @@
 import AddressList from "@components/AddressList";
 import Button from "@components/Button";
 import OrderSummary from "@components/OrderSummary";
+import useKeyboard from "@hooks/useKeyboard";
 import { checkoutOpen } from "@store/checkoutStore";
 import { cx } from "class-variance-authority";
 import { createPortal } from "preact/compat";
 
 const index = () => {
+  const { add } = useKeyboard('Escape', { event: 'keydown' })
   // remove app's default scroll if cart is open
   document.body.style.overflow = checkoutOpen.value ? "hidden" : "auto";
+
+  add('close-checkout-drawer', () => {
+    checkoutOpen.value = false;
+  })
 
   return createPortal(
     <div

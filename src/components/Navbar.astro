@@ -1,7 +1,6 @@
 ---
 import Button from "@components/Button";
 import RightNav from "@components/RightNav";
-import ShipmentRegions from "./ShipmentRegions";
 import { regionList } from "@api/region/regionList";
 import CartDrawer from "@components/CartDrawer";
 import CheckOutDrawer from "@components/CheckoutDrawer";
@@ -86,7 +85,7 @@ const { regions } = await regionList();
         ))
       }
     </div>
-    <ShipmentRegions regions={regions} client:load />
+    <!-- <ShipmentRegions regions={regions} client:load /> -->
     <!-- Right Nav -->
     <RightNav client:load />
     <CartDrawer client:only="preact" />
@@ -145,7 +144,7 @@ const { regions } = await regionList();
             }
           </div>
           <div class="py-4">
-            <ShipmentRegions screen="mobile" regions={regions} client:load />
+            <!-- <ShipmentRegions screen="mobile" regions={regions} client:load /> -->
             <RightNav screen="mobile" client:load />
           </div>
         </div>
