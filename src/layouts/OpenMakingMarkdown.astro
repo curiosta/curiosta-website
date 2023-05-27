@@ -1,0 +1,24 @@
+---
+import Layout from "./Layout.astro";
+import Navbar from "@components/Navbar.astro";
+import Footer from "@components/Footer.astro";
+import OpenMakingNav from "@components/OpenMakingNav";
+import Typography from "@components/Typography";
+const { frontmatter } = Astro.props;
+---
+
+<Layout title={frontmatter.title} description={frontmatter.description}>
+  <Navbar />
+  <OpenMakingNav />
+  <header class="py-8 px-4 text-center">
+    <div class="w-full">
+      <Typography tag="h1" size="h1/semi-bold">{frontmatter.title}</Typography>
+    </div>
+  </header>
+  <main class="pr flex justify-center bg-white py-8 w-full px-6 lg:px-8">
+    <article class="prose">
+      <slot />
+    </article>
+  </main>
+  <Footer />
+</Layout>

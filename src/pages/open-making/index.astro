@@ -1,0 +1,124 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Navbar from "@components/Navbar.astro";
+import Footer from "@components/Footer.astro";
+import OpenMakingNav from "@components/OpenMakingNav";
+import Typography from "@components/Typography";
+import Button from "@components/Button";
+import { Picture } from "@astrojs/image/components";
+import OpenMakingCard from "@components/Card/OpenMakingCard";
+
+const redirectPages = [
+  {
+    title: "Discover Manufacturers near you",
+    description: "Find digital fabricators to work with",
+    image: "/images/open-making-img3.webp",
+    link: "/open-making/manufacturers",
+  },
+  {
+    title: "Enter the global build",
+    description: "Check out Curiosta build",
+
+    image: "/images/open-making-img2.webp",
+    link: "/open-making/build",
+  },
+];
+
+const websiteUsesExamples = [
+  {
+    title: "Manufacturers",
+    description:
+      "Manufacturers get paid for their work. Curiosta now makes up a large proportion of his business.",
+    image: "/images/placeholderImg.svg",
+    link: "#",
+    linkTitle: "Join as a maker",
+  },
+  {
+    title: "Solution Engineers",
+    description:
+      "Solution Engineer get global distribution. Become part of the this community and share your work with a global audience.",
+    image: "/images/placeholderImg.svg",
+    link: "/solution-engineers",
+    linkTitle: "Find out more",
+  },
+  {
+    title: "You",
+    description: "You can request a quote to have designs made local to you.",
+    image: "/images/placeholderImg.svg",
+    link: "/products",
+    linkTitle: "Check Product",
+  },
+];
+---
+
+<Layout title="Open Making" description="Open Making">
+  <Navbar />
+  <OpenMakingNav />
+  <main class="space-y-8">
+    <Typography tag="h1" size="h3/bold" className="text-center my-8">
+      A global platform for local making
+    </Typography>
+    <section class="mx-auto max-w-7xl px-4">
+      <div class="relative overflow-hidden rounded-lg">
+        <div class="absolute inset-0">
+          <Picture
+            src={"/images/open-making-img1.webp"}
+            alt=""
+            class="h-full w-full object-cover object-center"
+            widths={[400, 800, 1200]}
+            aspectRatio={16 / 9}
+            formats={["avif", "webp"]}
+          />
+        </div>
+        <div
+          class="relative bg-gray-900 bg-opacity-75 px-6 py-32 sm:px-12 sm:py-20 lg:px-16"
+        >
+          <div
+            class="relative mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 text-center"
+          >
+            {
+              websiteUsesExamples.map((example) => (
+                <div class="flex items-center flex-col">
+                  <img
+                    src={example.image}
+                    alt=""
+                    class="rounded-full w-40 bg-white p-4"
+                  />
+                  <Typography size="h3/semi-bold" className="mt-3 text-white">
+                    {example.title}
+                  </Typography>
+
+                  <Typography
+                    size="body1/semi-bold"
+                    className="mt-3 text-white"
+                  >
+                    {example.description}
+                  </Typography>
+
+                  <Button
+                    link={example.link}
+                    className="!bg-white !text-primary-900 !w-fit mt-4"
+                  >
+                    {example.linkTitle}
+                  </Button>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-6xl px-4">
+      <Typography size="h4/semi-bold">
+        Building a new model of open making
+      </Typography>
+      <div
+        class="mx-auto mt-8 grid max-w-2xl grid-cols-1 gap-8 lg:mx-0 lg:max-w-none lg:grid-cols-2"
+      >
+        {redirectPages.map((page) => <OpenMakingCard page={page} />)}
+      </div>
+      <Footer />
+    </section>
+  </main>
+</Layout>

@@ -1,8 +1,8 @@
 ---
-title: Refund & Cancellation
+title: Terms of use
 description: Explore Curiosta's terms of usage, outlining the conditions and guidelines for using their platform, ensuring a secure and productive learning experience.
 
-layout: "@layouts/MarkdownLayout.astro"
+layout: "@layouts/TermsMarkdownLayout.astro"
 ---
 
 ## Heading
