@@ -7,7 +7,8 @@ import Layout from "@layouts/Layout.astro";
 import ShortIntroSection from "@section/ShortIntroSection.astro";
 import PartnerCompanies from "@section/PartnerCompanies.astro";
 import { pageTitleDesc } from "content";
-import ProductContainer from "@components/ProductContainer";
+import ProductCards from "@components/ProductCards";
+import CollectionGroup from "@components/CollectionGroup";
 
 const res = await listProducts({ limit: 3 });
 const products = res?.products;
@@ -24,7 +25,9 @@ const products = res?.products;
   <ShortIntroSection />
 
   <!-- Feature Products -->
-  <ProductContainer products={products} page={"Homepage"} client:load />
+  <CollectionGroup title='Featured Products' link='/products' linkText='View all products'>
+    <ProductCards products={products} client:load />
+  </CollectionGroup>
 
   <!-- Partner company Logo cloud -->
   <PartnerCompanies />
