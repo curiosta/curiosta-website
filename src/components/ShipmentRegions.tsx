@@ -52,9 +52,8 @@ const ShipmentRegions = ({ regions, screen }: Props) => {
 
   return (
     <div
-      class={`${
-        screen === "mobile" ? "flex" : "hidden"
-      } lg:flex items-center gap-2`}
+      class={`${screen === "mobile" ? "flex" : "hidden"
+        } lg:flex items-center gap-2`}
     >
       <select
         id="location"
