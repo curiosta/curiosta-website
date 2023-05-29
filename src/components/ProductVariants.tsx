@@ -1,17 +1,10 @@
 import type { Signal } from "@preact/signals";
 import Typography from "@components/Typography";
 import useLocalStorage from "@hooks/useLocalStorage";
+import type { PricedVariant } from "@medusajs/medusa/dist/types/pricing";
 
 interface Props {
-  productVariants?: {
-    id: string;
-    title: string;
-    inventory_quantity: number;
-    prices: {
-      currency_code: string;
-      amount: number;
-    }[];
-  }[];
+  productVariants?: PricedVariant[];
   selectedVariant: {
     id: Signal<string | undefined>;
     title: Signal<string | undefined>;
@@ -60,7 +53,13 @@ const ProductVariants = ({ productVariants, selectedVariant }: Props) => {
                     value={variant.title}
                     class="sr-only"
                     onInput={() =>
-                      handleVariant(variant.id, variant.title, variant.prices)
+                      variant.id && variant.title && variant.prices
+                        ? handleVariant(
+                            variant.id,
+                            variant.title,
+                            variant.prices
+                          )
+                        : undefined
                     }
                     aria-labelledby="variant-choice-0-label"
                   />

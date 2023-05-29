@@ -3,8 +3,8 @@ import Button from "@components/Button";
 import RightNav from "@components/RightNav";
 import ShipmentRegions from "./ShipmentRegions";
 import { regionList } from "@api/region/regionList";
-import CartDrawer from "./CartDrawer";
-
+import CartDrawer from "@components/CartDrawer";
+import CheckOutDrawer from "@components/CheckoutDrawer";
 const navLinks = [
   {
     title: "Products",
@@ -12,19 +12,14 @@ const navLinks = [
     link: "/products",
   },
   {
-    title: "Services",
-    description: "Services ",
-    link: "#",
+    title: "Open Making",
+    description: "Open Making",
+    link: "/open-making",
   },
   {
-    title: "Workplace",
-    description: "Work place",
-    link: "#",
-  },
-  {
-    title: "Designers",
-    description: "Designers",
-    link: "#",
+    title: "Solution Engineers",
+    description: "Solution Engineers",
+    link: "/solution-engineers",
   },
   {
     title: "Blog",
@@ -89,7 +84,8 @@ const { regions } = await regionList();
     <ShipmentRegions regions={regions} client:load />
     <!-- Right Nav -->
     <RightNav client:load />
-    <CartDrawer client:only='preact' />
+    <CartDrawer client:only="preact" />
+    <CheckOutDrawer client:only="preact" />
   </nav>
   {/* Mobile menu, show/hide based on menu open state. */}
   <div class="lg:hidden" role="dialog" aria-modal="true">
@@ -164,5 +160,4 @@ const { regions } = await regionList();
   closeMenu.addEventListener("click", () => {
     navLinks.style.display = "none";
   });
-  
 </script>

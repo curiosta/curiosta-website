@@ -1,0 +1,25 @@
+---
+import Layout from "./Layout.astro";
+import Navbar from "@components/Navbar.astro";
+import Footer from "@components/Footer.astro";
+import TermsNav from "@components/TermsNav";
+const { frontmatter } = Astro.props;
+---
+
+<Layout title={frontmatter.title} description={frontmatter.description}>
+  <Navbar />
+  <main
+    class="pr bg-white flex justify-between flex-wrap py-24 sm:py-32 mx-auto max-w-[80%] px-6 lg:px-8"
+  >
+    <div class="block lg:hidden bg-gray-50 h-fit w-full lg:w-1/4">
+      <TermsNav client:only="preact" />
+    </div>
+    <article class="prose">
+      <slot />
+    </article>
+    <div class="hidden lg:block bg-gray-50 h-fit lg:w-1/4">
+      <TermsNav client:only="preact" />
+    </div>
+  </main>
+  <Footer />
+</Layout>

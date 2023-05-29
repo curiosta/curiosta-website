@@ -1,0 +1,49 @@
+---
+import Navbar from "@components/Navbar.astro";
+import OpenMakingNav from "@components/OpenMakingNav";
+import Layout from "@layouts/Layout.astro";
+import Footer from "@components/Footer.astro";
+import Typography from "@components/Typography";
+import OpenMakingCard from "@components/Card/OpenMakingCard";
+
+const redirectPages = [
+  {
+    title: "WowCarving",
+    description: "Abu Dhabi, Abu Dhabi",
+    link: "#",
+    image: "/images/open-making-img1.webp",
+  },
+  {
+    title: "IDV Concepts Asia",
+    description: "Singapore, Johor",
+    link: "#",
+    image: "/images/open-making-img2.webp",
+  },
+  {
+    title: "WoodFix",
+    description: "Singapore, Johor",
+    link: "#",
+    image: "/images/open-making-img3.webp",
+  },
+];
+---
+
+<Layout title="Build" description="build">
+  <Navbar />
+  <OpenMakingNav />
+  <main class="bg-white pt-16 pb-8 mx-auto max-w-[80%] px-6 lg:px-8">
+    <div class="flex justify-between items-center">
+      <Typography tag="h3" size="h3/semi-bold">
+        Showcase your Curiosta builds
+      </Typography>
+    </div>
+    <section class="mt-16">
+      <div
+        class="mx-auto mt-8 grid max-w-2xl grid-cols-1 gap-8 lg:mx-0 lg:max-w-none lg:grid-cols-3"
+      >
+        {redirectPages.map((page) => <OpenMakingCard page={page} />)}
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
