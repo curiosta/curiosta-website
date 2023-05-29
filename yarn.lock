@@ -405,10 +405,10 @@
     "@contentful/rich-text-types" "^16.1.0"
     escape-html "^1.0.3"
 
-"@contentful/rich-text-types@^16.0.2", "@contentful/rich-text-types@^16.1.0":
-  version "16.1.0"
-  resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-16.1.0.tgz#2eea32439790abf857992167df68e82734934a3a"
-  integrity sha512-Pucb68FK0j9cHJ96FAewXv+bvH4XizC4KBbVqyHhPLkDIVfasj0AWU5rI1lnvysdVKu66NQkFe8xZdeFTkaLWQ==
+"@contentful/rich-text-types@^16.0.2", "@contentful/rich-text-types@^16.1.0", "@contentful/rich-text-types@^16.2.0":
+  version "16.2.0"
+  resolved "https://registry.yarnpkg.com/@contentful/rich-text-types/-/rich-text-types-16.2.0.tgz#5a98cb119340f4da46555216913e96d7ce58df70"
+  integrity sha512-4BHC+mfa50JB70epzpnas4EkiuB3mGdBZ5Rp8w7R5wXvswEf8TLg5yGau2FxmZeEjrAkDrt4vzBLVQ8v3Y//Jw==
 
 "@dabh/diagnostics@^2.0.2":
   version "2.0.3"
