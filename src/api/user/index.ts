@@ -1,5 +1,5 @@
 import medusa from "@api/medusa";
-import type { Customer, StorePostCustomersCustomerReq, StorePostCustomersReq } from "@medusajs/medusa";
+import type { Customer, StorePostCustomersCustomerReq } from "@medusajs/medusa";
 import { signal } from "@preact/signals";
 
 class User {

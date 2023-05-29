@@ -22,6 +22,8 @@ const AddressForm = ({ selectedAddressId, isNewAddress }: { selectedAddressId: S
       const payloadAddress = { ...data };
       if (localRegion?.countryCode) {
         payloadAddress.country_code = localRegion.countryCode;
+      } else {
+        payloadAddress.country_code = 'in'
       }
       const addShipping = await addShippingAddress(payloadAddress);
       const latestAddress = [...addShipping.customer.shipping_addresses].pop();
