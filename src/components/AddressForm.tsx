@@ -6,13 +6,15 @@ import type { AddressCreatePayload } from "@medusajs/medusa";
 import useLocalStorage from "@hooks/useLocalStorage";
 import user from "@api/user";
 import { updateCart } from "@api/cart/updateCart";
-import { useSignal } from "@preact/signals";
+import { Signal, useSignal } from "@preact/signals";
+import { useRef } from "preact/hooks";
 
-const AddressForm = () => {
+const AddressForm = ({ selectedAddressId, isNewAddress }: { selectedAddressId: Signal<string | null>, isNewAddress: Signal<boolean> }) => {
   const isLoading = useSignal<boolean>(false);
   const { get } = useLocalStorage();
   const localRegion = get<{ countryCode: string }>("region");
   const localCartId = get("cartId");
+  const resetButtonRef = useRef<HTMLButtonElement>(null)
 
   const handleShippingAddress = async (data: AddressCreatePayload) => {
     try {
@@ -20,25 +22,23 @@ const AddressForm = () => {
       const payloadAddress = { ...data };
       if (localRegion?.countryCode) {
         payloadAddress.country_code = localRegion.countryCode;
+      } else {
+        payloadAddress.country_code = 'in'
       }
-
       const addShipping = await addShippingAddress(payloadAddress);
+      const latestAddress = [...addShipping.customer.shipping_addresses].pop();
       // add shipping address in cart
       if (localCartId) {
-        const addCartShipping = await updateCart({
+        await updateCart({
           cartId: localCartId,
-          shipping_address:
-            addShipping.customer.shipping_addresses[
-              addShipping.customer.shipping_addresses.length - 1
-            ].id,
-          billing_address:
-            addShipping.customer.shipping_addresses[
-              addShipping.customer.shipping_addresses.length - 1
-            ].id,
+          shipping_address: latestAddress?.id,
+          billing_address: latestAddress?.id
         });
-        console.log(addCartShipping);
       }
-      user.refetch();
+      await user.refetch();
+      selectedAddressId.value = latestAddress?.id || null;
+      latestAddress?.id && (isNewAddress.value = false)
+      resetButtonRef.current?.click()
     } catch (error) {
       console.log(error);
     } finally {
@@ -48,9 +48,9 @@ const AddressForm = () => {
 
   return (
     <div class="bg-white pt-4">
-      <div class="relative mx-auto max-w-2xl  lg:px-8 ">
+      <div class="relative mx-auto max-w-2xl">
         <FormControl
-          class="px-4 sm:px-6 mt-4 flex flex-col gap-5 lg:col-start-1 lg:row-start-1 lg:px-0 lg:pb-4"
+          class="sm:px-6 mt-4 flex flex-col gap-5 lg:col-start-1 lg:row-start-1 lg:px-0 lg:pb-4"
           noValidate
           mode="onSubmit"
           onSubmit={handleShippingAddress}
@@ -110,7 +110,7 @@ const AddressForm = () => {
             />
             <Input
               name="phone"
-              type="phone"
+              type="number"
               label="Phone Number"
               autocomplete="phone"
               required={{ message: "Phone number is required!", value: true }}
@@ -118,16 +118,19 @@ const AddressForm = () => {
             />
           </div>
 
-          <div class="mt-5 border-t border-gray-200 pt-6 flex  justify-end ">
-            <Button
-              type="submit"
-              variant="primary"
-              title="Save address"
-              className="!w-auto"
-              disabled={isLoading.value}
-            >
-              {isLoading.value ? "Loading..." : "Save Address"}
-            </Button>
+          <div class="mt-5 border-t border-gray-200 pt-6">
+            <div className='flex justify-end items-center gap-4'>
+              <Button variant='danger' type='reset' className='!w-max' ref={resetButtonRef}>Reset</Button>
+              <Button
+                type="submit"
+                variant="primary"
+                title="Save address"
+                className="!w-auto"
+                disabled={isLoading.value}
+              >
+                {isLoading.value ? "Loading..." : "Save Address"}
+              </Button>
+            </div>
           </div>
         </FormControl>
       </div>

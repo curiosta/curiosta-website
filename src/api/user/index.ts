@@ -1,13 +1,13 @@
 import medusa from "@api/medusa";
-import type { Customer } from "@medusajs/medusa";
+import type { Customer, StorePostCustomersCustomerReq } from "@medusajs/medusa";
 import { signal } from "@preact/signals";
 
 class User {
   state = signal<"authenticated" | "loading" | "unauthenticated">("loading");
-  customer = signal<Customer | null>(null);
+  customer = signal<Omit<Customer, 'password_hash'> | null>(null);
 
   constructor() {
-    // intially call user
+    // initially call user
     this.refetch();
   }
 
@@ -24,6 +24,10 @@ class User {
         this.state.value = "unauthenticated";
       }
     }
+  }
+  async updateUser(payload: StorePostCustomersCustomerReq) {
+    const response = await medusa.customers.update(payload)
+    this.customer.value = response.customer
   }
 }
 

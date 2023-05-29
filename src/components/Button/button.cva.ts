@@ -31,6 +31,7 @@ const button = cva(
           "hover:bg-danger-600",
           "focus-visible:outline-danger-600",
           "text-white",
+          "py-3 px-8 w-full"
         ],
         icon: ["p-2 !shadow-none"],
         "icon-active": [
