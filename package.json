@@ -19,7 +19,7 @@
     "@medusajs/medusa-js": "^5.0.0",
     "@preact/signals": "^1.1.3",
     "astro": "^2.5.1",
-    "astro-sst": "^2.8.27",
+    "astro-sst": "^2.10.4",
     "class-variance-authority": "^0.6.0",
     "colorette": "^2.0.20",
     "contentful": "^10.2.1",
