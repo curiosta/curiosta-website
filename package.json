@@ -18,8 +18,11 @@
     "@contentful/rich-text-types": "^16.1.0",
     "@medusajs/medusa-js": "^5.0.0",
     "@preact/signals": "^1.1.3",
+<<<<<<< HEAD
     "@stripe/react-stripe-js": "^2.1.0",
     "@stripe/stripe-js": "^1.53.0",
+=======
+>>>>>>> origin/fix/shipping-address-bugs
     "astro": "^2.5.1",
     "astro-sst": "^2.8.27",
     "class-variance-authority": "^0.6.0",

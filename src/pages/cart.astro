@@ -2,12 +2,8 @@
 import Layout from "@layouts/Layout.astro";
 import Typography from "@components/Typography";
 import { pageTitleDesc } from "content";
-import ProductCart from "@components/ProductCart";
 import OrderSummary from "@components/OrderSummary";
 import Navbar from "@components/Navbar.astro";
-
-// debugging import only should not be in production!.
-import PaymentHandler from "@components/PaymentHandler";
 ---
 
 <Layout title={pageTitleDesc.cart.title} description={pageTitleDesc.cart.description}>
@@ -18,10 +14,8 @@ import PaymentHandler from "@components/PaymentHandler";
         Shopping Cart
       </Typography>
       <div class="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
-        <ProductCart client:load />
         <OrderSummary client:load />
       </div>
     </div>
-    <PaymentHandler client:only='preact' />
   </main>
 </Layout>
