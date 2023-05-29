@@ -3,14 +3,20 @@ import type { Signal } from "@preact/signals";
 
 interface Props {
   offset: Signal<number>;
-  count: number;
+  count: Signal<number | null>;
   limit: Signal<number>;
+  isLoading: Signal<boolean>;
 }
 
-const index = ({ offset, count, limit }: Props) => {
+const index = ({ offset, count, limit, isLoading }: Props) => {
   const hanldeNext = () => {
-    if (offset.value + limit.value < count) {
-      offset.value = Math.min(offset.value + limit.value, count * limit.value);
+    if (count.value) {
+      if (offset.value + limit.value < count.value) {
+        offset.value = Math.min(
+          offset.value + limit.value,
+          count.value * limit.value
+        );
+      }
     }
   };
   const handlePrev = () => {
@@ -19,7 +25,9 @@ const index = ({ offset, count, limit }: Props) => {
     }
   };
 
-  const isEndResult = count ? offset.value + limit.value > count : null;
+  const isEndResult = count.value
+    ? offset.value + limit.value > count.value
+    : null;
 
   return (
     <div
@@ -29,21 +37,32 @@ const index = ({ offset, count, limit }: Props) => {
       <div class="hidden sm:block">
         <p class="text-sm text-gray-700 flex gap-1">
           Showing
-          <span class="font-medium">{offset.value + 1}</span>
-          to
+          <span class="font-medium">{count.value ? offset.value + 1 : 0}</span>-
           <span class="font-medium">
-            {isEndResult ? count : offset.value + limit.value}
+            {isEndResult ? count.value : offset.value + limit.value || 0}
           </span>
-          over
-          <span class="font-medium">{count}</span>
+          of
+          <span class="font-medium">{count.value || 0}</span>
           results
         </p>
       </div>
       <div class="flex flex-1 justify-between sm:justify-end gap-4">
-        <Button className={"!w-fit !px-3 !py-2"} onClick={handlePrev}>
+        <Button
+          className={`!w-fit !px-3 !py-2 ${
+            offset.value <= 0 ? "hidden" : "inline-flex"
+          }`}
+          onClick={handlePrev}
+          disabled={isLoading.value || offset.value <= 0}
+        >
           Previous
         </Button>
-        <Button className={"!w-fit !px-3 !py-2"} onClick={hanldeNext}>
+        <Button
+          className={`!w-fit !px-3 !py-2 ${
+            isEndResult ? "hidden" : "inline-flex"
+          }`}
+          onClick={hanldeNext}
+          disabled={isLoading.value || isEndResult === true}
+        >
           Next
         </Button>
       </div>

@@ -35,7 +35,7 @@ const ProductContainer = ({ products, page }: Props) => {
       </div>
 
       <div
-        class={`mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-3 lg:gap-x-8`}
+        class={`mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-3 lg:gap-x-8 `}
       >
         {products.length
           ? products.map((product) => (
