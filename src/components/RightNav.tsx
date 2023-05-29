@@ -2,19 +2,22 @@ import { cart, cartOpen } from "@store/cartStore";
 import Button from "./Button";
 import { logoutUser } from "@api/user/logoutUser";
 import useLocalStorage from "@hooks/useLocalStorage";
+import user from "@api/user";
+import { cx } from "class-variance-authority";
 
 interface Props {
   screen?: "mobile";
 }
 
 const RightNav = ({ screen }: Props) => {
-  const { get } = useLocalStorage();
+  // const { get } = useLocalStorage();
   const totalCartItems = cart.value?.items?.reduce(
     (acc, curVal) => acc + curVal.quantity,
     0
   );
 
-  const localCustId = get("custId");
+  // const localCustId = get("custId");
+  const userState = user.state.value;
 
   const handleLogout = async () => {
     await logoutUser();
@@ -25,38 +28,49 @@ const RightNav = ({ screen }: Props) => {
 
   return (
     <div
-      class={` lg:flex lg:items-center  lg:justify-end ${screen === "mobile" ? "flex flex-col gap-4 mt-4" : "hidden"
-        }`}
+      class={cx(
+        "lg:flex lg:items-center  lg:justify-end",
+        screen === "mobile" ? "flex flex-col gap-4 mt-4" : "hidden"
+      )}
     >
-      {localCustId ? (
-        <Button
-          variant="primary"
-          className="leading-6 !px-2 !py-1 !w-fit rounded-md"
-          onClick={handleLogout}
-        >
-          Log out
-        </Button>
-      ) : (
-        <>
+      <div>
+        {userState === "authenticated" ? (
           <Button
-            link="/signup"
-            className="leading-6 !bg-transparent !text-primary-900 !shadow-none !px-0 lg:!px-2 !py-1 !w-fit rounded-md mr-3"
-          >
-            Sign Up
-          </Button>
-
-          <Button
-            link="/login"
             variant="primary"
             className="leading-6 !px-2 !py-1 !w-fit rounded-md"
+            onClick={handleLogout}
           >
-            Login
+            Log out
           </Button>
-        </>
-      )}
+        ) : (
+          <>
+            <Button
+              link="/signup"
+              className="leading-6 !bg-transparent !text-primary-900 !shadow-none !px-0 lg:!px-2 !py-1 !w-fit rounded-md mr-3"
+            >
+              Sign Up
+            </Button>
+
+            <Button
+              link="/login"
+              variant="primary"
+              className="leading-6 !px-2 !py-1 !w-fit rounded-md"
+            >
+              Login
+            </Button>
+          </>
+        )}
+      </div>
 
       <div class="flow-root lg:ml-6">
-        <a href="#" onClick={(e) => { e.preventDefault(); cartOpen.value = true }} class="group -m-2 flex items-center p-2">
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            cartOpen.value = true;
+          }}
+          class="group -m-2 flex items-center p-2"
+        >
           <svg
             class="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
             fill="none"
@@ -77,7 +91,7 @@ const RightNav = ({ screen }: Props) => {
           <span class="sr-only">items in cart, view bag</span>
         </a>
       </div>
-    </div >
+    </div>
   );
 };
 

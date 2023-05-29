@@ -1,12 +1,14 @@
 ---
+import type { Product } from "@api/product";
+import { categoriesList } from "@api/product/categoriesList";
 import { listProducts } from "@api/product/listProducts";
 import Footer from "@components/Footer.astro";
 import Navbar from "@components/Navbar.astro";
-import ProductContainer from "@components/ProductContainer";
+import ProductFilter from "@components/ProductFilter";
 import Layout from "@layouts/Layout.astro";
 
-const res = await listProducts();
-const products = res?.products;
+const categoryRes = await categoriesList();
+const categories = categoryRes?.product_categories;
 ---
 
 <Layout
@@ -15,7 +17,7 @@ const products = res?.products;
 >
   <Navbar />
   <main class="bg-white">
-    <ProductContainer products={products} page={"Productpage"} client:load />
+    <ProductFilter categories={categories} client:load />
   </main>
   <Footer />
 </Layout>

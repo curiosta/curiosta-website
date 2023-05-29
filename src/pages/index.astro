@@ -9,7 +9,7 @@ import PartnerCompanies from "@section/PartnerCompanies.astro";
 import { pageTitleDesc } from "content";
 import ProductContainer from "@components/ProductContainer";
 
-const res = await listProducts(3);
+const res = await listProducts({ limit: 3 });
 const products = res?.products;
 ---
 

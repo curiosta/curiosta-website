@@ -1,11 +1,11 @@
 import { signal } from "@preact/signals";
 
 interface Props {
-  productImages: {
+  productImages?: {
     id: string;
     url: string;
   }[];
-  productTitle: string;
+  productTitle?: string;
 }
 
 const activeIndex = signal(0);
@@ -21,7 +21,7 @@ const ProductImage = ({ productImages, productTitle }: Props) => {
           aria-orientation="horizontal"
           role="tablist"
         >
-          {productImages.map((image, index) => (
+          {(productImages || []).map((image, index) => (
             <button
               key={image.id}
               id="tabs-1-tab-1"
@@ -59,7 +59,7 @@ const ProductImage = ({ productImages, productTitle }: Props) => {
           class="h-[450px]"
         >
           <img
-            src={productImages[activeIndex.value]?.url}
+            src={productImages?.[activeIndex.value]?.url}
             alt={productTitle}
             class="h-full w-full object-cover object-center sm:rounded-lg"
           />

@@ -50,7 +50,7 @@ const LoginForm = () => {
         placeholder="Your Curiosta password"
       />
       <div class="flex items-center justify-between">
-        <Checkbox name="remember-me" type="checkbox" label="Remember me" />
+        <Checkbox name="remember-me" label="Remember me" />
         <div class="text-sm leading-6">
           <a
             href="#"

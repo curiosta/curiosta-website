@@ -1,0 +1,47 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Navbar from "@components/Navbar.astro";
+import Footer from "@components/Footer.astro";
+import Typography from "@components/Typography";
+import OpenMakingCard from "@components/Card/OpenMakingCard";
+
+const solutionEngineers = [
+  {
+    title: "John doe",
+    description: "",
+    link: "#",
+    image: "/images/placeholderImg.svg",
+  },
+  {
+    title: "John doe",
+    description: "",
+    link: "#",
+    image: "/images/placeholderImg.svg",
+  },
+  {
+    title: "John doe",
+    description: "",
+    link: "#",
+    image: "/images/placeholderImg.svg",
+  },
+];
+---
+
+<Layout title="Solution Engineers" description="Solution Engineers">
+  <Navbar />
+  <main class="pr bg-white py-24 sm:py-32 mx-auto max-w-[80%] px-6 lg:px-8">
+    <div class="flex justify-between items-center">
+      <Typography tag="h3" size="h3/semi-bold">
+        Our Solution Engineers
+      </Typography>
+    </div>
+    <section>
+      <div
+        class="mx-auto mt-8 grid max-w-2xl grid-cols-1 gap-8 lg:mx-0 lg:max-w-none lg:grid-cols-3"
+      >
+        {solutionEngineers.map((page) => <OpenMakingCard page={page} />)}
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>

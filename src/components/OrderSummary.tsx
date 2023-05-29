@@ -1,121 +1,50 @@
-import Button from "@components/Button";
-import { CurrencyMap, currencyMap } from "@components/CurrencyMap";
-import Typography from "@components/Typography";
 import { cart } from "@store/cartStore";
+import priceToCurrency from "@utils/priceToCurrency";
+import CartItem from "@components/CartItem";
 
 const OrderSummary = () => {
-  const currency = cart.value.region?.currency_code as keyof CurrencyMap;
-
-  const handleRedirect = () => {
-    if (cart.value.shipping_address_id) {
-      location.href = "/checkout";
-    } else {
-      location.href = "/newAddress";
-    }
-  };
-
   return (
-    <section
-      aria-labelledby="summary-heading"
-      class={`mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8 ${
-        !cart.value.items?.length ? "hidden" : ""
-      }`}
-    >
-      <Typography
-        tag="h6"
-        size="h6/medium"
-        variant="primary"
-        id="summary-heading"
-      >
-        Order summary
-      </Typography>
+    <div>
+      <ul role="list" class="divide-y divide-gray-200 p-4">
+        {cart.value.items.map((item) => (
+          <div className="py-4 border-b last:border-b-0">
+            <CartItem item={item} />
+          </div>
+        ))}
 
-      <dl class="mt-6 space-y-4">
+        {/* <!-- More products... --> */}
+      </ul>
+      <dl class="space-y-6 border-t border-gray-200 px-4 py-6 sm:px-6">
         <div class="flex items-center justify-between">
-          <dt class="text-sm text-gray-600">Subtotal</dt>
+          <dt class="text-sm">Subtotal</dt>
           <dd class="text-sm font-medium text-gray-900">
-            {currencyMap[currency]}
-            {(cart.value.subtotal / 100).toFixed(2)}
+            {cart.value.subtotal ? priceToCurrency(cart.value.subtotal) : "N/A"}
           </dd>
         </div>
-        <div class="flex items-center justify-between border-t border-gray-200 pt-4">
-          <dt class="flex items-center text-sm text-gray-600">
-            <span>Shipping estimate</span>
-            <a
-              href="#"
-              class="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500"
-            >
-              <span class="sr-only">
-                Learn more about how shipping is calculated
-              </span>
-              <svg
-                class="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM8.94 6.94a.75.75 0 11-1.061-1.061 3 3 0 112.871 5.026v.345a.75.75 0 01-1.5 0v-.5c0-.72.57-1.172 1.081-1.287A1.5 1.5 0 108.94 6.94zM10 15a1 1 0 100-2 1 1 0 000 2z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
-            </a>
-          </dt>
+        <div class="flex items-center justify-between">
+          <dt class="text-sm">Shipping</dt>
           <dd class="text-sm font-medium text-gray-900">
-            {currencyMap[currency]}
-            {(cart.value.shipping_total / 100).toFixed(2)}
+            {cart.value.shipping_total
+              ? priceToCurrency(cart.value.shipping_total)
+              : "N/A"}
           </dd>
         </div>
-        <div class="flex items-center justify-between border-t border-gray-200 pt-4">
-          <dt class="flex text-sm text-gray-600">
-            <span>Tax estimate</span>
-            <a
-              href="#"
-              class="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500"
-            >
-              <span class="sr-only">
-                Learn more about how tax is calculated
-              </span>
-              <svg
-                class="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM8.94 6.94a.75.75 0 11-1.061-1.061 3 3 0 112.871 5.026v.345a.75.75 0 01-1.5 0v-.5c0-.72.57-1.172 1.081-1.287A1.5 1.5 0 108.94 6.94zM10 15a1 1 0 100-2 1 1 0 000 2z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
-            </a>
-          </dt>
+        <div class="flex items-center justify-between">
+          <dt class="text-sm">Taxes</dt>
           <dd class="text-sm font-medium text-gray-900">
-            {currencyMap[currency]}
-            {(cart.value.tax_total / 100).toFixed(2)}
+            {cart.value.tax_total
+              ? priceToCurrency(cart.value.tax_total)
+              : "N/A"}
           </dd>
         </div>
-        <div class="flex items-center justify-between border-t border-gray-200 pt-4">
-          <dt class="text-base font-medium text-gray-900">Order total</dt>
+        <div class="flex items-center justify-between border-t border-gray-200 pt-6">
+          <dt class="text-base font-medium">Total</dt>
           <dd class="text-base font-medium text-gray-900">
-            {currencyMap[currency]}
-            {(cart.value.total / 100).toFixed(2)}
+            {cart.value.total ? priceToCurrency(cart.value.total) : "N/A"}
           </dd>
         </div>
       </dl>
-
-      <div class="mt-6">
-        <Button
-          type="button"
-          title={"checkout"}
-          variant={"primary"}
-          onClick={handleRedirect}
-        >
-          Checkout
-        </Button>
-      </div>
-    </section>
+    </div>
   );
 };
 

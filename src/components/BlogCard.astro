@@ -4,7 +4,7 @@ import Typography from "@components/Typography";
 const { title, slug, date, description, image } = Astro.props;
 ---
 
-<article class="flex flex-col items-start">
+<article class="flex flex-col items-start relative">
   <div class="relative w-full">
     <img
       src={image.fields.file.url}
@@ -19,16 +19,11 @@ const { title, slug, date, description, image } = Astro.props;
   <div class="max-w-xl">
     <div class="mt-8 flex items-center gap-x-4 text-xs">
       <time datetime="2020-03-16" class="text-gray-500">{date}</time>
-      <a
-        href={`/blog/${slug}`}
-        >
-          <Chip>
-            Marketing
-          </Chip>
-        </a
-      >
+      <a href={`/blog/${slug}`}>
+        <Chip>Marketing</Chip>
+      </a>
     </div>
-    <div class="group relative">
+    <div class="group">
       <Typography
         tag="h3"
         variant="primary"
