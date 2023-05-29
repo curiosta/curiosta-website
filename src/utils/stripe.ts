@@ -2,25 +2,22 @@ import medusa from "@api/medusa";
 import { loadStripe, Stripe } from "@stripe/stripe-js";
 
 class PaymentWorkflow {
-  stripeInstance: Stripe | null = null;
+  stripeInstancePromise: Promise<Stripe | null> | null = null;
   cart: string;
 
   constructor(cart: string) {
     this.cart = cart;
-  }
-
-  async init() {
     if (!import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY) {
       throw new Error("Stripe API Key was not found!");
     }
-    this.stripeInstance = await loadStripe(
+    this.stripeInstancePromise = loadStripe(
       import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY
     );
   }
 
   async handleCheckout() {
-    await this.init();
-    if (!this.stripeInstance) throw new Error('Stripe is not initialized!');
+    const stripe = await this.stripeInstancePromise;
+    if (!stripe) throw new Error('Stripe is not initialized!');
 
     const initializedSessionCart = await medusa.carts.createPaymentSessions(this.cart);
     const isStripeAvailableInCurrentRegion = initializedSessionCart.cart.payment_sessions.map(p => p.provider_id).includes('stripe');

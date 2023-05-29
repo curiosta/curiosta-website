@@ -1,8 +1,8 @@
 import user from "@api/user";
 import Button from "@components/Button";
 import Typography from "@components/Typography";
-import { useSignal } from "@preact/signals";
-import { ChangeEvent, useEffect } from "preact/compat";
+import { Signal, useSignal } from "@preact/signals";
+import { ChangeEvent, FunctionComponent, useEffect } from "preact/compat";
 import AddressForm from "@components/AddressForm";
 import { cx } from "class-variance-authority";
 import AddressCard from "./AddressCard";
@@ -11,9 +11,12 @@ import useLocalStorage from "@hooks/useLocalStorage";
 import "@utils/addressList.css";
 import { removeShippingAddress } from "@api/user/removeShippingAddress";
 
-const AddressList = () => {
+type TAddressListProps = {
+  selectedAddressId: Signal<string | null>;
+}
+
+const AddressList: FunctionComponent<TAddressListProps> = ({ selectedAddressId }) => {
   const currentCustomer = user.customer.value;
-  const selectedAddressId = useSignal<string | null>(null);
   const isNewAddress = useSignal<boolean>(true);
   const isLoading = useSignal<boolean>(false);
 

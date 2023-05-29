@@ -1,19 +1,44 @@
+import medusa from "@api/medusa";
 import AddressList from "@components/AddressList";
 import Button from "@components/Button";
 import OrderSummary from "@components/OrderSummary";
+import PaymentHandler from "@components/PaymentHandler";
 import useKeyboard from "@hooks/useKeyboard";
+import { useSignal } from "@preact/signals";
+import { cart } from "@store/cartStore";
 import { checkoutOpen } from "@store/checkoutStore";
+import { loadStripe } from "@stripe/stripe-js";
 import { cx } from "class-variance-authority";
-import { createPortal } from "preact/compat";
+import { createPortal, useEffect } from "preact/compat";
 
-const index = () => {
-  const { add } = useKeyboard('Escape', { event: 'keydown' })
+const stripe = await loadStripe(import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
+
+const CheckoutDrawer = () => {
+  const { add } = useKeyboard('Escape', { event: 'keydown' });
+  const selectedAddressId = useSignal<string | null>(null);
+  const clientSecret = useSignal<string | undefined>(undefined);
+
   // remove app's default scroll if cart is open
   document.body.style.overflow = checkoutOpen.value ? "hidden" : "auto";
 
   add('close-checkout-drawer', () => {
     checkoutOpen.value = false;
   })
+
+  useEffect(() => {
+    if (!cart.value) return;
+    medusa.carts.createPaymentSessions(cart.value.id).then(({ cart: sessionCart }) => {
+      const isStripeAvailable = sessionCart.payment_sessions?.some((s) => s.provider_id === 'stripe');
+      if (!isStripeAvailable) throw new Error('Stripe is not supported in this region, Please contact administrator & ask to add stripe in backend!.');
+
+      if (!cart.value) return;
+      medusa.carts.setPaymentSession(cart.value.id, { provider_id: 'stripe' }).then(({ cart: paymentSessionCart }) => {
+        const _clientSecret = paymentSessionCart.payment_session?.data.client_secret as string
+        if (_clientSecret) { clientSecret.value = _clientSecret }
+      })
+    });
+  }, [cart.value])
+
 
   return createPortal(
     <div
@@ -52,7 +77,10 @@ const index = () => {
             <div>
               <div class="mx-auto max-w-2xl md:px-4 pb-24 md:pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
                 <form class="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
-                  <AddressList />
+                  <div>
+                    <AddressList selectedAddressId={selectedAddressId} />
+                    {selectedAddressId.value && clientSecret.value ? <PaymentHandler clientSecret={clientSecret} stripe={stripe} addressId={selectedAddressId.value} /> : null}
+                  </div>
                   {/* <!-- Order summary --> */}
                   <div class="mt-10 lg:mt-0">
                     <h2 class="text-lg font-medium text-gray-900">
@@ -84,4 +112,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default CheckoutDrawer;
