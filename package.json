@@ -23,7 +23,7 @@
     "class-variance-authority": "^0.6.0",
     "colorette": "^2.0.20",
     "contentful": "^10.2.1",
-    "preact": "^10.15.0",
+    "preact": "^10.15.1",
     "react-hook-form": "^7.43.9",
     "tailwindcss": "^3.3.2"
   },
