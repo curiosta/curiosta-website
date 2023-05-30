@@ -31,12 +31,17 @@ const ShipmentRegions = ({ screen }: Props) => {
           const cartItemsLength = cart.value.items.length;
 
           if (cartItemsLength) {
-            const answer = confirm('Changing region will clear cart items, Do you still want to proceed?');
+            const answer = confirm(
+              "Changing region will clear cart items, Do you still want to proceed?"
+            );
             if (answer) {
               await resetCart();
             }
           }
-          await updateRegionByCountryId(cart.value.id, Number(e.currentTarget?.value))
+          await updateRegionByCountryId(
+            cart.value.id,
+            Number(e.currentTarget?.value)
+          );
           selectedCountry.value = Number(e.currentTarget.value);
         }}
         value={selectedCountry.value}

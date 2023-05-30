@@ -14,7 +14,8 @@ import {
 
 import Pagination from "@components/Pagination";
 import type { ProductCategory } from "@medusajs/medusa";
-import ProductCards from "./ProductCards";
+import ProductCards from "@components/ProductCards";
+import Button from "@components/Button";
 
 interface Props {
   categories: ProductCategory[];
@@ -56,7 +57,7 @@ const ProductFilter = ({ categories }: Props) => {
       <div class="flex items-center justify-end">
         <div class="relative inline-block text-left">
           <div>
-            {/* <Button
+            <Button
               type="button"
               variant="icon"
               className="!border-none"
@@ -77,9 +78,9 @@ const ProductFilter = ({ categories }: Props) => {
                   clip-rule="evenodd"
                 />
               </svg>
-            </Button> */}
+            </Button>
           </div>
-          {/* <div
+          <div
             class={`${isSortPopUp.value ? "block" : "hidden"
               } absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none`}
           >
@@ -88,11 +89,10 @@ const ProductFilter = ({ categories }: Props) => {
                 <Button
                   type="button"
                   variant="secondary"
-                  className={` ${
-                    sortOption.value === order.value
+                  className={` ${sortOption.value === order.value
                       ? "bg-gray-50"
                       : "!font-normal"
-                  }`}
+                    }`}
                   onClick={() => {
                     order.value = sortOption.value;
                   }}
@@ -101,7 +101,7 @@ const ProductFilter = ({ categories }: Props) => {
                 </Button>
               ))}
             </div>
-          </div> */}
+          </div>
         </div>
       </div>
       <div class="lg:grid lg:grid-cols-3 lg:gap-x-8 xl:grid-cols-4">

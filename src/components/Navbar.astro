@@ -2,8 +2,8 @@
 import Button from "@components/Button";
 import RightNav from "@components/RightNav";
 import CartDrawer from "@components/CartDrawer";
-import CheckOutDrawer from "@components/CheckoutDrawer";
 import ShipmentRegions from "./ShipmentRegions";
+import CheckoutDrawer from "./CheckoutDrawer";
 const navLinks = [
   {
     title: "Products",
@@ -26,7 +26,6 @@ const navLinks = [
     link: "/blog",
   },
 ];
-
 ---
 
 <header class="absolute inset-x-0 top-0 z-10">
@@ -45,10 +44,10 @@ const navLinks = [
     </div>
     <div class="flex lg:hidden">
       <Button
-      type="button"
-      variant={"icon"}
-      className="-m-2.5 !w-auto !border-none inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-      id="open-menu"
+        type="button"
+        variant={"icon"}
+        className="-m-2.5 !w-auto !border-none inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+        id="open-menu"
       >
         <span class="sr-only">Open main menu</span>
         <svg
@@ -83,7 +82,7 @@ const navLinks = [
     <!-- Right Nav -->
     <RightNav client:load />
     <CartDrawer client:only="preact" />
-    <CheckOutDrawer client:only="preact" />
+    <CheckoutDrawer client:only="preact" />
   </nav>
   {/* Mobile menu, show/hide based on menu open state. */}
   <div class="lg:hidden" role="dialog" aria-modal="true">
@@ -93,8 +92,8 @@ const navLinks = [
       class="fixed hidden inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
       id="nav-links"
     >
-    <div class="flex items-center justify-between">
-      <a href="/" class="-m-1.5 p-1.5">
+      <div class="flex items-center justify-between">
+        <a href="/" class="-m-1.5 p-1.5">
           <img
             class="h-12 w-auto"
             src="/images/curiosta_logo.png"
