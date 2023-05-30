@@ -15,7 +15,6 @@ import {
 import Pagination from "@components/Pagination";
 import type { ProductCategory } from "@medusajs/medusa";
 import ProductCards from "@components/ProductCards";
-import Button from "@components/Button";
 
 interface Props {
   categories: ProductCategory[];
@@ -25,10 +24,10 @@ const ProductFilter = ({ categories }: Props) => {
   const isSortPopUp = useSignal(false);
   const isLoading = useSignal(false);
 
-  const sortOptions = [
-    { id: 1, title: "Newest", value: "-created_at" },
-    { id: 2, title: "Oldest", value: "created_at" },
-  ];
+  // const sortOptions = [
+  //   { id: 1, title: "Featured", value: "created_at" },
+  //   { id: 2, title: "Newest Arrivals", value: "-created_at" },
+  // ];
 
   const productsList = async () => {
     try {
@@ -54,7 +53,7 @@ const ProductFilter = ({ categories }: Props) => {
 
   return (
     <div class="mx-auto max-w-2xl !pb-0 px-4  sm:px-6  lg:max-w-7xl lg:px-8">
-      <div class="flex items-center justify-end">
+      {/* <div class="flex items-center justify-end">
         <div class="relative inline-block text-left">
           <div>
             <Button
@@ -66,8 +65,9 @@ const ProductFilter = ({ categories }: Props) => {
             >
               Sort
               <svg
-                class={`-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500 ${isSortPopUp.value ? "rotate-180" : "rotate-0"
-                  }`}
+                class={`-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500 ${
+                  isSortPopUp.value ? "rotate-180" : "rotate-0"
+                }`}
                 viewBox="0 0 20 20"
                 fill="currentColor"
                 aria-hidden="true"
@@ -81,18 +81,18 @@ const ProductFilter = ({ categories }: Props) => {
             </Button>
           </div>
           <div
-            class={`${isSortPopUp.value ? "block" : "hidden"
-              } absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none`}
+            class={`${
+              isSortPopUp.value ? "block" : "hidden"
+            } absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none`}
           >
             <div class="py-1" role="none">
               {sortOptions.map((sortOption) => (
                 <Button
                   type="button"
                   variant="secondary"
-                  className={` ${sortOption.value === order.value
-                      ? "bg-gray-50"
-                      : "!font-normal"
-                    }`}
+                  className={` !border-none  ${
+                    sortOption.value !== order.value ? "!font-normal" : ""
+                  }`}
                   onClick={() => {
                     order.value = sortOption.value;
                   }}
@@ -103,7 +103,7 @@ const ProductFilter = ({ categories }: Props) => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       <div class="lg:grid lg:grid-cols-3 lg:gap-x-8 xl:grid-cols-4">
         <CategoriesOpt categories={categories} />
 
