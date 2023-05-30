@@ -53,7 +53,7 @@ const ProductFilter = ({ categories }: Props) => {
   }, [selectedCategoriesIds.value, offset.value, order.value]);
 
   return (
-    <div class="mx-auto max-w-2xl !pb-0 px-4 py-24 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+    <div class="mx-auto max-w-2xl !pb-0 px-4  sm:px-6  lg:max-w-7xl lg:px-8">
       <div class="flex items-center justify-end">
         <div class="relative inline-block text-left">
           <div>
