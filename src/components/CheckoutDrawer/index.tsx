@@ -16,10 +16,10 @@ import Typography from "@components/Typography";
 
 const loadingStripe = signal<boolean>(true);
 
-let stripe: Stripe | null = null;
+const stripe = signal<Stripe | null>(null);
 
 try {
-  stripe = await loadStripe(import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
+  stripe.value = await loadStripe(import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
   loadingStripe.value = false;
 } catch (error) {
 
@@ -38,7 +38,7 @@ const CheckoutDrawer = () => {
   })
 
   useEffect(() => {
-    if (loadingStripe.value || !cart.value || !checkoutOpen.value) return;
+    if (!cart.value || !checkoutOpen.value) return;
     medusa.carts.createPaymentSessions(cart.value.id).then(({ cart: sessionCart }) => {
       const isStripeAvailable = sessionCart.payment_sessions?.some((s) => s.provider_id === 'stripe');
       if (!isStripeAvailable) throw new Error('Stripe is not supported in this region, Please contact administrator & ask to add stripe in backend!.');
@@ -48,7 +48,7 @@ const CheckoutDrawer = () => {
         if (_clientSecret) { clientSecret.value = _clientSecret }
       })
     });
-  }, [cart.value, loadingStripe.value, checkoutOpen.value]);
+  }, [cart.value, checkoutOpen.value]);
 
 
   return createPortal(
@@ -86,8 +86,8 @@ const CheckoutDrawer = () => {
             </Button>
           </div>
           {!loadingStripe.value && clientSecret.value ? (
-            <Elements stripe={stripe} options={{ clientSecret: clientSecret.value }}>
-              <CheckoutElements clientSecret={clientSecret} selectedAddressId={selectedAddressId} stripe={stripe} />
+            <Elements stripe={stripe.value} options={{ clientSecret: clientSecret.value }}>
+              <CheckoutElements clientSecret={clientSecret} selectedAddressId={selectedAddressId} stripe={stripe.value} />
             </Elements>
           ) : (
             <div className='flex justify-center items-center h-full'>
