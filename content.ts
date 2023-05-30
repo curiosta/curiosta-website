@@ -1,19 +1,13 @@
 export const heroContent = {
   // Heading of the hero section on the home page
-  heading: `We’re changing the way people connect.`,
-  description: `Cupidatat minim id magna ipsum sint dolor qui. Sunt sit in quis
-  cupidatat mollit aute velit. Et labore commodo nulla aliqua
-  proident mollit ullamco exercitation tempor. Sint aliqua anim
-  nulla sunt mollit id pariatur in voluptate cillum.`,
+  heading: `Discover unique products`,
+  description: `Our mission is to connect you with talented, passionate local manufacturers to help support their small businesses. Shop with us and discover the beauty and quality of locally made products. Start supporting your local community now!`,
 };
 
 export const introSection = {
   // Section below hero
-  heading: `A global platform for local making`,
-  description: `Curiosta is an online marketplace that hosts independently designed
-  furniture and connects its customers to local makers around the world.
-  Rather than mass manufacturing and shipping worldwide, we’re building
-  a distributed and ethical supply chain through a global maker network.`,
+  heading: `A global platform for local manufacturers`,
+  description: `Looking to showcase your unique creativity to a global audience? Our platform offers the perfect solution for local manufacturers to showcase their talents to the world. Join our community and connect with like-minded creatives today.`,
 };
 
 // partner companies

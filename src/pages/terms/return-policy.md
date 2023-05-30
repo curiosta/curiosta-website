@@ -1,8 +1,8 @@
 ---
-title: Privacy Policy
+title: Return Policy
 description: description of this page
 
-layout: "@layouts/MarkdownLayout.astro"
+layout: "@layouts/TermsMarkdownLayout.astro"
 ---
 
 ## Heading

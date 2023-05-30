@@ -12,29 +12,6 @@ const aboutPages = [
     link: "/about/contact",
   },
 ];
-
-const legalPages = [
-  {
-    title: "Shipping policy",
-    link: "/legal/shipping-policy",
-  },
-  {
-    title: "Privacy Policy",
-    link: "/lega;/privacy-policy",
-  },
-  {
-    title: "Return policy",
-    link: "/legal/return-policy",
-  },
-  {
-    title: "Terms and condition",
-    link: "/legal/terms",
-  },
-  {
-    title: "Refund and Cancellation",
-    link: "/legal/refund-cancellation",
-  },
-];
 ---
 
 <footer class="bg-[#fbfbfb]" aria-labelledby="footer-heading">
@@ -176,21 +153,17 @@ const legalPages = [
               variant="primary"
               className=" leading-6"
             >
-              Legal
+              Terms
             </Typography>
             <ul role="list" class="mt-4 space-y-2">
-              {
-                legalPages.map((page) => (
-                  <li>
-                    <a
-                      href={page.link}
-                      class="text-sm leading-6 text-gray-600 hover:text-gray-900"
-                    >
-                      {page.title}
-                    </a>
-                  </li>
-                ))
-              }
+              <li>
+                <a
+                  href="/terms"
+                  class="text-sm leading-6 text-gray-600 hover:text-gray-900"
+                >
+                  Terms of use
+                </a>
+              </li>
             </ul>
           </div>
         </div>

@@ -18,8 +18,9 @@ const button = cva(
         ],
         secondary: [
           "bg-secondary",
-          "focus:bg-gray-100",
-          "hover:bg-gray-100",
+          "focus:bg-gray-50",
+          "hover:bg-gray-50",
+          "active:bg-gray-100",
           "disabled:bg-secondary-200",
           "text-primary-600",
           "px-4 py-2 w-full",
@@ -32,9 +33,7 @@ const button = cva(
           "text-white",
           "py-3 px-8 w-full"
         ],
-        icon: [
-          'p-2 !shadow-none'
-        ],
+        icon: ["p-2 !shadow-none"],
         "icon-active": [
           "bg-primary-600",
           "text-white",

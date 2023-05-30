@@ -6,5 +6,6 @@ export const selectedCategoriesIds = signal<string[]>([]);
 export const count = signal<null | number>(null);
 export const limit = signal<number>(6);
 export const offset = signal<number>(0);
+export const order = signal<string | null>(null);
 
 export const products = signal<PricedProduct[]>([]);
