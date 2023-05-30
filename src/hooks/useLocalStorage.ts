@@ -11,11 +11,11 @@ type LocalStorageKeys = "cartId" | "cart" | "custId" | "region" | 'countryId';
  * @returns `get` and `set` method which supports any kind of payload and automatically parses object using JSON.stringify().
  */
 const useLocalStorage = () => {
-  const setLocalStorage = (key: LocalStorageKeys, payload: any) => {
+  const setLocalStorage = <T = any>(key: LocalStorageKeys, payload: T) => {
     try {
       const value =
         typeof payload === "object" ? JSON.stringify(payload) : payload;
-      localStorage.setItem(key, value);
+      localStorage.setItem(key, value as string);
     } catch (error) {
       console.warn(`Error setting local storage key "${key}": `, error);
     }

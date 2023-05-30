@@ -2,6 +2,8 @@ import { activeCountry, regions, updateRegionByCountryId } from "@api/region/reg
 import { signal } from "@preact/signals";
 import { cart, resetCart } from "@store/cartStore";
 import { useEffect } from "preact/hooks";
+// select india default | temporary
+import "@api/region/regionList";
 
 interface Props {
   screen?: "mobile";
@@ -23,7 +25,6 @@ const ShipmentRegions = ({ screen }: Props) => {
     >
       <select
         id="location"
-        name="location"
         className=" block rounded-md border-0 py-1.5  text-gray-900 ring-1 ring-inset ring-gray-300  focus:ring-indigo-600 sm:text-sm sm:leading-6"
         onChange={async (e) => {
           if (!cart.value) return;
@@ -37,7 +38,6 @@ const ShipmentRegions = ({ screen }: Props) => {
           }
           await updateRegionByCountryId(cart.value.id, Number(e.currentTarget?.value))
           selectedCountry.value = Number(e.currentTarget.value);
-
         }}
         value={selectedCountry.value}
       >

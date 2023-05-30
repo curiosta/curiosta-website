@@ -1,10 +1,10 @@
 import { useSignal } from "@preact/signals";
 import AddToCartForm from "@components/AddToCartForm";
 import Typography from "@components/Typography";
-import type { Product } from "@api/product/index.d";
 import useLocalStorage from "@hooks/useLocalStorage";
 import { CurrencyMap, currencyMap } from "@utils/CurrencyMap";
 import type { PricedProduct } from "@medusajs/medusa/dist/types/pricing";
+import type { Region } from "@medusajs/medusa";
 
 interface Props {
   product: PricedProduct;
@@ -13,12 +13,12 @@ interface Props {
 const ProductInfo = ({ product }: Props) => {
   const defaultVariant = product?.variants?.at(0);
   const { get } = useLocalStorage();
-  const localRegion = get<{ curr_code?: string }>("region");
+  const localRegion = get<Region>("region");
 
   const amount = defaultVariant?.prices.find(
-    (item) => item.currency_code === localRegion?.curr_code
+    (item) => item.currency_code === localRegion?.currency_code,
   )?.amount;
-  const currency = localRegion?.curr_code as keyof CurrencyMap;
+  const currency = localRegion?.currency_code as keyof CurrencyMap;
 
   const selectedVariant = {
     id: useSignal(defaultVariant?.id),
@@ -59,9 +59,8 @@ const ProductInfo = ({ product }: Props) => {
               .fill(1)
               .map((val, index) => (
                 <svg
-                  class={`h-5 w-5 flex-shrink-0 ${
-                    index === 4 ? "text-gray-300" : "text-indigo-500"
-                  }`}
+                  class={`h-5 w-5 flex-shrink-0 ${index === 4 ? "text-gray-300" : "text-indigo-500"
+                    }`}
                   viewBox="0 0 20 20"
                   fill="currentColor"
                   aria-hidden="true"

@@ -8,10 +8,7 @@ import ProductInfo from "@components/ProductInfo";
 import { signal } from "@preact/signals";
 
 const productId = Astro.params.id;
-if (!productId) {
-  return (window.location = "/404");
-}
-const { product } = await getProduct(productId);
+const { product } = await getProduct(productId || '');
 
 export const checkoutOpen = signal<boolean>(false);
 ---
