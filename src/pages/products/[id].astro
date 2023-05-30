@@ -5,12 +5,9 @@ import Footer from "@components/Footer.astro";
 import ProductImage from "@components/ProductImage";
 import Layout from "@layouts/Layout.astro";
 import ProductInfo from "@components/ProductInfo";
-import { signal } from "@preact/signals";
 
 const productId = Astro.params.id;
-const { product } = await getProduct(productId || '');
-
-export const checkoutOpen = signal<boolean>(false);
+const { product } = await getProduct(productId || "");
 ---
 
 <Layout
@@ -19,9 +16,7 @@ export const checkoutOpen = signal<boolean>(false);
 >
   <Navbar />
   <main class="bg-white">
-    <div
-      class="mx-auto max-w-2xl px-4 py-24 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8"
-    >
+    <div class="mx-auto max-w-2xl px-4 py-8 sm:px-6 lg:max-w-7xl lg:px-8">
       <div class="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
         <ProductImage
           productImages={product.images}
