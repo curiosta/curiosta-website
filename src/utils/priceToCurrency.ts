@@ -3,7 +3,7 @@ import { cart } from "@store/cartStore";
 
 const priceToCurrency = (
   price: number | null | undefined,
-  currency_code = cart.value.region?.currency_code
+  currency_code = cart.value?.region?.currency_code
 ): string => {
   const currencySign = currencyMap[currency_code as SupportedCurrencies];
   if (!price) {

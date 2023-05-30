@@ -1,10 +1,9 @@
 ---
 import Button from "@components/Button";
 import RightNav from "@components/RightNav";
-import ShipmentRegions from "./ShipmentRegions";
-import { regionList } from "@api/region/regionList";
 import CartDrawer from "@components/CartDrawer";
-import CheckOutDrawer from "@components/CheckoutDrawer";
+import ShipmentRegions from "./ShipmentRegions";
+import CheckoutDrawer from "./CheckoutDrawer";
 const navLinks = [
   {
     title: "Products",
@@ -27,11 +26,9 @@ const navLinks = [
     link: "/blog",
   },
 ];
-
-const { regions } = await regionList();
 ---
 
-<header class="absolute inset-x-0 top-0 z-10">
+<header>
   <nav
     class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
     aria-label="Global"
@@ -60,11 +57,11 @@ const { regions } = await regionList();
           stroke-width="1.5"
           stroke="currentColor"
           aria-hidden="true"
-        >
+          >
           <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
         </svg>
       </Button>
     </div>
@@ -75,17 +72,17 @@ const { regions } = await regionList();
             href={nav.link}
             title={nav.description}
             class="text-sm font-semibold leading-6 text-gray-900"
-          >
-            {nav.title}
+            >
+              {nav.title}
           </a>
         ))
       }
     </div>
-    <ShipmentRegions regions={regions} client:load />
+    <ShipmentRegions client:load />
     <!-- Right Nav -->
     <RightNav client:load />
     <CartDrawer client:only="preact" />
-    <CheckOutDrawer client:only="preact" />
+    <CheckoutDrawer client:only="preact" />
   </nav>
   {/* Mobile menu, show/hide based on menu open state. */}
   <div class="lg:hidden" role="dialog" aria-modal="true">
@@ -140,9 +137,9 @@ const { regions } = await regionList();
             }
           </div>
           <div class="py-4">
-            <ShipmentRegions screen="mobile" regions={regions} client:load />
+            <!-- <ShipmentRegions screen="mobile" client:load /> -->
             <RightNav screen="mobile" client:load />
-          </div>
+          </div>  
         </div>
       </div>
     </div>

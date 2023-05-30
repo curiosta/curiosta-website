@@ -1,0 +1,14 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Navbar from "@components/Navbar.astro";
+import CartReset from "@components/Orders/CartReset";
+import parseOrderConfirmParams from '@utils/parseOrderConfirmParams'
+
+const params = parseOrderConfirmParams(Astro.url.searchParams);
+
+---
+
+<Layout title="Confirming..." description="Confirming your order...">
+  <Navbar />
+  <CartReset params={params} client:load />
+</Layout>

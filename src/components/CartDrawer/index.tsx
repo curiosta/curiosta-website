@@ -5,12 +5,21 @@ import priceToCurrency from "@utils/priceToCurrency";
 import Button from "@components/Button";
 import Typography from "@components/Typography";
 import EmptyCart from "./EmptyCart";
-import { checkoutOpen } from "@store/checkoutStore";
 import CartItem from "@components/CartItem";
+import user from "@api/user";
+import { checkoutOpen } from "@store/checkoutStore";
+import useKeyboard from "@hooks/useKeyboard";
 
 const CartDrawer = () => {
+  const { add } = useKeyboard('Escape', { event: 'keydown' })
   // remove app's default scroll if cart is open
   document.body.style.overflow = cartOpen.value ? "hidden" : "auto";
+
+  add('close-cart-drawer', () => {
+    if (!checkoutOpen.value) {
+      cartOpen.value = false;
+    }
+  })
 
   return createPortal(
     <div
@@ -32,7 +41,7 @@ const CartDrawer = () => {
           cartOpen.value && `!translate-x-0`
         )}
       >
-        {!cart.value.items?.length ? (
+        {!cart.value?.items?.length ? (
           <EmptyCart />
         ) : (
           <div className="p-4 pt-6 relative">
@@ -81,7 +90,13 @@ const CartDrawer = () => {
                 <Button
                   type="button"
                   variant="primary"
-                  onClick={() => (checkoutOpen.value = true)}
+                  onClick={() => {
+                    if (user.state.value === 'authenticated') {
+                      checkoutOpen.value = true;
+                    } else {
+                      window.location.href = '/login'
+                    }
+                  }}
                 >
                   Checkout
                 </Button>

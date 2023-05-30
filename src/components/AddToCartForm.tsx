@@ -5,9 +5,9 @@ import ProductVariants from "@components/ProductVariants";
 import { Signal, signal } from "@preact/signals";
 import { addLineItem } from "@api/cart/addLineItem";
 import { createCart } from "@api/cart/createCart";
-import { getUser } from "@api/user/getUser";
 import useLocalStorage from "@hooks/useLocalStorage";
 import type { PricedProduct } from "@medusajs/medusa/dist/types/pricing";
+import type { Region } from "@medusajs/medusa";
 
 interface Props {
   product: PricedProduct;
@@ -21,11 +21,10 @@ const loadingSignal = signal<boolean>(false);
 
 const AddToCartForm = ({ product, selectedVariant }: Props) => {
   const { get, set } = useLocalStorage();
-  const localRegion = get<{ id?: string; curr_code?: string }>("region");
+  const localRegion = get<Region>("region");
 
   const handleAddCart = async (e: ChangeEvent) => {
     e.preventDefault();
-    await getUser();
     const localCartId = get("cartId");
 
     if (selectedVariant.id.value) {

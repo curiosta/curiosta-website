@@ -1,55 +1,23 @@
-import useLocalStorage from "@hooks/useLocalStorage";
-import type { Region } from "@medusajs/medusa";
-import { useSignal } from "@preact/signals";
-import type { ChangeEvent } from "preact/compat";
+import { activeCountry, regions, updateRegionByCountryId } from "@api/region/regionList";
+import { signal } from "@preact/signals";
+import { cart, resetCart } from "@store/cartStore";
+import { useEffect } from "preact/hooks";
+// select india default | temporary
+import "@api/region/regionList";
 
 interface Props {
-  regions: Region[];
   screen?: "mobile";
 }
 
-const ShipmentRegions = ({ regions, screen }: Props) => {
-  const { set, get } = useLocalStorage();
-  const localCartId = get("cartId");
-  const disabled = localCartId?.length ? localCartId?.length > 0 : false;
-  const countries = regions?.map((region) => region.countries).flat(1);
+const selectedCountry = signal<number | undefined>(undefined);
+const ShipmentRegions = ({ screen }: Props) => {
+  const countries = regions.value?.map((region) => region.countries).flat(1);
 
-  const localRegion = get<{
-    id?: string;
-    curr_code?: string;
-    countryId?: number;
-    countryCode?: string;
-  }>("region");
+  useEffect(() => {
+    selectedCountry.value = activeCountry.value?.id;
+  }, [activeCountry.value]);
 
-  const selectedRegion = {
-    id: useSignal(localRegion?.id),
-    curr_code: useSignal(localRegion?.curr_code),
-    countryId: useSignal(localRegion?.countryId ?? countries[0].id),
-    countryCode: useSignal(localRegion?.countryCode),
-  };
-
-  selectedRegion.curr_code.value =
-    regions.find((region) =>
-      region?.countries
-        .map((item) => item.id)
-        .includes(selectedRegion?.countryId.value)
-    )?.currency_code || regions[0].currency_code;
-
-  selectedRegion.id.value =
-    countries.find((country) => country.id === selectedRegion.countryId.value)
-      ?.region_id || localRegion?.id;
-
-  selectedRegion.countryCode.value =
-    countries.find((country) => country.id === selectedRegion.countryId.value)
-      ?.iso_2 || countries[0].iso_2;
-
-  set("region", {
-    id: selectedRegion.id.value,
-    countryId: selectedRegion.countryId.value,
-    curr_code: selectedRegion.curr_code.value,
-    countryCode: selectedRegion.countryCode.value,
-  });
-
+  if (!activeCountry.value) return null;
   return (
     <div
       class={`${screen === "mobile" ? "flex" : "hidden"
@@ -57,15 +25,26 @@ const ShipmentRegions = ({ regions, screen }: Props) => {
     >
       <select
         id="location"
-        name="location"
         className=" block rounded-md border-0 py-1.5  text-gray-900 ring-1 ring-inset ring-gray-300  focus:ring-indigo-600 sm:text-sm sm:leading-6"
-        onChange={(e) => {
-          selectedRegion.countryId.value = parseInt(e.currentTarget.value);
-          location.reload();
+        onChange={async (e) => {
+          if (!cart.value) return;
+          const cartItemsLength = cart.value.items.length;
+
+          if (cartItemsLength) {
+            const answer = confirm(
+              "Changing region will clear cart items, Do you still want to proceed?"
+            );
+            if (answer) {
+              await resetCart();
+            }
+          }
+          await updateRegionByCountryId(
+            cart.value.id,
+            Number(e.currentTarget?.value)
+          );
+          selectedCountry.value = Number(e.currentTarget.value);
         }}
-        value={selectedRegion.countryId.value}
-        disabled={disabled}
-        title={disabled ? "clear cart before change country" : "select country"}
+        value={selectedCountry.value}
       >
         {countries?.map((country) => (
           <option value={country.id}>{country.name}</option>

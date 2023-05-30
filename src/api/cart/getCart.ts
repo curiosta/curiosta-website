@@ -7,7 +7,6 @@ const getCart = async () => {
   const cartId = get<string>("cartId");
   if (!cartId) return null;
   const result = await medusa.carts.retrieve(cartId);
-  console.log(result, "res");
 };
 
 export default getCart;

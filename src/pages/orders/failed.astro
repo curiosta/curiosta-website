@@ -1,0 +1,32 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Navbar from "@components/Navbar.astro";
+import Footer from "@components/Footer.astro";
+import Typography from "@components/Typography";
+---
+
+<Layout title="Orders Failed" description="Your orders is failed">
+  <Navbar />
+  <main
+    class="mx-auto max-w-2xl px-4 py-32 sm:py-40 sm:px-6 lg:max-w-7xl lg:px-8"
+  >
+    <div class="flex flex-col justify-center items-center">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="red"
+        class="w-20 h-20"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-1.72 6.97a.75.75 0 10-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 101.06 1.06L12 13.06l1.72 1.72a.75.75 0 101.06-1.06L13.06 12l1.72-1.72a.75.75 0 10-1.06-1.06L12 10.94l-1.72-1.72z"
+          clip-rule="evenodd"></path>
+      </svg>
+
+      <Typography tag="h2" size="h2/semi-bold">
+        Your order was failed
+      </Typography>
+    </div>
+  </main>
+  <Footer />
+</Layout>

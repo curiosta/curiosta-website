@@ -23,7 +23,7 @@ const OpenMakingNav = () => {
   ];
 
   return (
-    <nav class="p-4 flex justify-center bg-gray-50 mt-24">
+    <nav class="p-4 flex justify-center bg-gray-50 ">
       <ul role="list" class="flex flex-wrap gap-x-8">
         {openMakingPages.map((page) => (
           <li>
