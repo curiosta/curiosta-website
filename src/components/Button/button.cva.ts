@@ -18,11 +18,15 @@ const button = cva(
         ],
         secondary: [
           "bg-secondary",
-          "focus:bg-gray-50",
           "hover:bg-gray-50",
+          "focus:outline-none",
+          "focus:ring-2",
+          "focus:ring-primary-500",
+          "focus:ring-offset-2",
           "active:bg-gray-100",
           "disabled:bg-secondary-200",
           "text-primary-600",
+          "border border-gray-300",
           "px-4 py-2 w-full",
         ],
         danger: [
@@ -31,7 +35,7 @@ const button = cva(
           "hover:bg-danger-600",
           "focus-visible:outline-danger-600",
           "text-white",
-          "py-3 px-8 w-full"
+          "py-3 px-8 w-full",
         ],
         icon: ["p-2 !shadow-none"],
         "icon-active": [

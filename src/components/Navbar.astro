@@ -2,7 +2,7 @@
 import Button from "@components/Button";
 import RightNav from "@components/RightNav";
 import CartDrawer from "@components/CartDrawer";
-import CheckOutDrawer from "@components/CheckoutDrawer";
+import CheckoutDrawer from "@components/CheckoutDrawer";
 const navLinks = [
   {
     title: "Products",
@@ -25,7 +25,6 @@ const navLinks = [
     link: "/blog",
   },
 ];
-
 ---
 
 <header class="inset-x-0 top-0 z-10">
@@ -44,45 +43,45 @@ const navLinks = [
     </div>
     <div class="flex lg:hidden">
       <Button
-      type="button"
-      variant={"icon"}
-      className="-m-2.5 !w-auto !border-none inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-      id="open-menu"
+        type="button"
+        variant={"icon"}
+        className="-m-2.5 !w-auto !border-none inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+        id="open-menu"
       >
-      <span class="sr-only">Open main menu</span>
-      <svg
-      class="h-6 w-6"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke-width="1.5"
-      stroke="currentColor"
-      aria-hidden="true"
-      >
-      <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
-    </svg>
-  </Button>
-</div>
-<div class="hidden lg:flex lg:gap-x-12">
-  {
-    navLinks.map((nav) => (
-      <a
+        <span class="sr-only">Open main menu</span>
+        <svg
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+        </svg>
+      </Button>
+    </div>
+    <div class="hidden lg:flex lg:gap-x-12">
+      {
+        navLinks.map((nav) => (
+          <a
             href={nav.link}
             title={nav.description}
             class="text-sm font-semibold leading-6 text-gray-900"
-            >
+          >
             {nav.title}
-            </a>
-            ))
-          }
+          </a>
+        ))
+      }
     </div>
     <!-- <ShipmentRegions regions={regions} client:load /> -->
     <!-- Right Nav -->
     <RightNav client:load />
     <CartDrawer client:only="preact" />
-    <CheckOutDrawer client:only="preact" />
+    <CheckoutDrawer client:only="preact" />
   </nav>
   {/* Mobile menu, show/hide based on menu open state. */}
   <div class="lg:hidden" role="dialog" aria-modal="true">
@@ -92,8 +91,8 @@ const navLinks = [
       class="fixed hidden inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
       id="nav-links"
     >
-    <div class="flex items-center justify-between">
-      <a href="/" class="-m-1.5 p-1.5">
+      <div class="flex items-center justify-between">
+        <a href="/" class="-m-1.5 p-1.5">
           <img
             class="h-12 w-auto"
             src="/images/curiosta_logo.png"

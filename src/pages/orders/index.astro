@@ -1,12 +1,17 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import Typography from '@components/Typography'
+import Typography from "@components/Typography";
 import Navbar from "@components/Navbar.astro";
+import Footer from "@components/Footer.astro";
+import OrdersList from "@components/Orders/OrdersList";
 ---
 
 <Layout title="Orders" description="Your orders">
   <Navbar />
-  <Typography size='h3/bold'>
-    Orders
-  </Typography>
+  <main class="mx-auto max-w-2xl px-4 py-8 sm:px-6 lg:max-w-7xl lg:px-8">
+    <Typography size="h3/semi-bold">Your Orders</Typography>
+
+    <OrdersList client:load />
+  </main>
+  <Footer />
 </Layout>
