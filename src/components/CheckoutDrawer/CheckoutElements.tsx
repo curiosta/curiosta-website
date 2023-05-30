@@ -1,9 +1,9 @@
-import medusa from "@api/medusa"
 import user from "@api/user"
 import AddressList from "@components/AddressList"
+import Button from "@components/Button"
 import OrderSummary from "@components/OrderSummary"
 import PaymentHandler from "@components/PaymentHandler"
-import type { Signal } from "@preact/signals"
+import { Signal, useSignal } from "@preact/signals"
 import { cart } from "@store/cartStore"
 import { PaymentElement, useElements, } from "@stripe/react-stripe-js"
 import type { Stripe } from "@stripe/stripe-js"
@@ -18,31 +18,65 @@ type TCheckoutElementsProps = {
 const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({ selectedAddressId, clientSecret, stripe }) => {
   const elements = useElements();
   const currentCustomer = user.customer.value;
+  const processingPayment = useSignal<boolean>(false);
 
   const handlePayment = async () => {
-    if (!stripe || !elements || !clientSecret.value || !cart.value) return;
+    processingPayment.value = true
+    const stripeInstance = await stripe;
+    console.log(clientSecret.value, cart.value, elements);
+    if (!stripeInstance || !elements || !clientSecret.value || !cart.value) return;
 
     const element = elements.getElement(PaymentElement);
-    if (!element) return;
+    if (!element) {
+      processingPayment.value = false
+      return
+    };
     elements.submit();
 
     const selectedAddress = currentCustomer?.billing_address_id && currentCustomer.shipping_addresses.find((address) => address.id === currentCustomer.billing_address_id);
 
+
     if (!selectedAddress) {
+      processingPayment.value = false
       throw new Error('User does not have any address selected!');
     }
 
     try {
-      await medusa.carts.complete(cart.value.id);
-      const { error } = await stripe.confirmPayment({
+
+      const { error } = await stripeInstance.confirmPayment({
         elements,
         clientSecret: clientSecret.value,
         confirmParams: {
-          return_url: `${window.location.origin}/orders/confirm?cart=${cart.value.id}`
+          return_url: `${window.location.origin}/orders/confirm?cart=${cart.value.id}`,
+          payment_method_data: {
+            billing_details: {
+              address: {
+                line1: selectedAddress.address_1 || '',
+                line2: selectedAddress.address_2 || '',
+                city: selectedAddress.city || '',
+                country: selectedAddress.country_code || '',
+                postal_code: selectedAddress.postal_code || '',
+                state: selectedAddress.province || '',
+              },
+              name: `${selectedAddress.customer?.first_name || ''} ${selectedAddress.customer?.last_name || ''}`.trim() || undefined,
+              email: selectedAddress.customer?.email,
+            }
+          },
+          shipping: {
+            address: {
+              line1: selectedAddress.address_1 || '',
+              line2: selectedAddress.address_2 || '',
+              city: selectedAddress.city || '',
+              country: selectedAddress.country_code || '',
+              postal_code: selectedAddress.postal_code || '',
+              state: selectedAddress.province || '',
+            },
+            name: `${selectedAddress.customer?.first_name || ''} ${selectedAddress.customer?.last_name || ''}`.trim(),
+          }
         },
       });
-    } catch (error) {
-    }
+    } catch (error) { }
+    processingPayment.value = false
   }
 
   return (
@@ -55,7 +89,7 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({ selectedA
           }}>
             <div>
               <AddressList selectedAddressId={selectedAddressId} />
-              {selectedAddressId.value && clientSecret.value ? <PaymentHandler clientSecret={clientSecret} stripe={stripe} addressId={selectedAddressId.value} /> : null}
+              {selectedAddressId.value && clientSecret.value ? <PaymentHandler /> : null}
             </div>
             {/* <!-- Order summary --> */}
             <div class="mt-10 lg:mt-0">
@@ -68,12 +102,9 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({ selectedA
                 <OrderSummary />
 
                 <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
-                  <button
-                    type="submit"
-                    class="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
-                  >
+                  <Button type='submit'>
                     Confirm order
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>

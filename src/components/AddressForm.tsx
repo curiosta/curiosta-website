@@ -12,7 +12,6 @@ import { useRef } from "preact/hooks";
 const AddressForm = ({ selectedAddressId, isNewAddress }: { selectedAddressId: Signal<string | null>, isNewAddress: Signal<boolean> }) => {
   const isLoading = useSignal<boolean>(false);
   const { get } = useLocalStorage();
-  const localRegion = get<{ countryCode: string }>("region");
   const localCartId = get("cartId");
   const resetButtonRef = useRef<HTMLButtonElement>(null)
 
@@ -20,9 +19,9 @@ const AddressForm = ({ selectedAddressId, isNewAddress }: { selectedAddressId: S
     try {
       isLoading.value = true;
       const payloadAddress = { ...data };
-      if (localRegion?.countryCode) {
-        payloadAddress.country_code = localRegion.countryCode;
-      }
+
+      payloadAddress.country_code = 'in'; // temporary, need to make it dynamic later.
+
       const addShipping = await addShippingAddress(payloadAddress);
       const latestAddress = [...addShipping.customer.shipping_addresses].pop();
       // add shipping address in cart

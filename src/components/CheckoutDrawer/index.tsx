@@ -4,16 +4,26 @@ import Button from "@components/Button";
 import OrderSummary from "@components/OrderSummary";
 import PaymentHandler from "@components/PaymentHandler";
 import useKeyboard from "@hooks/useKeyboard";
-import { useSignal } from "@preact/signals";
+import { signal, useSignal } from "@preact/signals";
 import { cart } from "@store/cartStore";
 import { checkoutOpen } from "@store/checkoutStore";
 import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+import { Stripe, loadStripe } from "@stripe/stripe-js";
 import { cx } from "class-variance-authority";
 import { createPortal, useEffect } from "preact/compat";
 import CheckoutElements from "./CheckoutElements";
+import Typography from "@components/Typography";
 
-const stripe = await loadStripe(import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
+const loadingStripe = signal<boolean>(true);
+
+let stripe: Stripe | null = null;
+
+try {
+  stripe = await loadStripe(import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
+  loadingStripe.value = false;
+} catch (error) {
+
+}
 
 const CheckoutDrawer = () => {
   const { add } = useKeyboard('Escape', { event: 'keydown' });
@@ -28,18 +38,18 @@ const CheckoutDrawer = () => {
   })
 
   useEffect(() => {
-    if (!cart.value) return;
+    if (loadingStripe.value || !cart.value || !checkoutOpen.value) return;
     medusa.carts.createPaymentSessions(cart.value.id).then(({ cart: sessionCart }) => {
       const isStripeAvailable = sessionCart.payment_sessions?.some((s) => s.provider_id === 'stripe');
       if (!isStripeAvailable) throw new Error('Stripe is not supported in this region, Please contact administrator & ask to add stripe in backend!.');
-
+      console.log('hhhhhhh');
       if (!cart.value) return;
       medusa.carts.setPaymentSession(cart.value.id, { provider_id: 'stripe' }).then(({ cart: paymentSessionCart }) => {
         const _clientSecret = paymentSessionCart.payment_session?.data.client_secret as string
         if (_clientSecret) { clientSecret.value = _clientSecret }
       })
     });
-  }, [cart.value]);
+  }, [cart.value, loadingStripe.value, checkoutOpen.value]);
 
 
   return createPortal(
@@ -56,8 +66,8 @@ const CheckoutDrawer = () => {
           checkoutOpen.value && `!translate-y-0`
         )}
       >
-        <div className="p-4 pt-6 relative">
-          <div className="flex justify-end items-center ">
+        <div className="p-4 pt-6 relative h-full flex flex-col">
+          <div className="flex justify-end items-center">
             {/* close  */}
             <Button variant="icon" onClick={() => (checkoutOpen.value = false)}>
               <svg
@@ -75,7 +85,15 @@ const CheckoutDrawer = () => {
               </svg>
             </Button>
           </div>
-          {clientSecret.value ? (
+          {loadingStripe.value ? (
+            <>
+              <div className='flex justify-center items-center h-full'>
+                <Typography size='h4/normal' className='animate-pulse duration-75'>Please wait...</Typography>
+              </div>
+            </>
+          ) : null}
+
+          {!loadingStripe.value && clientSecret.value ? (
             <Elements stripe={stripe} options={{ clientSecret: clientSecret.value }}>
               <CheckoutElements clientSecret={clientSecret} selectedAddressId={selectedAddressId} stripe={stripe} />
             </Elements>
