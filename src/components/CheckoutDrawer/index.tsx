@@ -42,7 +42,6 @@ const CheckoutDrawer = () => {
     medusa.carts.createPaymentSessions(cart.value.id).then(({ cart: sessionCart }) => {
       const isStripeAvailable = sessionCart.payment_sessions?.some((s) => s.provider_id === 'stripe');
       if (!isStripeAvailable) throw new Error('Stripe is not supported in this region, Please contact administrator & ask to add stripe in backend!.');
-      console.log('hhhhhhh');
       if (!cart.value) return;
       medusa.carts.setPaymentSession(cart.value.id, { provider_id: 'stripe' }).then(({ cart: paymentSessionCart }) => {
         const _clientSecret = paymentSessionCart.payment_session?.data.client_secret as string
@@ -69,6 +68,7 @@ const CheckoutDrawer = () => {
         <div className="p-4 pt-6 relative h-full flex flex-col">
           <div className="flex justify-end items-center">
             {/* close  */}
+            <Typography size="body2/normal" variant='secondary' className='select-none'>Press 'esc' to close</Typography>
             <Button variant="icon" onClick={() => (checkoutOpen.value = false)}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -85,19 +85,16 @@ const CheckoutDrawer = () => {
               </svg>
             </Button>
           </div>
-          {loadingStripe.value ? (
-            <>
-              <div className='flex justify-center items-center h-full'>
-                <Typography size='h4/normal' className='animate-pulse duration-75'>Please wait...</Typography>
-              </div>
-            </>
-          ) : null}
-
           {!loadingStripe.value && clientSecret.value ? (
             <Elements stripe={stripe} options={{ clientSecret: clientSecret.value }}>
               <CheckoutElements clientSecret={clientSecret} selectedAddressId={selectedAddressId} stripe={stripe} />
             </Elements>
-          ) : null}
+          ) : (
+            <div className='flex justify-center items-center h-full'>
+              <Typography size='h4/normal' className='animate-pulse duration-75'>Please wait...</Typography>
+            </div>
+
+          )}
         </div>
       </div>
     </div>,

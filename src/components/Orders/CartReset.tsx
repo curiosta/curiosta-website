@@ -18,7 +18,7 @@ const CartReset: FunctionComponent<TCleanupProps> = ({ params }) => {
     if (params.cart && params.status === 'succeeded' && params.paymentIntentId?.length) {
       await medusa.carts.complete(params.cart);
       resetCart();
-      window.location.href = '/orders/success'
+      window.location.replace('/orders/success')
     }
   }
 
@@ -26,8 +26,9 @@ const CartReset: FunctionComponent<TCleanupProps> = ({ params }) => {
     refreshCart()
   }, [])
   return (
-    <div className='h-full flex justify-center items-center'>
-      <Typography>Please wait, confirming your order...</Typography>
+    <div className='pt-64 flex justify-center items-center flex-col'>
+      <Typography size='h4/normal' className='animate-pulse'>Please wait, confirming your order...</Typography>
+      <Typography className='mt-4' variant='secondary'>Do not close your browser</Typography>
     </div>
   );
 }

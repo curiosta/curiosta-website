@@ -23,7 +23,6 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({ selectedA
   const handlePayment = async () => {
     processingPayment.value = true
     const stripeInstance = await stripe;
-    console.log(clientSecret.value, cart.value, elements);
     if (!stripeInstance || !elements || !clientSecret.value || !cart.value) return;
 
     const element = elements.getElement(PaymentElement);
