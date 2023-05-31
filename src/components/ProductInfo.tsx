@@ -59,7 +59,7 @@ const ProductInfo = ({ product }: Props) => {
               .fill(1)
               .map((val, index) => (
                 <svg
-                  class={`h-5 w-5 flex-shrink-0 ${index === 4 ? "text-gray-300" : "text-indigo-500"
+                  class={`h-5 w-5 flex-shrink-0 ${index === 4 ? "text-gray-300" : "text-app-primary-500"
                     }`}
                   viewBox="0 0 20 20"
                   fill="currentColor"
@@ -120,7 +120,7 @@ const ProductInfo = ({ product }: Props) => {
                   </svg>
 
                   <svg
-                    class="hidden h-6 w-6 text-indigo-400 group-hover:text-indigo-500"
+                    class="hidden h-6 w-6 text-app-primary-400 group-hover:text-app-primary-500"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke-width="1.5"

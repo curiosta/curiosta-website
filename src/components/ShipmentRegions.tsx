@@ -25,7 +25,7 @@ const ShipmentRegions = ({ screen }: Props) => {
     >
       <select
         id="location"
-        className=" block rounded-md border-0 py-1.5  text-gray-900 ring-1 ring-inset ring-gray-300  focus:ring-indigo-600 sm:text-sm sm:leading-6"
+        className=" block rounded-md border-0 py-1.5  text-gray-900 ring-1 ring-inset ring-gray-300  focus:ring-primary-600 sm:text-sm sm:leading-6"
         onChange={async (e) => {
           if (!cart.value) return;
           const cartItemsLength = cart.value.items.length;
