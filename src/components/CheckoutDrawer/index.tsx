@@ -14,16 +14,11 @@ import { createPortal, useEffect } from "preact/compat";
 import CheckoutElements from "./CheckoutElements";
 import Typography from "@components/Typography";
 
-const loadingStripe = signal<boolean>(true);
-
 const stripe = signal<Stripe | null>(null);
 
-try {
-  stripe.value = await loadStripe(import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
-  loadingStripe.value = false;
-} catch (error) {
-
-}
+loadStripe(import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY || '').then((stripeInstance) => {
+  stripe.value = stripeInstance;
+})
 
 const CheckoutDrawer = () => {
   const { add } = useKeyboard('Escape', { event: 'keydown' });
@@ -85,7 +80,7 @@ const CheckoutDrawer = () => {
               </svg>
             </Button>
           </div>
-          {!loadingStripe.value && clientSecret.value ? (
+          {clientSecret.value && stripe.value ? (
             <Elements stripe={stripe.value} options={{ clientSecret: clientSecret.value }}>
               <CheckoutElements clientSecret={clientSecret} selectedAddressId={selectedAddressId} stripe={stripe.value} />
             </Elements>
