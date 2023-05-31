@@ -1,24 +1,17 @@
 import medusa from "@api/medusa";
-import AddressList from "@components/CheckoutDrawer/AddressList";
 import Button from "@components/Button";
-import OrderSummary from "@components/OrderSummary";
-import PaymentHandler from "@components/PaymentHandler";
 import useKeyboard from "@hooks/useKeyboard";
-import { signal, useSignal } from "@preact/signals";
+import { useSignal } from "@preact/signals";
 import { cart } from "@store/cartStore";
 import { checkoutOpen } from "@store/checkoutStore";
 import { Elements } from "@stripe/react-stripe-js";
-import { Stripe, loadStripe } from "@stripe/stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import { cx } from "class-variance-authority";
 import { createPortal, useEffect } from "preact/compat";
 import CheckoutElements from "./CheckoutElements";
 import Typography from "@components/Typography";
 
-const stripe = signal<Stripe | null>(null);
-
-loadStripe(import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY || '').then((stripeInstance) => {
-  stripe.value = stripeInstance;
-})
+const stripe = await loadStripe(import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
 
 const CheckoutDrawer = () => {
   const { add } = useKeyboard('Escape', { event: 'keydown' });
@@ -80,9 +73,9 @@ const CheckoutDrawer = () => {
               </svg>
             </Button>
           </div>
-          {clientSecret.value && stripe.value ? (
-            <Elements stripe={stripe.value} options={{ clientSecret: clientSecret.value }}>
-              <CheckoutElements clientSecret={clientSecret} selectedAddressId={selectedAddressId} stripe={stripe.value} />
+          {clientSecret.value ? (
+            <Elements stripe={stripe} options={{ clientSecret: clientSecret.value }}>
+              <CheckoutElements clientSecret={clientSecret} selectedAddressId={selectedAddressId} stripe={stripe} />
             </Elements>
           ) : (
             <div className='flex justify-center items-center h-full'>
