@@ -3,7 +3,7 @@ import Button from "@components/Button";
 import Typography from "@components/Typography";
 import { Signal, useSignal } from "@preact/signals";
 import { ChangeEvent, FunctionComponent, useEffect } from "preact/compat";
-import AddressForm from "@components/AddressForm";
+import AddressForm from "./AddressForm";
 import { cx } from "class-variance-authority";
 import AddressCard from "./AddressCard";
 import { updateCart } from "@api/cart/updateCart";
@@ -99,7 +99,7 @@ const AddressList: FunctionComponent<TAddressListProps> = ({ selectedAddressId }
                 selectedAddressId.value = null;
               }}
               className={`flex justify-center w-52 min-h-[10rem] items-center bg-white shadow-sm rounded-lg border ${isNewAddress.value
-                ? " border-indigo-600 ring-2 ring-indigo-600"
+                ? " border-primary-600 ring-2 ring-primary-600"
                 : ""
                 }`}
             >
@@ -111,7 +111,7 @@ const AddressList: FunctionComponent<TAddressListProps> = ({ selectedAddressId }
                 stroke="currentColor"
                 class={cx(
                   "w-10",
-                  isNewAddress.value ? "stroke-indigo-600" : "stroke-gray-200"
+                  isNewAddress.value ? "stroke-primary-600" : "stroke-gray-200"
                 )}
               >
                 <path
