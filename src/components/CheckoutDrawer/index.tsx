@@ -1,5 +1,5 @@
 import medusa from "@api/medusa";
-import AddressList from "@components/AddressList";
+import AddressList from "@components/CheckoutDrawer/AddressList";
 import Button from "@components/Button";
 import OrderSummary from "@components/OrderSummary";
 import PaymentHandler from "@components/PaymentHandler";
