@@ -16,11 +16,11 @@ import Typography from "@components/Typography";
 
 const stripe = signal<Stripe | null>(null);
 
-try {
-  stripe.value = await loadStripe(import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
-} catch (error) {
-  console.log('Failed to load stripe:', error);
-}
+(window as any).pky = import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY;
+
+loadStripe(import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY || '').then((stripeInstance) => {
+  stripe.value = stripeInstance;
+})
 
 const CheckoutDrawer = () => {
   const { add } = useKeyboard('Escape', { event: 'keydown' });
