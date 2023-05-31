@@ -4,26 +4,26 @@ import medusa from "@api/medusa";
 import useLocalStorage from "@hooks/useLocalStorage";
 import type { StoreCartsRes } from "@medusajs/medusa";
 import { signal } from "@preact/signals";
-const { get, remove, set } = useLocalStorage()
+const { get, remove, set } = useLocalStorage();
 
-const localData = get<StoreCartsRes['cart']>('cart');
+const localData = get<StoreCartsRes["cart"]>("cart");
 
-export const cart = signal<StoreCartsRes['cart'] | null>(localData || null);
+export const cart = signal<StoreCartsRes["cart"] | null>(localData || null);
 export const cartOpen = signal<boolean>(false);
 
 export const createCart = async () => {
   const res = await medusa.carts.create();
-  cart.value = res.cart
+  cart.value = res.cart;
   return res.cart;
-}
+};
 
 export const resetCart = async () => {
-  remove('cart');
-  remove('cartId');
-  const cart = await createCart()
-  set('cart', cart);
-  set('cartId', cart.id);
-}
+  remove("cart");
+  remove("cartId");
+  const cart = await createCart();
+  set("cart", cart);
+  set("cartId", cart.id);
+};
 
 export async function increaseCartItem(
   cartId: string,
@@ -56,4 +56,4 @@ export async function removeCartItem(cartId: string, line_id: string) {
   cart.value = updateCart.cart;
 }
 
-!localData && createCart()
+!localData && createCart();

@@ -10,19 +10,19 @@ interface Props {
 }
 
 const RightNav = ({ screen }: Props) => {
-  // const { get } = useLocalStorage();
+  const { remove } = useLocalStorage();
+
   const totalCartItems = cart.value?.items?.reduce(
     (acc, curVal) => acc + curVal.quantity,
     0
   );
 
-  // const localCustId = get("custId");
   const userState = user.state.value;
 
   const handleLogout = async () => {
     await logoutUser();
-    localStorage.removeItem("custId");
-    localStorage.removeItem("cartId");
+    remove("cart");
+    remove("cartId");
     location.reload();
   };
 

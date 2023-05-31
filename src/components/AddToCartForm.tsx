@@ -1,6 +1,6 @@
 import type { ChangeEvent } from "preact/compat";
 import Button from "@components/Button";
-import { cart, cartOpen } from "@store/cartStore";
+import { cart, cartOpen, resetCart } from "@store/cartStore";
 import ProductVariants from "@components/ProductVariants";
 import { Signal, signal } from "@preact/signals";
 import { addLineItem } from "@api/cart/addLineItem";
@@ -8,6 +8,7 @@ import { createCart } from "@api/cart/createCart";
 import useLocalStorage from "@hooks/useLocalStorage";
 import type { PricedProduct } from "@medusajs/medusa/dist/types/pricing";
 import type { Region } from "@medusajs/medusa";
+import user from "@api/user";
 
 interface Props {
   product: PricedProduct;
@@ -22,32 +23,55 @@ const loadingSignal = signal<boolean>(false);
 const AddToCartForm = ({ product, selectedVariant }: Props) => {
   const { get, set } = useLocalStorage();
   const localRegion = get<Region>("region");
+  const userState = user.state.value;
 
   const handleAddCart = async (e: ChangeEvent) => {
     e.preventDefault();
+
+    const userCartId = user.customer.value?.metadata?.cartId as string;
     const localCartId = get("cartId");
 
     if (selectedVariant.id.value) {
       try {
         loadingSignal.value = true;
-        if (localCartId) {
-          const res = await addLineItem({
-            cardId: localCartId,
-            variant_id: selectedVariant.id.value,
-            quantity: 1,
-          });
+        if (userState === "authenticated") {
+          if (userCartId) {
+            const res = await addLineItem({
+              cardId: userCartId,
+              variant_id: selectedVariant.id.value,
+              quantity: 1,
+            });
 
-          cart.value = res.cart;
+            cart.value = res.cart;
+          } else {
+            const resCart = await user.resetCartId();
+            const res = await addLineItem({
+              cardId: resCart.id,
+              variant_id: selectedVariant.id.value,
+              quantity: 1,
+            });
+            cart.value = res.cart;
+          }
         } else {
-          const res = await createCart({
-            region_id: localRegion?.id,
-            variant_id: selectedVariant.id.value,
-            quantity: 1,
-          });
+          if (localCartId) {
+            const res = await addLineItem({
+              cardId: localCartId,
+              variant_id: selectedVariant.id.value,
+              quantity: 1,
+            });
+            cart.value = res.cart;
+          } else {
+            const res = await createCart({
+              region_id: localRegion?.id,
+              variant_id: selectedVariant.id.value,
+              quantity: 1,
+            });
 
-          set("cartId", res.cart.id);
-          cart.value = res.cart;
+            set("cartId", res.cart.id);
+            cart.value = res.cart;
+          }
         }
+
         cartOpen.value = true;
       } catch {
       } finally {
@@ -57,7 +81,8 @@ const AddToCartForm = ({ product, selectedVariant }: Props) => {
       alert("Can't add to card because variant id not found");
     }
   };
-  localStorage.setItem("cart", JSON.stringify(cart.value));
+  set("cart", cart.value);
+
   return (
     <div class="mt-6">
       <form onSubmit={handleAddCart}>

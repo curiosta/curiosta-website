@@ -11,6 +11,7 @@ import Typography from "./Typography";
 import priceToCurrency from "@utils/priceToCurrency";
 import Button from "@components/Button";
 import { checkoutOpen } from "@store/checkoutStore";
+import user from "@api/user";
 
 const CartItem = ({ item }: { item: LineItem }) => {
   const loadingQty = useSignal<boolean>(false);
@@ -18,6 +19,7 @@ const CartItem = ({ item }: { item: LineItem }) => {
   const increaseQty = async () => {
     loadingQty.value = true;
     try {
+      if (!cart.value) return;
       await increaseCartItem(cart.value.id, item.id, item.quantity);
     } catch {
       // handle error
@@ -28,6 +30,7 @@ const CartItem = ({ item }: { item: LineItem }) => {
   const decreaseQty = async () => {
     loadingQty.value = true;
     try {
+      if (!cart.value) return;
       await decreaseCartItem(cart.value.id, item.id, item.quantity);
     } catch {
       // handle error
@@ -38,10 +41,11 @@ const CartItem = ({ item }: { item: LineItem }) => {
   const removeProductFromCart = async () => {
     try {
       loadingRemove.value = true;
+      if (!cart.value) return;
       await removeCartItem(cart.value.id, item.id);
       if (!cart.value.items.length) {
-        localStorage.removeItem("cartId");
-        location.reload();
+        // remove cart id to customer meta data
+        await user.updateUser({ metadata: { cartId: null } });
         checkoutOpen.value = false;
       }
     } catch (error) {

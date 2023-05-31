@@ -1,12 +1,8 @@
 import medusa from "@api/medusa";
-import useLocalStorage from "src/hooks/useLocalStorage";
+import user from "@api/user";
 
-const getCart = async () => {
-  const { get } = useLocalStorage();
-
-  const cartId = get<string>("cartId");
-  if (!cartId) return null;
-  const result = await medusa.carts.retrieve(cartId);
+const getCart = async (cart_id: string) => {
+  return medusa.carts.retrieve(cart_id);
 };
 
 export default getCart;
