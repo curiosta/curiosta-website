@@ -16,8 +16,6 @@ import Typography from "@components/Typography";
 
 const stripe = signal<Stripe | null>(null);
 
-(window as any).pky = import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY;
-
 loadStripe(import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY || '').then((stripeInstance) => {
   stripe.value = stripeInstance;
 })
