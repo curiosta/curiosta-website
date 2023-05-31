@@ -22,13 +22,13 @@ interface Props {
 }
 
 const ProductFilter = ({ categories }: Props) => {
-  const isSortPopUp = useSignal(false);
+  // const isSortPopUp = useSignal(false);
   const isLoading = useSignal(false);
 
-  const sortOptions = [
-    { id: 1, title: "Newest", value: "-created_at" },
-    { id: 2, title: "Oldest", value: "created_at" },
-  ];
+  // const sortOptions = [
+  //   { id: 1, title: "Newest", value: "-created_at" },
+  //   { id: 2, title: "Oldest", value: "created_at" },
+  // ];
 
   const productsList = async () => {
     try {
@@ -54,7 +54,7 @@ const ProductFilter = ({ categories }: Props) => {
 
   return (
     <div class="mx-auto max-w-2xl !pb-0 px-4  sm:px-6  lg:max-w-7xl lg:px-8">
-      <div class="flex items-center justify-end">
+      {/* <div class="flex items-center justify-end">
         <div class="relative inline-block text-left">
           <div>
             <Button
@@ -103,7 +103,7 @@ const ProductFilter = ({ categories }: Props) => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       <div class="lg:grid lg:grid-cols-3 lg:gap-x-8 xl:grid-cols-4">
         <CategoriesOpt categories={categories} />
 
