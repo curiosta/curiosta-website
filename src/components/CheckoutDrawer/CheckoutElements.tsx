@@ -1,5 +1,5 @@
 import user from "@api/user"
-import AddressList from "@components/AddressList"
+import AddressList from "@components/CheckoutDrawer/AddressList"
 import Button from "@components/Button"
 import OrderSummary from "@components/OrderSummary"
 import PaymentHandler from "@components/PaymentHandler"
@@ -8,6 +8,7 @@ import { cart } from "@store/cartStore"
 import { PaymentElement, useElements, } from "@stripe/react-stripe-js"
 import type { Stripe } from "@stripe/stripe-js"
 import type { FunctionComponent } from "preact"
+import ShipmentSelect from "./ShipmentSelect"
 
 type TCheckoutElementsProps = {
   selectedAddressId: Signal<string | null>;
@@ -89,6 +90,7 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({ selectedA
             <div>
               <AddressList selectedAddressId={selectedAddressId} />
               {selectedAddressId.value && clientSecret.value ? <PaymentHandler /> : null}
+              <ShipmentSelect />
             </div>
             {/* <!-- Order summary --> */}
             <div class="mt-10 lg:mt-0">
