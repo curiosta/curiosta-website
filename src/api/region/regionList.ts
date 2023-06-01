@@ -1,4 +1,5 @@
 import medusa from "@api/medusa";
+import user from "@api/user";
 import useLocalStorage from "@hooks/useLocalStorage";
 import type { Country, Region } from "@medusajs/medusa";
 import { signal } from "@preact/signals";
@@ -6,11 +7,12 @@ import { cart } from "@store/cartStore";
 
 // set default region
 const { get, set } = useLocalStorage();
-const region = get<Region>('region');
-const countryId = get<number>('countryId');
+
+const region = get('region');
+const countryId = get('countryId');
 
 export const regions = signal<Region[] | undefined>(undefined);
-export const activeRegion = signal<Region | undefined>(region || undefined)
+export const activeRegion = signal<Region | undefined>(undefined)
 export const activeCountry = signal<Country | undefined>(undefined);
 
 // queries
@@ -35,7 +37,7 @@ export const updateRegion = async (cartId: string, regionId: string) => {
     if (regions.value?.length) {
       const currentRegion = regions.value.filter((region) => region.id === regionId)[0];
       currentRegion && (activeRegion.value = currentRegion)
-      set<Region>('region', currentRegion)
+      set('region', currentRegion)
     }
   } catch (error) {
     console.error(error)
@@ -66,5 +68,5 @@ export const setActiveCountry = (id: number) => {
   // select india region if no region exist in user's browser | remove before implement global regions
   const indiaRegion = regions.value?.filter((r) => r.countries.map((c) => c.iso_2).includes('in'))[0];
 
-  !region && indiaRegion && set<Region>('region', indiaRegion)
+  !region && indiaRegion && set('region', indiaRegion)
 })();
