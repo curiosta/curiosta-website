@@ -1,4 +1,4 @@
-import type { Cart, Region } from "@medusajs/medusa";
+import type { Cart, Region, StoreCartsRes } from "@medusajs/medusa";
 
 // NOTE: explicitly add keys here so that app does not set or get data from local storage 'accidentally'.
 // type LocalStorageKeys = "custId" | "region" | 'countryId';
@@ -6,9 +6,10 @@ import type { Cart, Region } from "@medusajs/medusa";
 type LocalStorageItems = {
   cartId: string;
   custId: string;
-  region: Region,
+  region: Region;
+  cart: StoreCartsRes["cart"];
   countryId: number;
-}
+};
 
 /**
  * A custom hook to simplify the usage of the local storage.
@@ -17,7 +18,10 @@ type LocalStorageItems = {
  * @returns `get` and `set` method which supports any kind of payload and automatically parses object using JSON.stringify().
  */
 const useLocalStorage = () => {
-  const setLocalStorage = <T extends keyof LocalStorageItems>(key: T, payload: LocalStorageItems[T] | null) => {
+  const setLocalStorage = <T extends keyof LocalStorageItems>(
+    key: T,
+    payload: LocalStorageItems[T] | null
+  ) => {
     try {
       const value =
         typeof payload === "object" ? JSON.stringify(payload) : payload;
@@ -37,7 +41,7 @@ const useLocalStorage = () => {
       }
       try {
         value = JSON.parse(value);
-      } catch (error) { }
+      } catch (error) {}
       return value as LocalStorageItems[T] | null;
     } catch (error) {
       console.warn(`Error getting local storage key "${key}": `, error);
@@ -46,10 +50,14 @@ const useLocalStorage = () => {
   };
 
   const removeLocalStorage = (key: keyof LocalStorageItems) => {
-    localStorage.removeItem(key as string)
-  }
+    localStorage.removeItem(key as string);
+  };
 
-  return { get: getLocalStorage, set: setLocalStorage, remove: removeLocalStorage };
+  return {
+    get: getLocalStorage,
+    set: setLocalStorage,
+    remove: removeLocalStorage,
+  };
 };
 
 export default useLocalStorage;

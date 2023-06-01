@@ -80,7 +80,7 @@ const AddToCartForm = ({ product, selectedVariant }: Props) => {
       alert("Can't add to card because variant id not found");
     }
   };
-
+  set("cart", cart.value);
   return (
     <div class="mt-6">
       <form onSubmit={handleAddCart}>
