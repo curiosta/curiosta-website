@@ -45,7 +45,7 @@ const CartItem = ({ item }: { item: LineItem }) => {
       await removeCartItem(cart.value.id, item.id);
       if (!cart.value.items.length) {
         // remove cart id to customer meta data
-        await user.updateUser({ metadata: { cartId: null } });
+        await user.updateUser({ metadata: { cart_id: null } });
         checkoutOpen.value = false;
       }
     } catch (error) {

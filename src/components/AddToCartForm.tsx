@@ -28,7 +28,7 @@ const AddToCartForm = ({ product, selectedVariant }: Props) => {
   const handleAddCart = async (e: ChangeEvent) => {
     e.preventDefault();
 
-    const userCartId = user.customer.value?.metadata?.cartId as string;
+    const userCartId = user.customer.value?.metadata?.cart_id as string;
     const localCartId = get("cartId");
 
     if (selectedVariant.id.value) {
