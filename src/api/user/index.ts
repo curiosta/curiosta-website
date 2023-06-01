@@ -1,6 +1,11 @@
 import getCart from "@api/cart/getCart";
 import medusa from "@api/medusa";
-import type { Customer, StorePostCustomersCustomerReq } from "@medusajs/medusa";
+import useLocalStorage from "@hooks/useLocalStorage";
+import type {
+  Customer,
+  StoreCartsRes,
+  StorePostCustomersCustomerReq,
+} from "@medusajs/medusa";
 import { signal } from "@preact/signals";
 import { cart } from "@store/cartStore";
 
@@ -19,9 +24,9 @@ class User {
       const result = await medusa.auth.getSession();
       this.customer.value = result.customer;
       this.state.value = "authenticated";
-      if (this.customer.value.metadata?.cartId) {
+      if (this.customer.value.metadata?.cart_id) {
         const res = await getCart(
-          this.customer.value.metadata?.cartId as string
+          this.customer.value.metadata?.cart_id as string
         );
         cart.value = res.cart;
       }
@@ -39,9 +44,27 @@ class User {
   }
   async resetCartId() {
     const response = await medusa.carts.create();
-    await medusa.customers.update({ metadata: { cartId: response.cart.id } });
+    await medusa.customers.update({ metadata: { cart_id: response.cart.id } });
     cart.value = response.cart;
     return response.cart;
+  }
+
+  async setCart() {
+    const userState = this.state.value;
+    if (userState === "authenticated") {
+      const userCartId = this.customer.value?.metadata.cart_id as string;
+      if (userCartId) {
+        const res = await medusa.carts.retrieve(userCartId);
+        cart.value = res.cart;
+        return res.cart;
+      } else {
+        await user.resetCartId();
+      }
+    } else if (userState === "unauthenticated") {
+      const { get } = useLocalStorage();
+      const localData = get<StoreCartsRes["cart"]>("cart");
+      return (cart.value = localData);
+    }
   }
 }
 

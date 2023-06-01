@@ -6,9 +6,7 @@ import type { StoreCartsRes } from "@medusajs/medusa";
 import { signal } from "@preact/signals";
 const { get, remove, set } = useLocalStorage();
 
-const localData = get<StoreCartsRes["cart"]>("cart");
-
-export const cart = signal<StoreCartsRes["cart"] | null>(localData || null);
+export const cart = signal<StoreCartsRes["cart"] | null>(null);
 export const cartOpen = signal<boolean>(false);
 
 export const selectedShippingOption = signal<string | undefined>(undefined);
@@ -22,24 +20,26 @@ export const createCart = async () => {
 
 export const listShippingMethods = async () => {
   if (!cart.value?.id) return;
-  const response = await medusa.shippingOptions.listCartOptions(cart.value.id)
-  return response.shipping_options
-}
+  const response = await medusa.shippingOptions.listCartOptions(cart.value.id);
+  return response.shipping_options;
+};
 
 export const updateShippingMethod = async (id: string) => {
   if (!cart.value?.id || !id) return;
   selectedShippingOption.value = id;
   isShippingUpdateLoading.value = true;
   try {
-    const response = await medusa.carts.addShippingMethod(cart.value.id, { option_id: id })
-    cart.value = response.cart
-    isShippingUpdateLoading.value = false
+    const response = await medusa.carts.addShippingMethod(cart.value.id, {
+      option_id: id,
+    });
+    cart.value = response.cart;
+    isShippingUpdateLoading.value = false;
     return response.cart;
   } catch (error) {
   } finally {
-    isShippingUpdateLoading.value = false
+    isShippingUpdateLoading.value = false;
   }
-}
+};
 
 export const resetCart = async () => {
   remove("cart");
@@ -79,5 +79,3 @@ export async function removeCartItem(cartId: string, line_id: string) {
   const updateCart = await removeLineItem({ cartId: cartId, line_id });
   cart.value = updateCart.cart;
 }
-
-!localData && createCart();

@@ -4,6 +4,7 @@ import { logoutUser } from "@api/user/logoutUser";
 import useLocalStorage from "@hooks/useLocalStorage";
 import user from "@api/user";
 import { cx } from "class-variance-authority";
+import { useEffect } from "preact/hooks";
 
 interface Props {
   screen?: "mobile";
@@ -16,6 +17,14 @@ const RightNav = ({ screen }: Props) => {
     (acc, curVal) => acc + curVal.quantity,
     0
   );
+
+  const setIntialCart = async () => {
+    await user.setCart();
+  };
+
+  useEffect(() => {
+    setIntialCart();
+  }, []);
 
   const userState = user.state.value;
 
