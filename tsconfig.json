@@ -17,5 +17,10 @@
       "@utils/*": ["./src/utils/*"],
       "@payment": ["./src/payment/index.ts"],
     }
-  }
+  },
+  "exclude": [
+    "cdk",
+    "dist",
+    "node_modules"
+  ]
 }

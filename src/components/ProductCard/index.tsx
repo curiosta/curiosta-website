@@ -11,7 +11,7 @@ type TProductCard = {
 
 const ProductCard: FunctionComponent<TProductCard> = ({ product }) => {
   const { get } = useLocalStorage();
-  const localRegion = get<Region>("region");
+  const localRegion = get("region");
   const currency = localRegion?.currency_code as keyof CurrencyMap || 'inr';
   const amount = product.variants?.[0]?.prices?.find((item) => item.currency_code === currency)?.amount;
 

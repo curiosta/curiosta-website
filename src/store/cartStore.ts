@@ -41,14 +41,6 @@ export const updateShippingMethod = async (id: string) => {
   }
 };
 
-export const resetCart = async () => {
-  remove("cart");
-  remove("cartId");
-  const cart = await createCart();
-  set("cart", cart);
-  set("cartId", cart.id);
-};
-
 export async function increaseCartItem(
   cartId: string,
   line_id: string,

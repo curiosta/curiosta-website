@@ -11,10 +11,14 @@ export interface BlogPost {
   };
 }
 
+if (!import.meta.env.PUBLIC_CONTENTFUL_SPACE_ID || !import.meta.env.PUBLIC_CONTENTFUL_ACCESS_TOKEN) {
+  throw new Error('Could not find PUBLIC_CONTENTFUL_ACCESS_TOKEN or PUBLIC_CONTENTFUL_SPACE_ID!');
+};
+
 // client is not initialized. initializing...
 const contentful = contentfulClient.createClient({
-  space: import.meta.env.CONTENTFUL_SPACE_ID,
-  accessToken: import.meta.env.CONTENTFUL_ACCESS_TOKEN,
+  space: import.meta.env.PUBLIC_CONTENTFUL_SPACE_ID,
+  accessToken: import.meta.env.PUBLIC_CONTENTFUL_ACCESS_TOKEN,
   host: "cdn.contentful.com",
 });
 
