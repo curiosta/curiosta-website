@@ -43,10 +43,6 @@ class User {
     cart.value = response.cart;
     return response.cart;
   }
-  async setCartId() {
-    const res = fetch(this.customer.value?.metadata.cartId);
-    cart.value = res.cart
-  }
 }
 
 const user = new User();
