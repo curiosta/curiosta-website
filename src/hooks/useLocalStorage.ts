@@ -1,9 +1,11 @@
-import type { Region } from "@medusajs/medusa";
+import type { Cart, Region } from "@medusajs/medusa";
 
 // NOTE: explicitly add keys here so that app does not set or get data from local storage 'accidentally'.
 // type LocalStorageKeys = "custId" | "region" | 'countryId';
 
-type LocalStorageItems = {
+type LocalStorageItems = { [x: string]: null } & {
+  cartId: string;
+  cart: Omit<Cart, "refundable_amount" | "refunded_total">;
   customerId: string;
   region: Region,
   countryId: number;
@@ -20,7 +22,7 @@ const useLocalStorage = () => {
     try {
       const value =
         typeof payload === "object" ? JSON.stringify(payload) : payload;
-      localStorage.setItem(key, value as string);
+      localStorage.setItem(key as string, value as string);
     } catch (error) {
       console.warn(`Error setting local storage key "${key}": `, error);
     }
@@ -30,7 +32,7 @@ const useLocalStorage = () => {
     key: T
   ): LocalStorageItems[T] | null => {
     try {
-      let value = localStorage.getItem(key);
+      let value = localStorage.getItem(key as string);
       if (value === null) {
         return null;
       }
@@ -45,7 +47,7 @@ const useLocalStorage = () => {
   };
 
   const removeLocalStorage = (key: keyof LocalStorageItems) => {
-    localStorage.removeItem(key)
+    localStorage.removeItem(key as string)
   }
 
   return { get: getLocalStorage, set: setLocalStorage, remove: removeLocalStorage };

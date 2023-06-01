@@ -22,7 +22,7 @@ const loadingSignal = signal<boolean>(false);
 
 const AddToCartForm = ({ product, selectedVariant }: Props) => {
   const { get, set } = useLocalStorage();
-  const localRegion = get<Region>("region");
+  const localRegion = get("region");
   const userState = user.state.value;
 
   const handleAddCart = async (e: ChangeEvent) => {

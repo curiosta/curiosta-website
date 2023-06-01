@@ -6,7 +6,7 @@ import type { StoreCartsRes } from "@medusajs/medusa";
 import { signal } from "@preact/signals";
 const { get, remove, set } = useLocalStorage();
 
-const localData = get<StoreCartsRes["cart"]>("cart");
+const localData = get("cart");
 
 export const cart = signal<StoreCartsRes["cart"] | null>(localData || null);
 export const cartOpen = signal<boolean>(false);

@@ -13,7 +13,7 @@ interface Props {
 const ProductInfo = ({ product }: Props) => {
   const defaultVariant = product?.variants?.at(0);
   const { get } = useLocalStorage();
-  const localRegion = get<Region>("region");
+  const localRegion = get("region");
 
   const amount = defaultVariant?.prices.find(
     (item) => item.currency_code === localRegion?.currency_code,
