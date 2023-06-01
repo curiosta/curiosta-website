@@ -1,13 +1,12 @@
 import type { ChangeEvent } from "preact/compat";
 import Button from "@components/Button";
-import { cart, cartOpen, resetCart } from "@store/cartStore";
+import { cart, cartOpen } from "@store/cartStore";
 import ProductVariants from "@components/ProductVariants";
 import { Signal, signal } from "@preact/signals";
 import { addLineItem } from "@api/cart/addLineItem";
 import { createCart } from "@api/cart/createCart";
 import useLocalStorage from "@hooks/useLocalStorage";
 import type { PricedProduct } from "@medusajs/medusa/dist/types/pricing";
-import type { Region } from "@medusajs/medusa";
 import user from "@api/user";
 
 interface Props {
@@ -81,7 +80,6 @@ const AddToCartForm = ({ product, selectedVariant }: Props) => {
       alert("Can't add to card because variant id not found");
     }
   };
-  set("cart", cart.value);
 
   return (
     <div class="mt-6">

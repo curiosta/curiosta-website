@@ -21,7 +21,6 @@ const RightNav = ({ screen }: Props) => {
 
   const handleLogout = async () => {
     await logoutUser();
-    remove("cart");
     remove("cartId");
     location.reload();
   };

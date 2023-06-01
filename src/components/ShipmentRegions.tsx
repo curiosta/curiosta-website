@@ -1,9 +1,10 @@
 import { activeCountry, regions, updateRegionByCountryId } from "@api/region/regionList";
 import { signal } from "@preact/signals";
-import { cart, resetCart } from "@store/cartStore";
+import { cart } from "@store/cartStore";
 import { useEffect } from "preact/hooks";
 // select india default | temporary
 import "@api/region/regionList";
+import user from "@api/user";
 
 interface Props {
   screen?: "mobile";
@@ -35,7 +36,7 @@ const ShipmentRegions = ({ screen }: Props) => {
               "Changing region will clear cart items, Do you still want to proceed?"
             );
             if (answer) {
-              await resetCart();
+              await user.resetCartId();
             }
           }
           await updateRegionByCountryId(

@@ -3,10 +3,9 @@ import type { Cart, Region } from "@medusajs/medusa";
 // NOTE: explicitly add keys here so that app does not set or get data from local storage 'accidentally'.
 // type LocalStorageKeys = "custId" | "region" | 'countryId';
 
-type LocalStorageItems = { [x: string]: null } & {
+type LocalStorageItems = {
   cartId: string;
-  cart: Omit<Cart, "refundable_amount" | "refunded_total">;
-  customerId: string;
+  custId: string;
   region: Region,
   countryId: number;
 }
