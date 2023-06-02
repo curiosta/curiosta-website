@@ -7,7 +7,6 @@ type LocalStorageItems = {
   cartId: string;
   custId: string;
   region: Region;
-  cart: Omit<Cart, "refundable_amount" | "refunded_total">;
   countryId: number;
 };
 

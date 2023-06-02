@@ -1,17 +1,10 @@
 import type { LineItem } from "@medusajs/medusa";
 import { useSignal } from "@preact/signals";
-import {
-  cart,
-  decreaseCartItem,
-  increaseCartItem,
-  removeCartItem,
-} from "@store/cartStore";
+import cart from "@api/cart";
 import { cx } from "class-variance-authority";
 import Typography from "./Typography";
 import priceToCurrency from "@utils/priceToCurrency";
 import Button from "@components/Button";
-import { checkoutOpen } from "@store/checkoutStore";
-import user from "@api/user";
 
 const CartItem = ({ item }: { item: LineItem }) => {
   const loadingQty = useSignal<boolean>(false);
@@ -19,8 +12,7 @@ const CartItem = ({ item }: { item: LineItem }) => {
   const increaseQty = async () => {
     loadingQty.value = true;
     try {
-      if (!cart.value) return;
-      await increaseCartItem(cart.value.id, item.id, item.quantity);
+      await cart.setItemQuantity(item.id, item.quantity + 1);
     } catch {
       // handle error
     } finally {
@@ -30,30 +22,14 @@ const CartItem = ({ item }: { item: LineItem }) => {
   const decreaseQty = async () => {
     loadingQty.value = true;
     try {
-      if (!cart.value) return;
-      await decreaseCartItem(cart.value.id, item.id, item.quantity);
+      await cart.setItemQuantity(item.id, item.quantity - 1);
     } catch {
       // handle error
     } finally {
       loadingQty.value = false;
     }
   };
-  const removeProductFromCart = async () => {
-    try {
-      loadingRemove.value = true;
-      if (!cart.value) return;
-      await removeCartItem(cart.value.id, item.id);
-      if (!cart.value.items.length) {
-        // remove cart id to customer meta data
-        await user.updateUser({ metadata: { cart_id: null } });
-        checkoutOpen.value = false;
-      }
-    } catch (error) {
-      // handle error
-    } finally {
-      loadingRemove.value = false;
-    }
-  };
+  const removeProductFromCart = async () => await cart.removeItem(item.id)
 
   return (
     <div className={cx("flex h-20", loadingRemove.value && "grayscale")}>

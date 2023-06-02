@@ -6,7 +6,7 @@ import { ChangeEvent, FunctionComponent, useEffect } from "preact/compat";
 import AddressForm from "./AddressForm";
 import { cx } from "class-variance-authority";
 import AddressCard from "./AddressCard";
-import { updateCart } from "@api/cart/updateCart";
+import cart from "@api/cart";
 import useLocalStorage from "@hooks/useLocalStorage";
 import "@utils/addressList.css";
 import { removeShippingAddress } from "@api/user/removeShippingAddress";
@@ -39,8 +39,7 @@ const AddressList: FunctionComponent<TAddressListProps> = ({ selectedAddressId }
 
       isLoading.value = true;
 
-      await updateCart({
-        cartId: localCartId,
+      await cart.updateCart({
         shipping_address: selectedAddressId.value,
         billing_address: selectedAddressId.value,
       });

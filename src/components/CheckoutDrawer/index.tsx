@@ -2,7 +2,7 @@ import medusa from "@api/medusa";
 import Button from "@components/Button";
 import useKeyboard from "@hooks/useKeyboard";
 import { useSignal } from "@preact/signals";
-import { cart } from "@store/cartStore";
+import cart from "@api/cart";
 import { checkoutOpen } from "@store/checkoutStore";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -26,17 +26,17 @@ const CheckoutDrawer = () => {
   })
 
   useEffect(() => {
-    if (!cart.value || !checkoutOpen.value) return;
-    medusa.carts.createPaymentSessions(cart.value.id).then(({ cart: sessionCart }) => {
+    if (!cart.store.value || !checkoutOpen.value) return;
+    medusa.carts.createPaymentSessions(cart.store.value.id).then(({ cart: sessionCart }) => {
       const isStripeAvailable = sessionCart.payment_sessions?.some((s) => s.provider_id === 'stripe');
       if (!isStripeAvailable) throw new Error('Stripe is not supported in this region, Please contact administrator & ask to add stripe in backend!.');
-      if (!cart.value) return;
-      medusa.carts.setPaymentSession(cart.value.id, { provider_id: 'stripe' }).then(({ cart: paymentSessionCart }) => {
+      if (!cart.store.value) return;
+      medusa.carts.setPaymentSession(cart.store.value.id, { provider_id: 'stripe' }).then(({ cart: paymentSessionCart }) => {
         const _clientSecret = paymentSessionCart.payment_session?.data.client_secret as string
         if (_clientSecret) { clientSecret.value = _clientSecret }
       })
     });
-  }, [cart.value, checkoutOpen.value]);
+  }, [cart.store.value, checkoutOpen.value]);
 
 
   return createPortal(

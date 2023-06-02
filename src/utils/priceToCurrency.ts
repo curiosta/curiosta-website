@@ -1,9 +1,9 @@
 import { SupportedCurrencies, currencyMap } from "@utils/CurrencyMap";
-import { cart } from "@store/cartStore";
+import cart from "@api/cart";
 
 const priceToCurrency = (
   price: number | null | undefined,
-  currency_code = cart.value?.region?.currency_code
+  currency_code = cart.store.value?.region?.currency_code
 ): string => {
   const currencySign = currencyMap[currency_code as SupportedCurrencies];
   if (!price) {

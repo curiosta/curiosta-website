@@ -1,9 +1,8 @@
 import medusa from "@api/medusa";
-import user from "@api/user";
 import useLocalStorage from "@hooks/useLocalStorage";
 import type { Country, Region } from "@medusajs/medusa";
 import { signal } from "@preact/signals";
-import { cart } from "@store/cartStore";
+import cart from "@api/cart";
 
 // set default region
 const { get, set } = useLocalStorage();
@@ -30,10 +29,9 @@ export const getCartRegion = (cartRegionId: string) => {
 }
 
 // mutations
-export const updateRegion = async (cartId: string, regionId: string) => {
+export const updateRegion = async (regionId: string) => {
   try {
-    const res = await medusa.carts.update(cartId, { region_id: regionId })
-    cart.value = res.cart;
+    cart.updateCart({ region_id: regionId })
     if (regions.value?.length) {
       const currentRegion = regions.value.filter((region) => region.id === regionId)[0];
       currentRegion && (activeRegion.value = currentRegion)
@@ -44,9 +42,9 @@ export const updateRegion = async (cartId: string, regionId: string) => {
   }
 }
 
-export const updateRegionByCountryId = (cartId: string, id: number) => {
+export const updateRegionByCountryId = (id: number) => {
   const activeCountry = regions.value?.map(r => r.countries).flat(1).filter(country => country.id === id)[0]
-  activeCountry?.region_id && updateRegion(cartId, activeCountry.region_id);
+  activeCountry?.region_id && updateRegion(activeCountry.region_id);
   setActiveCountry(id);
 }
 

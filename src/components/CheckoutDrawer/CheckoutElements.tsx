@@ -4,7 +4,7 @@ import Button from "@components/Button"
 import OrderSummary from "@components/OrderSummary"
 import PaymentHandler from "@components/PaymentHandler"
 import { Signal, useSignal } from "@preact/signals"
-import { cart } from "@store/cartStore"
+import cart from "@api/cart"
 import { PaymentElement, useElements, } from "@stripe/react-stripe-js"
 import type { Stripe } from "@stripe/stripe-js"
 import type { FunctionComponent } from "preact"
@@ -24,7 +24,7 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({ selectedA
   const handlePayment = async () => {
     processingPayment.value = true
     const stripeInstance = await stripe;
-    if (!stripeInstance || !elements || !clientSecret.value || !cart.value) return;
+    if (!stripeInstance || !elements || !clientSecret.value || !cart.store.value) return;
 
     const element = elements.getElement(PaymentElement);
     if (!element) {
@@ -43,36 +43,30 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({ selectedA
 
     try {
 
+      const userDetails = {
+        address: {
+          line1: selectedAddress.address_1 || '',
+          line2: selectedAddress.address_2 || '',
+          city: selectedAddress.city || '',
+          country: selectedAddress.country_code || '',
+          postal_code: selectedAddress.postal_code || '',
+          state: selectedAddress.province || '',
+        },
+        name: `${selectedAddress.customer?.first_name || ''} ${selectedAddress.customer?.last_name || ''}`.trim(),
+      }
+
       const { error } = await stripeInstance.confirmPayment({
         elements,
         clientSecret: clientSecret.value,
         confirmParams: {
-          return_url: `${window.location.origin}/orders/confirm?cart=${cart.value.id}`,
+          return_url: `${window.location.origin}/orders/confirm?cart=${cart.store.value.id}`,
           payment_method_data: {
             billing_details: {
-              address: {
-                line1: selectedAddress.address_1 || '',
-                line2: selectedAddress.address_2 || '',
-                city: selectedAddress.city || '',
-                country: selectedAddress.country_code || '',
-                postal_code: selectedAddress.postal_code || '',
-                state: selectedAddress.province || '',
-              },
-              name: `${selectedAddress.customer?.first_name || ''} ${selectedAddress.customer?.last_name || ''}`.trim() || undefined,
+              ...userDetails,
               email: selectedAddress.customer?.email,
             }
           },
-          shipping: {
-            address: {
-              line1: selectedAddress.address_1 || '',
-              line2: selectedAddress.address_2 || '',
-              city: selectedAddress.city || '',
-              country: selectedAddress.country_code || '',
-              postal_code: selectedAddress.postal_code || '',
-              state: selectedAddress.province || '',
-            },
-            name: `${selectedAddress.customer?.first_name || ''} ${selectedAddress.customer?.last_name || ''}`.trim(),
-          }
+          shipping: userDetails
         },
       });
     } catch (error) { }

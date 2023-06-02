@@ -1,13 +1,10 @@
 import type { ChangeEvent } from "preact/compat";
 import Button from "@components/Button";
-import { cart, cartOpen } from "@store/cartStore";
 import ProductVariants from "@components/ProductVariants";
-import { Signal, signal } from "@preact/signals";
-import { addLineItem } from "@api/cart/addLineItem";
-import { createCart } from "@api/cart/createCart";
+import { Signal, effect, signal } from "@preact/signals";
 import useLocalStorage from "@hooks/useLocalStorage";
 import type { PricedProduct } from "@medusajs/medusa/dist/types/pricing";
-import user from "@api/user";
+import cart from "@api/cart";
 
 interface Props {
   product: PricedProduct;
@@ -20,59 +17,13 @@ interface Props {
 const loadingSignal = signal<boolean>(false);
 
 const AddToCartForm = ({ product, selectedVariant }: Props) => {
-  const userState = user.state.value;
   const handleAddCart = async (e: ChangeEvent) => {
     e.preventDefault();
-    const userCartId = user.customer.value?.metadata?.cart_id as string;
-
     if (selectedVariant.id.value) {
-      try {
-        loadingSignal.value = true;
-        if (userState === "authenticated") {
-          if (userCartId) {
-            const res = await addLineItem({
-              cardId: userCartId,
-              variant_id: selectedVariant.id.value,
-              quantity: 1,
-            });
-
-            cart.value = res.cart;
-          } else {
-            const resCart = await user.resetCartId();
-            const res = await addLineItem({
-              cardId: resCart.id,
-              variant_id: selectedVariant.id.value,
-              quantity: 1,
-            });
-            cart.value = res.cart;
-          }
-        } else if (userState === 'unauthenticated') {
-          const { get, set } = useLocalStorage();
-          const localRegion = get("region");
-          const localCartId = get("cartId");
-          if (localCartId) {
-            const res = await addLineItem({
-              cardId: localCartId,
-              variant_id: selectedVariant.id.value,
-              quantity: 1,
-            });
-            cart.value = res.cart;
-          } else {
-            const res = await createCart({
-              region_id: localRegion?.id,
-              variant_id: selectedVariant.id.value,
-              quantity: 1,
-            });
-
-            set("cartId", res.cart.id);
-            cart.value = res.cart;
-          }
-        }
-        cartOpen.value = true;
-      } catch {
-      } finally {
-        loadingSignal.value = false;
-      }
+      loadingSignal.value = true;
+      await cart.addItem(selectedVariant.id.value)
+      loadingSignal.value = false
+      cart.open.value = true;
     } else {
       alert("Can't add to card because variant id not found");
     }

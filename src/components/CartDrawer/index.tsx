@@ -1,4 +1,4 @@
-import { cart, cartOpen } from "@store/cartStore";
+import cart from "@api/cart";
 import { createPortal } from "preact/compat";
 import { cx } from "class-variance-authority";
 import priceToCurrency from "@utils/priceToCurrency";
@@ -13,11 +13,11 @@ import useKeyboard from "@hooks/useKeyboard";
 const CartDrawer = () => {
   const { add } = useKeyboard('Escape', { event: 'keydown' })
   // remove app's default scroll if cart is open
-  document.body.style.overflow = cartOpen.value ? "hidden" : "auto";
+  document.body.style.overflow = cart.open.value ? "hidden" : "auto";
 
   add('close-cart-drawer', () => {
     if (!checkoutOpen.value) {
-      cartOpen.value = false;
+      cart.open.value = false;
     }
   })
 
@@ -25,30 +25,30 @@ const CartDrawer = () => {
     <div
       className={cx(
         `fixed w-full flex h-screen top-0 left-0 opacity-0 pointer-events-none -z-10 transition-all duration-100`,
-        cartOpen.value && `z-50 opacity-100 pointer-events-auto`
+        cart.open.value && `z-50 opacity-100 pointer-events-auto`
       )}
     >
       {/* overlay */}
       <div
         className="hidden sm:block w-full bg-primary-100/30"
-        onClick={() => (cartOpen.value = false)}
+        onClick={() => (cart.open.value = false)}
       />
 
       {/* cart drawer */}
       <div
         className={cx(
           `w-full absolute top-0 right-0 h-screen translate-x-full sm:max-w-sm overflow-auto bg-white transition-all`,
-          cartOpen.value && `!translate-x-0`
+          cart.open.value && `!translate-x-0`
         )}
       >
-        {!cart.value?.items?.length ? (
+        {!cart.store.value?.items?.length ? (
           <EmptyCart />
         ) : (
           <div className="p-4 pt-6 relative">
             <div className="flex justify-between items-center border-b p-2">
               <Typography size="h6/bold">Shopping Cart</Typography>
               {/* close cart */}
-              <Button variant="icon" onClick={() => (cartOpen.value = false)}>
+              <Button variant="icon" onClick={() => (cart.open.value = false)}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="text-gray-400 w-6"
@@ -67,7 +67,7 @@ const CartDrawer = () => {
             <div className="flex flex-col px-4">
               {/* cart items */}
 
-              {cart.value.items.map((item) => (
+              {cart.store.value.items.map((item) => (
                 <div className="py-4 border-b last:border-b-0">
                   <CartItem item={item} />
                 </div>
@@ -79,7 +79,7 @@ const CartDrawer = () => {
                 <div className="flex justify-between">
                   <Typography size="body1/bold">Subtotal</Typography>
                   <Typography size="body1/bold">
-                    {priceToCurrency(cart.value.subtotal)}
+                    {priceToCurrency(cart.store.value.subtotal)}
                   </Typography>
                 </div>
                 <Typography size="small/normal" variant="secondary">
@@ -106,7 +106,7 @@ const CartDrawer = () => {
                     variant="app-primary"
                     size="body2/bold"
                     className="cursor-pointer"
-                    onClick={() => (cartOpen.value = false)}
+                    onClick={() => (cart.open.value = false)}
                   >
                     Continue Shopping
                   </Typography>

@@ -1,7 +1,6 @@
-import medusa from "@api/medusa"
 import type { PricedShippingOption } from "@medusajs/medusa/dist/types/pricing"
-import { signal, useSignal } from "@preact/signals"
-import { listShippingMethods, updateShippingMethod, selectedShippingOption, isShippingUpdateLoading } from "@store/cartStore"
+import { useSignal } from "@preact/signals"
+import cart from "@api/cart"
 import priceToCurrency from "@utils/priceToCurrency"
 import { cx } from "class-variance-authority"
 import { useEffect } from "preact/hooks"
@@ -9,10 +8,13 @@ import { useEffect } from "preact/hooks"
 const ShipmentSelect = () => {
   const shippingOptions = useSignal<PricedShippingOption[]>([])
   const listOfAvailableShipmentProviders = async () => {
-    const options = await listShippingMethods();
-    if (!options) return;
-    shippingOptions.value = options;
-    options?.[0]?.id && await updateShippingMethod(options[0].id)
+    if (!cart.shipping.options.value?.length) {
+      await cart.listShippingMethods();
+    }
+    const firstShippingOption = cart.shipping.options.value?.[0];
+    if (firstShippingOption?.id) {
+      await cart.updateShippingMethod(firstShippingOption.id)
+    }
   }
 
   useEffect(() => {
@@ -28,10 +30,10 @@ const ShipmentSelect = () => {
           <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
             {
               shippingOptions.value.map((option) => {
-                const activeOption = option.id && selectedShippingOption.value === option.id;
+                const activeOption = option.id && cart.shipping.selectedOption.value === option.id;
                 return (
-                  <label class={cx(`relative flex cursor-pointer rounded-lg bg-white p-4 shadow-sm focus:outline-none focus:ring-primary-600 focus:ring-2`, activeOption && `border ring-2 ring-primary-600`, isShippingUpdateLoading.value && `!bg-gray-100 pointer-events-none`)} tabIndex={1} onClick={() => {
-                    !isShippingUpdateLoading.value && option.id && option.id !== selectedShippingOption.value && updateShippingMethod(option.id)
+                  <label class={cx(`relative flex cursor-pointer rounded-lg bg-white p-4 shadow-sm focus:outline-none focus:ring-primary-600 focus:ring-2`, activeOption && `border ring-2 ring-primary-600`, cart.shipping.isUpdating.value && `!bg-gray-100 pointer-events-none`)} tabIndex={1} onClick={() => {
+                    !cart.shipping.isUpdating.value && option.id && option.id !== cart.shipping.selectedOption.value && cart.updateShippingMethod(option.id)
                   }}>
                     <input type="radio" name="delivery-method" value="Standard" class="sr-only" aria-labelledby="delivery-method-0-label" aria-describedby="delivery-method-0-description-0 delivery-method-0-description-1" />
                     <span class="flex flex-1">

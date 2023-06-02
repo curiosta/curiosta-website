@@ -1,4 +1,4 @@
-import { cart, cartOpen } from "@store/cartStore";
+import cart from "@api/cart";
 import Button from "./Button";
 import { logoutUser } from "@api/user/logoutUser";
 import useLocalStorage from "@hooks/useLocalStorage";
@@ -12,19 +12,10 @@ interface Props {
 
 const RightNav = ({ screen }: Props) => {
   const { remove } = useLocalStorage();
-
-  const totalCartItems = cart.value?.items?.reduce(
+  const totalCartItems = cart.store.value?.items?.reduce(
     (acc, curVal) => acc + curVal.quantity,
     0
   );
-
-  const setIntialCart = async () => {
-    await user.setCart();
-  };
-
-  useEffect(() => {
-    setIntialCart();
-  }, []);
 
   const userState = user.state.value;
 
@@ -75,7 +66,7 @@ const RightNav = ({ screen }: Props) => {
           href="#"
           onClick={(e) => {
             e.preventDefault();
-            cartOpen.value = true;
+            cart.open.value = true;
           }}
           class="group -m-2 flex items-center p-2"
         >
