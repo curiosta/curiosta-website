@@ -11,9 +11,9 @@ import { useRef } from "preact/hooks";
 
 const AddressForm = ({ selectedAddressId, isNewAddress }: { selectedAddressId: Signal<string | null>, isNewAddress: Signal<boolean> }) => {
   const isLoading = useSignal<boolean>(false);
+  const resetButtonRef = useRef<HTMLButtonElement>(null)
   const { get } = useLocalStorage();
   const localCartId = get("cartId");
-  const resetButtonRef = useRef<HTMLButtonElement>(null)
 
   const handleShippingAddress = async (data: AddressCreatePayload) => {
     try {

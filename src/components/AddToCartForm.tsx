@@ -20,15 +20,10 @@ interface Props {
 const loadingSignal = signal<boolean>(false);
 
 const AddToCartForm = ({ product, selectedVariant }: Props) => {
-  const { get, set } = useLocalStorage();
-  const localRegion = get("region");
   const userState = user.state.value;
-
   const handleAddCart = async (e: ChangeEvent) => {
     e.preventDefault();
-
     const userCartId = user.customer.value?.metadata?.cart_id as string;
-    const localCartId = get("cartId");
 
     if (selectedVariant.id.value) {
       try {
@@ -51,7 +46,10 @@ const AddToCartForm = ({ product, selectedVariant }: Props) => {
             });
             cart.value = res.cart;
           }
-        } else {
+        } else if (userState === 'unauthenticated') {
+          const { get, set } = useLocalStorage();
+          const localRegion = get("region");
+          const localCartId = get("cartId");
           if (localCartId) {
             const res = await addLineItem({
               cardId: localCartId,
@@ -70,7 +68,6 @@ const AddToCartForm = ({ product, selectedVariant }: Props) => {
             cart.value = res.cart;
           }
         }
-
         cartOpen.value = true;
       } catch {
       } finally {
@@ -80,7 +77,7 @@ const AddToCartForm = ({ product, selectedVariant }: Props) => {
       alert("Can't add to card because variant id not found");
     }
   };
-  set("cart", cart.value);
+
   return (
     <div class="mt-6">
       <form onSubmit={handleAddCart}>

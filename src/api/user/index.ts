@@ -3,15 +3,28 @@ import medusa from "@api/medusa";
 import useLocalStorage from "@hooks/useLocalStorage";
 import type {
   Customer,
-  StoreCartsRes,
   StorePostCustomersCustomerReq,
 } from "@medusajs/medusa";
 import { signal } from "@preact/signals";
 import { cart } from "@store/cartStore";
 
+type TCustomerMetadata = {
+  cart_id?: string | null;
+  stripe_id?: string;
+  country_id?: number;
+}
+
+export type TCustomer = Omit<Customer, "password_hash" | 'metadata'> & {
+  metadata: TCustomerMetadata
+}
+
+export type TCustomerUpdatePayload = Omit<StorePostCustomersCustomerReq, 'metadata'> & {
+  metadata?: TCustomerMetadata
+}
+
 class User {
   state = signal<"authenticated" | "loading" | "unauthenticated">("loading");
-  customer = signal<Omit<Customer, "password_hash"> | null>(null);
+  customer = signal<TCustomer | null>(null);
 
   constructor() {
     // initially call user
@@ -24,12 +37,6 @@ class User {
       const result = await medusa.auth.getSession();
       this.customer.value = result.customer;
       this.state.value = "authenticated";
-      if (this.customer.value.metadata?.cart_id) {
-        const res = await getCart(
-          this.customer.value.metadata?.cart_id as string
-        );
-        cart.value = res.cart;
-      }
     } catch (response: any) {
       const errorJson = response.toJSON?.();
       // user is unauthenticated
@@ -38,13 +45,19 @@ class User {
       }
     }
   }
-  async updateUser(payload: StorePostCustomersCustomerReq) {
+  async updateUser(payload: TCustomerUpdatePayload) {
     const response = await medusa.customers.update(payload);
     this.customer.value = response.customer;
   }
   async resetCartId() {
     const response = await medusa.carts.create();
-    await medusa.customers.update({ metadata: { cart_id: response.cart.id } });
+
+    if (this.state.value === 'authenticated') {
+      await medusa.customers.update({ metadata: { cart_id: response.cart.id } });
+    } else if (this.state.value === 'unauthenticated') {
+      const { set } = useLocalStorage();
+      set('cartId', response.cart.id);
+    }
     cart.value = response.cart;
     return response.cart;
   }
@@ -62,7 +75,7 @@ class User {
       }
     } else if (userState === "unauthenticated") {
       const { get } = useLocalStorage();
-      const localData = get<StoreCartsRes["cart"]>("cart");
+      const localData = get("cart");
       return (cart.value = localData);
     }
   }

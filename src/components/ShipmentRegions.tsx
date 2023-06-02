@@ -5,6 +5,7 @@ import { useEffect } from "preact/hooks";
 // select india default | temporary
 import "@api/region/regionList";
 import user from "@api/user";
+import '@api/cart'
 
 interface Props {
   screen?: "mobile";

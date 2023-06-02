@@ -1,4 +1,4 @@
-import type { Cart, Region, StoreCartsRes } from "@medusajs/medusa";
+import type { Cart, Region } from "@medusajs/medusa";
 
 // NOTE: explicitly add keys here so that app does not set or get data from local storage 'accidentally'.
 // type LocalStorageKeys = "custId" | "region" | 'countryId';
@@ -7,7 +7,7 @@ type LocalStorageItems = {
   cartId: string;
   custId: string;
   region: Region;
-  cart: StoreCartsRes["cart"];
+  cart: Omit<Cart, "refundable_amount" | "refunded_total">;
   countryId: number;
 };
 
@@ -41,7 +41,7 @@ const useLocalStorage = () => {
       }
       try {
         value = JSON.parse(value);
-      } catch (error) {}
+      } catch (error) { }
       return value as LocalStorageItems[T] | null;
     } catch (error) {
       console.warn(`Error getting local storage key "${key}": `, error);
