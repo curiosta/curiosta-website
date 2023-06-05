@@ -5,6 +5,8 @@ import { cx } from "class-variance-authority";
 import Typography from "./Typography";
 import priceToCurrency from "@utils/priceToCurrency";
 import Button from "@components/Button";
+import Input from "@components/Input";
+import type { ChangeEvent } from "preact/compat";
 
 const CartItem = ({ item }: { item: LineItem }) => {
   const loadingQty = useSignal<boolean>(false);
@@ -29,10 +31,25 @@ const CartItem = ({ item }: { item: LineItem }) => {
       loadingQty.value = false;
     }
   };
-  const removeProductFromCart = async () => await cart.removeItem(item.id)
+
+  const handleQty = async (e: ChangeEvent<HTMLInputElement>) => {
+    const quantity = e.currentTarget.valueAsNumber;
+
+    try {
+      if (!quantity) return;
+      // loadingQty.value = true;
+      await cart.setItemQuantity(item.id, quantity);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      loadingQty.value = false;
+    }
+  };
+
+  const removeProductFromCart = async () => await cart.removeItem(item.id);
 
   return (
-    <div className={cx("flex h-20", loadingRemove.value && "grayscale")}>
+    <div className={cx("flex ", loadingRemove.value && "grayscale")}>
       {item.thumbnail ? (
         <img
           src={item.thumbnail}
@@ -75,7 +92,7 @@ const CartItem = ({ item }: { item: LineItem }) => {
         <div className="flex justify-between items-center">
           <div className="flex gap-2 items-center">
             {/* decrease cart quantity */}
-            <Button
+            {/* <Button
               type="button"
               variant="icon"
               className="w-4 !p-0"
@@ -96,10 +113,10 @@ const CartItem = ({ item }: { item: LineItem }) => {
                   d="M19.5 12h-15"
                 />
               </svg>
-            </Button>
+            </Button> */}
 
-            {/* quantity / loading */}
-            {loadingQty.value ? (
+            {/* quantity input */}
+            {/* {loadingQty.value ? (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -115,13 +132,20 @@ const CartItem = ({ item }: { item: LineItem }) => {
                 />
               </svg>
             ) : (
-              <Typography variant="app-primary" size="body1/normal">
-                {item.quantity}
-              </Typography>
-            )}
-
+            
+            )}  */}
+            <Input
+              type="number"
+              min="1"
+              value={item.quantity}
+              onInput={handleQty}
+              className={`!w-12 !px-0 text-center ${
+                loadingQty.value ? "opacity-75" : "opacity-100"
+              }`}
+              disabled={loadingQty.value}
+            />
             {/* increase cart quantity */}
-            <Button
+            {/* <Button
               type="button"
               variant="icon"
               className="w-4 !p-0"
@@ -142,7 +166,7 @@ const CartItem = ({ item }: { item: LineItem }) => {
                   d="M12 4.5v15m7.5-7.5h-15"
                 />
               </svg>
-            </Button>
+            </Button> */}
           </div>
           <Button type="button" variant="icon" onClick={removeProductFromCart}>
             <Typography variant="app-primary" size="small/medium">
