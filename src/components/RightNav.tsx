@@ -4,6 +4,7 @@ import { logoutUser } from "@api/user/logoutUser";
 import useLocalStorage from "@hooks/useLocalStorage";
 import user from "@api/user";
 import { cx } from "class-variance-authority";
+import Search from "./Search";
 
 interface Props {
   screen?: "mobile";
@@ -27,11 +28,11 @@ const RightNav = ({ screen }: Props) => {
   return (
     <div
       class={cx(
-        "lg:flex lg:items-center  lg:justify-end",
-        screen === "mobile" ? "flex flex-col gap-4 mt-4" : "hidden"
+        "lg:flex lg:items-center lg:justify-end flex flex-col gap-4 mt-4 sm:hidden sm:flex-row sm:mt-0",
       )}
     >
-      <div>
+      <Search />
+      <div className={`ml-0 sm:ml-10`}>
         {userState === "authenticated" ? (
           <Button
             variant="primary"

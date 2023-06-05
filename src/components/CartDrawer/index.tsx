@@ -11,11 +11,11 @@ import { checkoutOpen } from "@store/checkoutStore";
 import useKeyboard from "@hooks/useKeyboard";
 
 const CartDrawer = () => {
-  const { add } = useKeyboard('Escape', { event: 'keydown' })
+  const { addListener } = useKeyboard('Escape')
   // remove app's default scroll if cart is open
   document.body.style.overflow = cart.open.value ? "hidden" : "auto";
 
-  add('close-cart-drawer', () => {
+  addListener(() => {
     if (!checkoutOpen.value) {
       cart.open.value = false;
     }

@@ -97,7 +97,7 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({ selectedA
                 <OrderSummary />
 
                 <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
-                  <Button type='submit'>
+                  <Button type='submit' disabled={!!cart.loading.value}>
                     Confirm order
                   </Button>
                 </div>
