@@ -5,7 +5,7 @@ import type { ChangeEvent } from "preact/compat";
 import Radio from "@components/Radio";
 import { cx } from "class-variance-authority";
 import countriesMap from "@utils/countriesMap";
-import Button from "./Button";
+import Button from "../Button";
 
 interface Props {
   address: Address;
@@ -25,8 +25,8 @@ const AddressCard = ({
   const disabled = isLoading.value;
   return (
     <label
-      class={cx(`relative flex w-52 h-full min-h-[10rem] cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none focus:ring-indigo-600 focus:ring-2`,
-        selectedAddressId.value === address.id && "border-indigo-600 ring-2 ring-indigo-600",
+      class={cx(`relative flex w-52 h-full min-h-[10rem] cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none focus:ring-primary-600 focus:ring-2`,
+        selectedAddressId.value === address.id && "border-primary-600 ring-2 ring-primary-600",
         disabled && '!bg-gray-100')}
     >
       <Radio
@@ -79,7 +79,7 @@ const AddressCard = ({
         <>
           {/* selected address check mark */}
           <svg
-            class={`h-5 w-5 absolute top-4 right-4 text-indigo-600 ${selectedAddressId.value === address.id ? "block" : "hidden"
+            class={`h-5 w-5 absolute top-4 right-4 text-app-primary-600 ${selectedAddressId.value === address.id ? "block" : "hidden"
               }`}
             viewBox="0 0 20 20"
             fill="currentColor"

@@ -43,7 +43,7 @@ const ProductVariants = ({ productVariants, selectedVariant }: Props) => {
             ? productVariants.map((variant) => (
               <label
                 class={`flex items-center ${variant.title === selectedVariant.title.value
-                  ? "border-transparent bg-indigo-600 text-white hover:bg-indigo-700"
+                  ? "border-transparent bg-primary-600 text-white hover:bg-primary-700"
                   : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
                   } justify-center rounded-md border py-3 px-3 text-sm font-medium uppercase sm:flex-1 cursor-pointer focus:outline-none`}
               >
