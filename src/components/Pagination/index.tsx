@@ -1,5 +1,6 @@
 import Button from "@components/Button";
 import type { Signal } from "@preact/signals";
+import { cx } from "class-variance-authority";
 
 interface Props {
   offset: Signal<number>;
@@ -31,7 +32,10 @@ const index = ({ offset, count, limit, isLoading }: Props) => {
 
   return (
     <div
-      class="flex items-center justify-between border-t border-gray-200 bg-white mt-20 px-4 py-3 sm:px-6"
+      class={cx(
+        "items-center justify-between border-t border-gray-200 bg-white mt-20 px-4 py-3 sm:px-6",
+        count.value ? "flex" : "hidden"
+      )}
       aria-label="Pagination"
     >
       <div class="hidden sm:block">
