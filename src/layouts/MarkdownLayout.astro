@@ -8,7 +8,7 @@ const { frontmatter } = Astro.props;
 <Layout title={frontmatter.title} description={frontmatter.description}>
   <Navbar />
   <main
-    class="pr bg-white flex justify-between py-8 mx-auto max-w-[80%] px-6 lg:px-8"
+    class="pr bg-white flex justify-between py-8 mx-auto w-full lg:max-w-[80%] px-6 lg:px-8"
   >
     <article class="prose">
       <slot />
