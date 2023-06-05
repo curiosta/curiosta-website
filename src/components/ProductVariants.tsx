@@ -3,6 +3,7 @@ import Typography from "@components/Typography";
 import useLocalStorage from "@hooks/useLocalStorage";
 import type { PricedVariant } from "@medusajs/medusa/dist/types/pricing";
 import type { Region } from "@medusajs/medusa";
+import region from "@api/region";
 
 interface Props {
   productVariants?: PricedVariant[];
@@ -14,9 +15,6 @@ interface Props {
 }
 
 const ProductVariants = ({ productVariants, selectedVariant }: Props) => {
-  const { get } = useLocalStorage();
-  const localRegion = get("region");
-
   const handleVariant = (
     id: string,
     title: string,
@@ -25,7 +23,7 @@ const ProductVariants = ({ productVariants, selectedVariant }: Props) => {
     selectedVariant.id.value = id;
     selectedVariant.title.value = title;
     selectedVariant.price.value = prices.find(
-      (item) => item.currency_code === localRegion?.currency_code
+      (item) => item.currency_code === region.selectedCountry.value?.region?.currency_code
     )?.amount;
   };
 

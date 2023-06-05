@@ -1,12 +1,14 @@
 import medusa from "@api/medusa";
 import user from "@api/user";
 import useLocalStorage from "@hooks/useLocalStorage";
-import type { Cart, ShippingMethod, StorePostCartReq, StorePostCartsCartReq } from "@medusajs/medusa"
+import type { Cart, StorePostCartReq, StorePostCartsCartReq } from "@medusajs/medusa"
 import type { PricedShippingOption } from "@medusajs/medusa/dist/types/pricing";
 import { effect, signal } from "@preact/signals"
 
 type TCart = Omit<Cart, "refundable_amount" | "refunded_total">
-type TCartMetadata = {}
+type TCartMetadata = {
+
+}
 type TCartUpdatePayload = Omit<StorePostCartsCartReq, 'metadata'> & { metadata?: TCartMetadata }
 type TCartCreatePayload = Omit<StorePostCartReq, 'metadata'> & { metadata?: TCartMetadata }
 
@@ -147,4 +149,3 @@ class CartStore {
 const cart = new CartStore();
 
 export default cart;
-

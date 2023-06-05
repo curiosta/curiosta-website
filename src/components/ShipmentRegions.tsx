@@ -1,23 +1,15 @@
-import { activeCountry, regions, updateRegionByCountryId } from "@api/region/regionList";
-import { signal } from "@preact/signals";
 import cart from "@api/cart";
-import { useEffect } from "preact/hooks";
 
 // select india default | temporary
-import "@api/region/regionList";
-import { cx } from "class-variance-authority";
+import "@api/region";
 
+import { cx } from "class-variance-authority";
+import region from "@api/region";
 interface Props {
   screen?: "mobile";
 }
 
-const selectedCountry = signal<number | undefined>(undefined);
 const ShipmentRegions = ({ screen }: Props) => {
-  const countries = regions.value?.map((region) => region.countries).flat(1);
-  useEffect(() => {
-    selectedCountry.value = activeCountry.value?.id;
-  }, [activeCountry.value]);
-
   return (
     <div
       class={cx(`lg:flex items-center gap-2`, screen === "mobile" ? "flex" : "hidden")}
@@ -28,8 +20,13 @@ const ShipmentRegions = ({ screen }: Props) => {
         onChange={async (e) => {
           if (!cart.store.value) return;
           const countryIdStr = e.currentTarget.value
-          const cartItemsLength = cart.store.value.items.length;
 
+          let countryId = Number(countryIdStr)
+          if (Number.isNaN(countryId)) {
+            return;
+          }
+
+          const cartItemsLength = cart.store.value.items.length;
           if (cartItemsLength) {
             const answer = confirm(
               "Changing country will clear cart items, Do you still want to proceed?"
@@ -38,21 +35,11 @@ const ShipmentRegions = ({ screen }: Props) => {
               await cart.resetCartId();
             }
           }
-
-          let countryId = Number(countryIdStr)
-          if (Number.isNaN(countryId)) {
-            return;
-          }
-
-          await updateRegionByCountryId(
-            countryId
-          );
-
-          Number(countryId);
+          await region.setCountry(countryId)
         }}
-        value={selectedCountry.value}
+        value={region.selectedCountry.value?.id}
       >
-        {countries?.map((country) => (
+        {region.countries.value?.map((country) => (
           <option value={country.id}>{country.name}</option>
         ))}
       </select>

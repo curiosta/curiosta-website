@@ -4,7 +4,6 @@ import { logoutUser } from "@api/user/logoutUser";
 import useLocalStorage from "@hooks/useLocalStorage";
 import user from "@api/user";
 import { cx } from "class-variance-authority";
-import { useEffect } from "preact/hooks";
 
 interface Props {
   screen?: "mobile";

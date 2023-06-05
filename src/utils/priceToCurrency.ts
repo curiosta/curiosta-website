@@ -9,6 +9,7 @@ const priceToCurrency = (
   if (!price) {
     return "N/A";
   }
+
   return `${currencySign}${(price / 100).toFixed(2)}`;
 };
 

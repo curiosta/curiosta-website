@@ -6,7 +6,6 @@ import type { Cart, Region } from "@medusajs/medusa";
 type LocalStorageItems = {
   cartId: string;
   custId: string;
-  region: Region;
   countryId: number;
 };
 

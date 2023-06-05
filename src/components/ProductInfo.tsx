@@ -1,10 +1,9 @@
 import { useSignal } from "@preact/signals";
 import AddToCartForm from "@components/AddToCartForm";
 import Typography from "@components/Typography";
-import useLocalStorage from "@hooks/useLocalStorage";
 import { CurrencyMap, currencyMap } from "@utils/CurrencyMap";
 import type { PricedProduct } from "@medusajs/medusa/dist/types/pricing";
-import type { Region } from "@medusajs/medusa";
+import region from "@api/region";
 
 interface Props {
   product: PricedProduct;
@@ -12,19 +11,22 @@ interface Props {
 
 const ProductInfo = ({ product }: Props) => {
   const defaultVariant = product?.variants?.at(0);
-  const { get } = useLocalStorage();
-  const localRegion = get("region");
 
   const amount = defaultVariant?.prices.find(
-    (item) => item.currency_code === localRegion?.currency_code,
+    (item) => item.currency_code === region.selectedCountry.value?.region?.currency_code,
   )?.amount;
-  const currency = localRegion?.currency_code as keyof CurrencyMap;
+
+  const currency = region.selectedCountry.value?.region?.currency_code as keyof CurrencyMap;
 
   const selectedVariant = {
     id: useSignal(defaultVariant?.id),
     title: useSignal(defaultVariant?.title),
     price: useSignal(amount),
   };
+
+  if (defaultVariant && selectedVariant.id.value === defaultVariant.id) {
+    selectedVariant.price.value = amount
+  }
 
   return (
     <div class="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
@@ -44,7 +46,7 @@ const ProductInfo = ({ product }: Props) => {
           variant="primary"
           className="tracking-tight"
         >
-          {currencyMap[currency]}
+          {selectedVariant.price.value && currencyMap[currency]}
           {selectedVariant.price.value
             ? (selectedVariant.price?.value / 100).toFixed(2)
             : "Price not available"}

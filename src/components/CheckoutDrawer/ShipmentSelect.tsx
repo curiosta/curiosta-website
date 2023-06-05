@@ -1,17 +1,15 @@
-import type { PricedShippingOption } from "@medusajs/medusa/dist/types/pricing"
-import { useSignal } from "@preact/signals"
 import cart from "@api/cart"
 import priceToCurrency from "@utils/priceToCurrency"
 import { cx } from "class-variance-authority"
 import { useEffect } from "preact/hooks"
 
 const ShipmentSelect = () => {
-  const shippingOptions = useSignal<PricedShippingOption[]>([])
   const listOfAvailableShipmentProviders = async () => {
     if (!cart.shipping.options.value?.length) {
       await cart.listShippingMethods();
     }
     const firstShippingOption = cart.shipping.options.value?.[0];
+
     if (firstShippingOption?.id) {
       await cart.updateShippingMethod(firstShippingOption.id)
     }
@@ -29,7 +27,7 @@ const ShipmentSelect = () => {
 
           <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
             {
-              shippingOptions.value.map((option) => {
+              (cart.shipping.options?.value || []).map((option) => {
                 const activeOption = option.id && cart.shipping.selectedOption.value === option.id;
                 return (
                   <label class={cx(`relative flex cursor-pointer rounded-lg bg-white p-4 shadow-sm focus:outline-none focus:ring-primary-600 focus:ring-2`, activeOption && `border ring-2 ring-primary-600`, cart.shipping.isUpdating.value && `!bg-gray-100 pointer-events-none`)} tabIndex={1} onClick={() => {
