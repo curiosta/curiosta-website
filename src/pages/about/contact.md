@@ -1,6 +1,6 @@
 ---
 title: Contact Us
-description: description of this page
+description: contact us
 
 layout: "@layouts/MarkdownLayout.astro"
 ---
