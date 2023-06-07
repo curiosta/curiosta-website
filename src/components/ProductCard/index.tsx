@@ -6,8 +6,8 @@ import region from "@api/region";
 import type { CurrencyMap } from "@utils/CurrencyMap";
 
 type TProductCard = {
-  product: PricedProduct
-}
+  product: PricedProduct;
+};
 
 const ProductCard: FunctionComponent<TProductCard> = ({ product }) => {
 
@@ -29,7 +29,8 @@ const ProductCard: FunctionComponent<TProductCard> = ({ product }) => {
             {product.title}
           </Typography>
           <Typography size="body2/normal" variant="secondary" className="mt-1 ">
-            {product.description?.slice(0, 30) + "..." || "Description not available"}
+            {product.description?.slice(0, 30) + "..." ||
+              "Description not available"}
           </Typography>
           <Typography size="body2/medium" variant="primary" className="mt-1 ">
             {currency ? currencyMap[currency] : ''}
