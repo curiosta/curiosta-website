@@ -44,7 +44,7 @@ const blogs = post.relatedBlogPosts?.map((item: FieldsType) => {
 
 <Layout title={post?.title} description={""}>
   <Navbar />
-  <main class="py-8 mx-auto max-w-[80%] px-6 lg:px-8">
+  <main class="py-8 mx-auto w-full lg:max-w-[80%] px-6 lg:px-8">
     <img
       src={post?.image.file.url}
       alt={post?.image.title}
