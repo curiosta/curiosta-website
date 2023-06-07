@@ -4,16 +4,18 @@ import useLocalStorage from "@hooks/useLocalStorage";
 import type { PricedProduct } from "@medusajs/medusa/dist/types/pricing";
 import type { FunctionComponent } from "preact";
 import type { Region } from "@medusajs/medusa";
+import type { Product } from "@store/productStore";
 
 type TProductCard = {
-  product: PricedProduct
-}
+  product: Product;
+};
 
 const ProductCard: FunctionComponent<TProductCard> = ({ product }) => {
   const { get } = useLocalStorage();
   const localRegion = get<Region>("region");
-  const currency = localRegion?.currency_code as keyof CurrencyMap || 'inr';
-  const amount = product.variants?.[0]?.prices?.find((item) => item.currency_code === currency)?.amount;
+  const currency = localRegion?.currency_code as keyof CurrencyMap;
+  // const amount = product.variants?.[0]?.prices?.find((item) => item.currency_code === currency)?.amount;
+  const amount = product.prices?.inr;
 
   return (
     <a href={`/products/${product.id}`}>
@@ -31,7 +33,8 @@ const ProductCard: FunctionComponent<TProductCard> = ({ product }) => {
             {product.title}
           </Typography>
           <Typography size="body2/normal" variant="secondary" className="mt-1 ">
-            {product.description?.slice(0, 30) + "..." || "Description not available"}
+            {product.description?.slice(0, 30) + "..." ||
+              "Description not available"}
           </Typography>
           <Typography size="body2/medium" variant="primary" className="mt-1 ">
             {currencyMap[currency]}

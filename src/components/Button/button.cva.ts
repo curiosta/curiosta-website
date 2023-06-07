@@ -29,6 +29,13 @@ const button = cva(
           "border border-gray-300",
           "px-4 py-2 w-full",
         ],
+        dropDown: [
+          "bg-secondary",
+          "hover:bg-gray-50",
+          "disabled:bg-secondary-200",
+          "text-primary-600",
+          "px-4 py-2 w-full",
+        ],
         danger: [
           "bg-danger-600",
           "focus:bg-danger-600",
