@@ -2,17 +2,13 @@ import Button from "@components/Button";
 import Input from "@components/Input";
 import Checkbox from "@components/Checkbox";
 import FormControl from "@components/FormControl";
-import { LoginUser, loginUser } from "@api/user/loginUser";
-import useLocalStorage from "@hooks/useLocalStorage";
+import user from "@api/user";
 
 const LoginForm = () => {
-  const { set } = useLocalStorage();
 
-  const handleLoginUser = async (data: LoginUser) => {
+  const handleLoginUser = async (data: any) => {
     try {
-      const { email, password } = data;
-      const user = await loginUser({ email, password });
-      set("custId", user.customer.id);
+      await user.login(data);
       history.back();
     } catch (error) {
       console.log(error);

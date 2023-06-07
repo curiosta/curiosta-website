@@ -30,8 +30,6 @@ class Search {
     }
 
     const res = await this.productIndex.search(query, searchOptions)
-
-    console.log(res.hits);
     const products = res.hits.map((hit: any) => {
       return ({
         title: hit.title,
@@ -42,8 +40,6 @@ class Search {
         thumbnail: hit.thumbnail
       }) as Product
     });
-
-    console.log(products);
 
     return {
       products,

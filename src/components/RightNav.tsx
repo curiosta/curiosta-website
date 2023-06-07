@@ -1,7 +1,5 @@
 import cart from "@api/cart";
 import Button from "./Button";
-import { logoutUser } from "@api/user/logoutUser";
-import useLocalStorage from "@hooks/useLocalStorage";
 import user from "@api/user";
 import { cx } from "class-variance-authority";
 
@@ -10,17 +8,10 @@ interface Props {
 }
 
 const RightNav = ({ screen }: Props) => {
-  const { remove } = useLocalStorage();
   const totalCartItems = cart.store.value?.items?.reduce(
     (acc, curVal) => acc + curVal.quantity,
     0
   );
-
-  const handleLogout = async () => {
-    await logoutUser();
-    remove("cartId");
-    location.reload();
-  };
 
   return (
     <div
@@ -34,7 +25,7 @@ const RightNav = ({ screen }: Props) => {
           <Button
             variant="primary"
             className="leading-6 !px-2 !py-1 !w-fit rounded-md"
-            onClick={handleLogout}
+            onClick={user.logout}
           >
             Log out
           </Button>
