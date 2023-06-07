@@ -11,4 +11,6 @@ interface EnvironmentVariables {
   CONTENTFUL_SPACE_ID: string;
   CONTENTFUL_ACCESS_TOKEN: string;
   STRIPE_PUBLISHABLE_KEY: string;
+  MEILISEARCH_API: string;
+  MEILISEARCH_HOST: string;
 }

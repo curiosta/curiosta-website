@@ -25,7 +25,6 @@ const Input = forwardRef<HTMLInputElement, TInputProps>(
       }
     }, [value]);
 
-
     if (!controller) {
       return <InputCore value={value} {...props} ref={ref} />
     }
