@@ -2,7 +2,7 @@ import Typography from "@components/Typography";
 import { cx } from "class-variance-authority";
 import type { ComponentChildren, FunctionComponent } from "preact";
 import { HTMLAttributes, forwardRef } from "preact/compat";
-import { useId } from "preact/hooks";
+import { useEffect, useId, useRef } from "preact/hooks";
 import './input.css';
 import type {
   FieldError,
@@ -46,6 +46,15 @@ const InputCore = forwardRef<HTMLInputElement, InputCoreProps>(
     ...props
   }, ref) => {
     const id = useId();
+    const inputRef = useRef<HTMLInputElement>(null)
+
+    useEffect(() => {
+      if (inputRef.current?.value) {
+        // we need to get the input's value on initial page load since browsers can autofill the form before the javascript gets executed
+        props.onChange?.({ target: { value: inputRef.current.value } })
+      }
+    }, [])
+
     return (
       <div className="w-full">
         {label ? (
@@ -65,8 +74,8 @@ const InputCore = forwardRef<HTMLInputElement, InputCoreProps>(
           ) : null}
           <input
             id={id}
-            {...props}
             disabled={disabled}
+            ref={inputRef}
             className={cx(
               `block w-full rounded-md border-0 p-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600  sm:text-sm sm:leading-6 focus-visible:outline-none`,
               leftAdornment ? "rounded-l-none" : "rounded-l-md",
@@ -75,15 +84,10 @@ const InputCore = forwardRef<HTMLInputElement, InputCoreProps>(
               className
             )}
             placeholder={placeholder || label || ""}
-            // {...field}
+            {...props}
             pattern={undefined}
+            required={false}
             readOnly={props.readOnly}
-            required={
-              typeof rules?.required === "object"
-                ? rules.required.value
-                : Boolean(rules?.required)
-            }
-            ref={ref}
           />
           {rightAdornment || null}
         </div>

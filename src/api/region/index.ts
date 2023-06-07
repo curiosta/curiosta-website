@@ -20,7 +20,7 @@ class Region {
 
   async initialize() {
 
-    const userCountryId = user.customer.value?.metadata.country_id
+    const userCountryId = user.customer.value?.metadata?.country_id
     const result = await medusa.regions.list();
     const { regions } = result
     const countries = regions.map((region) => region.countries).flat(1).sort((a, z) => a.display_name > z.display_name ? 1 : -1).map((country) => {

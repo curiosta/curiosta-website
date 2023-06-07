@@ -1,6 +1,4 @@
 import ProductCard from "@components/ProductCard";
-import Typography from "@components/Typography";
-import type { PricedProduct } from "@medusajs/medusa/dist/types/pricing";
 import type { Product } from "@store/productStore";
 import type { FunctionComponent } from "preact";
 

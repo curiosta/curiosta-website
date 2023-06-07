@@ -46,7 +46,7 @@ class CartStore {
     this.loading.value = 'cart:get'
     if (user.state.value === 'authenticated') {
       // if user is authenticated, get cart id from server
-      cartId = user.customer.value?.metadata.cart_id || undefined;
+      cartId = user.customer.value?.metadata?.cart_id || undefined;
 
     } else if (user.state.value === 'unauthenticated') {
       // if user is unauthenticated, get cart id from local storage

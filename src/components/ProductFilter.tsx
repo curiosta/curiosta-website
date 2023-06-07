@@ -18,6 +18,7 @@ import type { ProductCategory } from "@medusajs/medusa";
 import ProductCards from "@components/ProductCards";
 import Button from "@components/Button";
 import { productSort } from "@api/product/productSort";
+import search from "@api/search";
 
 interface Props {
   categories: ProductCategory[];
@@ -26,6 +27,7 @@ interface Props {
 const ProductFilter = ({ categories }: Props) => {
   const isSortPopUp = useSignal(false);
   const isLoading = useSignal(false);
+  const sortContainerRef = useRef<HTMLDivElement>(null);
 
   const sortOptions = [
     { id: 1, title: "Price: High to Low", value: "desc" },
@@ -35,20 +37,12 @@ const ProductFilter = ({ categories }: Props) => {
   const productsList = async () => {
     try {
       isLoading.value = true;
-      // const res = await listProducts({
-      //   category_id: selectedCategoriesIds.value,
-      //   limit: limit.value,
-      //   offset: offset.value,
-      //   order: order.value ? order.value : undefined,
-      // });
-      const sortRes = await productSort({
-        category: selectedCategoriesIds.value,
-        sortOrder: sortOrder.value ? sortOrder.value : undefined,
+      const sortRes = await search.getProducts(undefined, {
+        categories: selectedCategoriesIds.value,
+        sort: sortOrder.value as 'asc' | 'desc',
       });
-      products.value = sortRes?.hits as Product[];
-      count.value = sortRes?.estimatedTotalHits;
-
-      // console.log(sortRes);
+      products.value = sortRes.products;
+      count.value = sortRes.count;
     } catch (error) {
       console.log(error);
     } finally {
@@ -60,20 +54,23 @@ const ProductFilter = ({ categories }: Props) => {
     productsList();
   }, [selectedCategoriesIds.value, offset.value, sortOrder.value]);
 
-  // console.log(products.value);
+  useEffect(() => {
+    const clickAwayListener = (e: MouseEvent) => {
+      if (sortContainerRef.current?.contains(e.target as any)) return;
+      isSortPopUp.value = false
+    }
 
-  // hide sort menu on outside click
-  // const sortRef = useRef<HTMLButtonElement>(null);
-  // window.onclick = (e) => {
-  //   if (e.target !== sortRef.current) {
-  //     isSortPopUp.value = false;
-  //   }
-  // };
+    window.addEventListener('click', clickAwayListener)
+
+    return () => {
+      window.removeEventListener('click', clickAwayListener)
+    }
+  }, [])
 
   return (
     <div class="mx-auto max-w-2xl !pb-0 px-4  sm:px-6  lg:max-w-7xl lg:px-8">
       <div class="flex items-center justify-end">
-        <div class="relative inline-block text-left">
+        <div class="relative inline-block text-left" ref={sortContainerRef}>
           <div>
             <Button
               type="button"
@@ -84,9 +81,8 @@ const ProductFilter = ({ categories }: Props) => {
             >
               Sort
               <svg
-                class={`-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500 ${
-                  isSortPopUp.value ? "rotate-180" : "rotate-0"
-                }`}
+                class={`-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500 ${isSortPopUp.value ? "rotate-180" : "rotate-0"
+                  }`}
                 viewBox="0 0 20 20"
                 fill="currentColor"
                 aria-hidden="true"
@@ -100,20 +96,18 @@ const ProductFilter = ({ categories }: Props) => {
             </Button>
           </div>
           <div
-            class={`${
-              isSortPopUp.value ? "block" : "hidden"
-            } absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none`}
+            class={`${isSortPopUp.value ? "block" : "hidden"
+              } absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none`}
           >
             <div class="py-1" role="none">
               {sortOptions.map((sortOption) => (
                 <Button
                   type="button"
                   variant="dropDown"
-                  className={`!shadow-none ${
-                    sortOption.value === sortOrder.value
-                      ? "!bg-gray-100"
-                      : "!font-normal"
-                  }`}
+                  className={`!shadow-none ${sortOption.value === sortOrder.value
+                    ? "!bg-gray-100"
+                    : "!font-normal"
+                    }`}
                   onClick={() => {
                     sortOrder.value = sortOption.value;
                   }}

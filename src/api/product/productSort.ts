@@ -1,6 +1,6 @@
 import { MeiliSearch } from "meilisearch";
 
-if (!import.meta.env.PUBLIC_MEILISEARCH_HOST || import.meta.env.PUBLIC_MEILISEARCH_API) {
+if (!import.meta.env.PUBLIC_MEILISEARCH_HOST || !import.meta.env.PUBLIC_MEILISEARCH_API) {
   throw new Error('PUBLIC_MEILISEARCH_HOST or PUBLIC_MEILISEARCH_API was not found in environment variables!')
 }
 
@@ -9,9 +9,6 @@ const client = new MeiliSearch({
   apiKey: import.meta.env.PUBLIC_MEILISEARCH_API,
 });
 
-const update = () =>
-  client.index("products").updateFilterableAttributes(["categories"]);
-update();
 
 const index = client.index("products");
 

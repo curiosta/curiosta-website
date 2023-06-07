@@ -1,48 +1,55 @@
-import { InstantMeiliSearchInstance, instantMeiliSearch } from "@meilisearch/instant-meilisearch";
-import type { CurrencyMap } from "@utils/CurrencyMap";
-
-type TFindTypes = 'products'
-
-export type SearchProductPrices = Record<keyof CurrencyMap, number>
-
-export type SearchProductResult = {
-  name: string;
-  description: string;
-  image: string;
-  handle: string;
-  prices: SearchProductPrices
-}
-
-type SearchProductResponse = {
-  title: string;
-  description: string;
-  thumbnail: string;
-  handle: string;
-  prices: SearchProductPrices
-}
-
-
-export type TSearchGet = {
-  products: SearchProductResult[]
-}
+import type { Product } from "@store/productStore";
+import { Index, MeiliSearch, SearchParams } from "meilisearch";
 
 class Search {
-  client: InstantMeiliSearchInstance;
+  client: MeiliSearch;
+
+  productIndex: Index<{}>
 
   constructor() {
     if (!import.meta.env.PUBLIC_MEILISEARCH_HOST || !import.meta.env.PUBLIC_MEILISEARCH_API) {
       throw new Error('PUBLIC_MEILISEARCH_HOST or PUBLIC_MEILISEARCH_API was not found in environment variables!')
     }
-    this.client = instantMeiliSearch(import.meta.env.PUBLIC_MEILISEARCH_HOST, import.meta.env.PUBLIC_MEILISEARCH_API)
+
+    this.client = new MeiliSearch({
+      host: import.meta.env.PUBLIC_MEILISEARCH_HOST,
+      apiKey: import.meta.env.PUBLIC_MEILISEARCH_API,
+    });
+
+    this.productIndex = this.client.index('products');
   }
 
-  async get(find: TFindTypes, query: string): Promise<TSearchGet> {
-    if (!query.length) throw new Error('Empty search value!');
+  async getProducts(query = '', { sort, categories }: { sort: 'asc' | 'desc', categories: undefined | string[] }) {
 
-    const result = await this.client.search([{ indexName: find, query }])
+    const searchOptions: SearchParams = {}
+    if (sort) {
+      searchOptions.sort = [`prices.usd:${sort}`]
+    }
+    if (categories?.length) {
+      searchOptions.filter = [`categories IN [${categories.join(', ')}]`]
+    }
 
+    const res = await this.productIndex.search(query, searchOptions)
+
+    console.log(res.hits);
+    const products = res.hits.map((hit: any) => {
+      return ({
+        title: hit.title,
+        description: hit.description,
+        handle: hit.handle,
+        id: hit.id,
+        prices: hit.prices,
+        thumbnail: hit.thumbnail
+      }) as Product
+    });
+
+    console.log(products);
+
+    return {
+      products,
+      count: res.estimatedTotalHits,
+    }
   }
-
 
 }
 

@@ -31,7 +31,6 @@ const LoginForm = () => {
         type="email"
         label="Email address"
         autocomplete="email"
-        required
         placeholder={"example@gmail.com"}
         validator={(value) =>
           !/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(value)

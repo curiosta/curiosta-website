@@ -1,18 +1,19 @@
 import Typography from "@components/Typography";
 import { currencyMap } from "@utils/CurrencyMap";
-import type { PricedProduct } from "@medusajs/medusa/dist/types/pricing";
 import type { FunctionComponent } from "preact";
 import region from "@api/region";
 import type { CurrencyMap } from "@utils/CurrencyMap";
+import type { Product } from "@store/productStore";
 
 type TProductCard = {
-  product: PricedProduct;
+  product: Product;
 };
 
 const ProductCard: FunctionComponent<TProductCard> = ({ product }) => {
 
   const currency = region.selectedCountry.value?.region.currency_code as keyof CurrencyMap;
-  const amount = product.variants?.[0]?.prices?.find((item) => item.currency_code && item.currency_code === currency)?.amount;
+
+  const amount = product.prices?.[currency];
   return (
     <a href={`/products/${product.id}`}>
       <div class="card">

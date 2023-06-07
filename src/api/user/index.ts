@@ -12,7 +12,7 @@ type TCustomerMetadata = {
 }
 
 export type TCustomer = Omit<Customer, "password_hash" | 'metadata'> & {
-  metadata: TCustomerMetadata
+  metadata?: TCustomerMetadata
 }
 
 export type TCustomerUpdatePayload = Omit<StorePostCustomersCustomerReq, 'metadata'> & {
