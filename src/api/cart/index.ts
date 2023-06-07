@@ -26,7 +26,6 @@ class CartStore {
   shipping = {
     options: signal<PricedShippingOption[] | undefined>(undefined),
     selectedOption: signal<string | undefined>(undefined),
-    isUpdating: signal<boolean>(false)
   }
 
   // cart drawer state
