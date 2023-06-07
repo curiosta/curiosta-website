@@ -16,8 +16,6 @@ const RightNav = ({ screen }: Props) => {
     0
   );
 
-  const userState = user.state.value;
-
   const handleLogout = async () => {
     await logoutUser();
     remove("cartId");
@@ -32,7 +30,7 @@ const RightNav = ({ screen }: Props) => {
       )}
     >
       <div className={`ml-0 sm:ml-10`}>
-        {userState === "authenticated" ? (
+        {user.state.value === "authenticated" ? (
           <Button
             variant="primary"
             className="leading-6 !px-2 !py-1 !w-fit rounded-md"
