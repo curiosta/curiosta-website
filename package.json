@@ -30,7 +30,7 @@
     "contentful": "^10.2.2",
     "meilisearch": "^0.33.0",
     "preact": "^10.15.1",
-    "react-hook-form": "^7.44.2",
+    "react-hook-form": "^7.44.3",
     "react-instantsearch-dom": "^6.40.0",
     "tailwind-merge": "^1.13.0",
     "tailwindcss": "^3.3.2"
