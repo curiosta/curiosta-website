@@ -3,34 +3,36 @@ import Button from "@components/Button";
 import FormControl from "@components/FormControl";
 import Input from "@components/Input";
 import type { AddressCreatePayload } from "@medusajs/medusa";
-import useLocalStorage from "@hooks/useLocalStorage";
 import user from "@api/user";
 import cart from "@api/cart";
 import { Signal, useSignal } from "@preact/signals";
 import { useRef } from "preact/hooks";
+import region from "@api/region";
 
 const AddressForm = ({ selectedAddressId, isNewAddress }: { selectedAddressId: Signal<string | null>, isNewAddress: Signal<boolean> }) => {
   const isLoading = useSignal<boolean>(false);
-  const resetButtonRef = useRef<HTMLButtonElement>(null)
-  const { get } = useLocalStorage();
-  const localCartId = get("cartId");
+  const resetButtonRef = useRef<HTMLButtonElement>(null);
 
   const handleShippingAddress = async (data: AddressCreatePayload) => {
     try {
       isLoading.value = true;
       const payloadAddress = { ...data };
 
-      payloadAddress.country_code = 'in'; // temporary, need to make it dynamic later.
+      if (region.selectedCountry.value?.iso_2) {
+        payloadAddress.country_code = region.selectedCountry.value?.iso_2;
+      } else {
+        throw new Error('Country not selected, Try reloading page!.')
+      }
 
       const addShipping = await addShippingAddress(payloadAddress);
       const latestAddress = [...addShipping.customer.shipping_addresses].pop();
+
       // add shipping address in cart
-      if (localCartId) {
-        await cart.updateCart({
-          shipping_address: latestAddress?.id,
-          billing_address: latestAddress?.id
-        });
-      }
+      await cart.updateCart({
+        shipping_address: latestAddress?.id,
+        billing_address: latestAddress?.id
+      });
+
       await user.refetch();
       selectedAddressId.value = latestAddress?.id || null;
       latestAddress?.id && (isNewAddress.value = false)

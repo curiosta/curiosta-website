@@ -20,14 +20,14 @@ type TCartCreatePayload = Omit<StorePostCartReq, "metadata"> & {
 
 type TLoadableOptionsList = {
   cart:
-    | "get"
-    | "create"
-    | "update"
-    | "reset"
-    | {
-        line_items: "get" | "add" | "remove" | "update" | { quantity: "" };
-        shipping: "all" | "set";
-      };
+  | "get"
+  | "create"
+  | "update"
+  | "reset"
+  | {
+    line_items: "get" | "add" | "remove" | "update" | { quantity: "" };
+    shipping: "all" | "set";
+  };
 };
 
 type TLoadableOptions = FlattenOptionsList<TLoadableOptionsList>;
@@ -103,7 +103,7 @@ class CartStore {
     this.loading.value = undefined;
   }
   async updateCart(payload: TCartUpdatePayload) {
-    if (!this.store.value) return;
+    if (!this.store.value) throw new Error('Cart was not initialize before using cart.updateCart function.');
     this.loading.value = "cart:update";
 
     const updateResult = await medusa.carts.update(
@@ -132,7 +132,7 @@ class CartStore {
   // line items
 
   async addItem(id: string, quantity = 1) {
-    if (!this.store.value) return;
+    if (!this.store.value) throw new Error('Cart was not initialize before using cart.addItem function.');
     this.loading.value = "cart:line_items:add";
     const response = await medusa.carts.lineItems.create(this.store.value.id, {
       quantity,
@@ -143,7 +143,7 @@ class CartStore {
   }
 
   async removeItem(id: string) {
-    if (!this.store.value) return;
+    if (!this.store.value) throw new Error('Cart was not initialize before using cart.removeItem function.');
     this.loading.value = "cart:line_items:remove";
     const response = await medusa.carts.lineItems.delete(
       this.store.value.id,
@@ -158,7 +158,7 @@ class CartStore {
   }
 
   async setItemQuantity(id: string, quantity: number) {
-    if (!this.store.value) return;
+    if (!this.store.value) throw new Error('Cart was not initialize before using cart.setItemQuantity function.');
     this.loading.value = "cart:line_items:update";
     const item = this.store.value.items.find((item) => item.id === id);
     if (quantity < 1) {
