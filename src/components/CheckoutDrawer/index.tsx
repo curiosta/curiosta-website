@@ -36,7 +36,7 @@ const CheckoutDrawer = () => {
         if (_clientSecret) { clientSecret.value = _clientSecret }
       })
     });
-  }, [cart.store.value, checkoutOpen.value]);
+  }, [checkoutOpen.value]);
 
 
   return createPortal(
@@ -75,7 +75,7 @@ const CheckoutDrawer = () => {
           </div>
           {clientSecret.value ? (
             <Elements stripe={stripe} options={{ clientSecret: clientSecret.value }}>
-              <CheckoutElements clientSecret={clientSecret} selectedAddressId={selectedAddressId} stripe={stripe} />
+              {<CheckoutElements clientSecret={clientSecret} selectedAddressId={selectedAddressId} stripe={stripe} /> as any}
             </Elements>
           ) : (
             <div className='flex justify-center items-center h-full'>

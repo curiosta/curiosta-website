@@ -1,26 +1,18 @@
+import { InstantMeiliSearchInstance, instantMeiliSearch } from "@meilisearch/instant-meilisearch";
 import type { Product } from "@store/productStore";
-import { Index, MeiliSearch, SearchParams } from "meilisearch";
+import type { SearchParams } from "meilisearch";
 
 class Search {
-  client: MeiliSearch;
-
-  productIndex: Index<{}>
-
+  client: InstantMeiliSearchInstance;
   constructor() {
     if (!import.meta.env.PUBLIC_MEILISEARCH_HOST || !import.meta.env.PUBLIC_MEILISEARCH_API) {
       throw new Error('PUBLIC_MEILISEARCH_HOST or PUBLIC_MEILISEARCH_API was not found in environment variables!')
     }
 
-    this.client = new MeiliSearch({
-      host: import.meta.env.PUBLIC_MEILISEARCH_HOST,
-      apiKey: import.meta.env.PUBLIC_MEILISEARCH_API,
-    });
-
-    this.productIndex = this.client.index('products');
+    this.client = instantMeiliSearch(import.meta.env.PUBLIC_MEILISEARCH_HOST, import.meta.env.PUBLIC_MEILISEARCH_API)
   }
 
   async getProducts(query = '', { sort, categories }: { sort: 'asc' | 'desc', categories: undefined | string[] }) {
-
     const searchOptions: SearchParams = {}
     if (sort) {
       searchOptions.sort = [`prices.usd:${sort}`]
@@ -29,8 +21,9 @@ class Search {
       searchOptions.filter = [`categories IN [${categories.join(', ')}]`]
     }
 
-    const res = await this.productIndex.search(query, searchOptions)
-    const products = res.hits.map((hit: any) => {
+    const res = (await this.client.search([{ indexName: 'products', facet: '', query, params: searchOptions }])).results[0]
+
+    const products = res?.hits.map((hit: any) => {
       return ({
         title: hit.title,
         description: hit.description,
@@ -42,8 +35,8 @@ class Search {
     });
 
     return {
-      products,
-      count: res.estimatedTotalHits,
+      products: products || [],
+      count: res.nbHits,
     }
   }
 

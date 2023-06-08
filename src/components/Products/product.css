@@ -1,0 +1,34 @@
+/* input and buttons */
+.search-box-container {
+  @apply w-3/4;
+}
+.search-box-container input {
+  @apply block w-full rounded-l-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6;
+}
+.search-box-container form {
+  @apply flex;
+}
+.search-box-container button {
+  @apply inline-flex justify-center rounded-r-md focus-visible:ring-2 focus-visible:ring-offset-1 ring-primary-600 outline-none font-semibold shadow-sm bg-primary-600 w-10 h-10 items-center fill-white;
+}
+.search-box-container button[type=reset] {
+  @apply hidden;
+}
+
+.search-box-container button svg {
+  @apply w-4 h-4;
+}
+
+/* hits */
+
+.hits-container{
+  @apply w-full max-w-7xl mx-auto;
+}
+
+.hits-container ul{
+  @apply flex flex-wrap justify-center sm:grid sm:grid-cols-2 md:grid-cols-3 gap-4;
+}
+
+.hits-container ul li {
+  @apply w-full max-w-xs;
+}

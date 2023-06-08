@@ -65,11 +65,10 @@ const Category = ({ category, depth }: Props) => {
     <ul>
       <li>
         <div
-          class={`flex item-center my-1 rounded-md p-2 ${
-            activeCategory.value === category.name
+          class={`flex item-center my-1 rounded-md p-2 ${activeCategory.value === category.name
               ? "bg-gray-50"
               : "bg-transparent"
-          }`}
+            }`}
         >
           <Checkbox
             name={category.name}
@@ -115,9 +114,8 @@ const Category = ({ category, depth }: Props) => {
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  class={`text-gray-400 h-5 w-5 shrink-0  ${
-                    category.category_children.length ? "block" : "hidden"
-                  } `}
+                  class={`text-gray-400 h-5 w-5 shrink-0  ${category.category_children.length ? "block" : "hidden"
+                    } `}
                 >
                   <path
                     stroke-linecap="round"
@@ -146,16 +144,15 @@ const Category = ({ category, depth }: Props) => {
           </div>
         </div>
         <div
-          className={`${
-            disabled || activeCategory.value !== category.name
+          className={`${disabled || activeCategory.value !== category.name
               ? "hidden"
               : "block"
-          }`}
+            }`}
         >
           {category.category_children.length
             ? category.category_children.map((child_cate) => (
-                <Category category={child_cate} depth={depth + 1} />
-              ))
+              <Category category={child_cate} depth={depth + 1} />
+            ))
             : ""}
         </div>
       </li>

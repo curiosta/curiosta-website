@@ -25,7 +25,10 @@ const RightNav = ({ screen }: Props) => {
           <Button
             variant="primary"
             className="leading-6 !px-2 !py-1 !w-fit rounded-md"
-            onClick={user.logout}
+            onClick={async () => {
+              await user.logout()
+              window.location.href = '/login'
+            }}
           >
             Log out
           </Button>
