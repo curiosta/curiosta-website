@@ -25,7 +25,6 @@ const Input = forwardRef<HTMLInputElement, TInputProps>(
       }
     }, [value]);
 
-
     if (!controller) {
       return <InputCore value={value} {...props} ref={ref} />
     }
@@ -38,7 +37,7 @@ const Input = forwardRef<HTMLInputElement, TInputProps>(
           name={props.name || ''}
           rules={{ ...rules, ...props, validate: validator }}
           render={({ field, fieldState: { error } }) => (
-            <InputCore error={error} {...field} {...props} value={value} rules={rules} ref={ref} />
+            <InputCore error={error} {...field} {...props} value={value} rules={rules} ref={ref} /> as any
           )} />
       </>
     );

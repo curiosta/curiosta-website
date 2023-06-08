@@ -2,7 +2,7 @@ import { ForwardedRef, HTMLAttributes, forwardRef } from "preact/compat";
 import type { VariantProps } from "class-variance-authority";
 import button from "@components/Button/button.cva";
 import { cx } from "class-variance-authority";
-
+import { twMerge } from "tailwind-merge";
 interface Props
   extends Omit<HTMLAttributes<HTMLButtonElement>, "class">,
   VariantProps<typeof button> {
@@ -10,7 +10,7 @@ interface Props
 }
 
 const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, Props>(({ type, className, children, disabled, link, ...rest }, ref) => {
-  const classes = cx(button(rest), className);
+  const classes = twMerge(cx(button(rest), className));
   return (
     <>
       {link && !disabled ? (

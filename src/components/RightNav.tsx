@@ -1,7 +1,5 @@
-import { cart, cartOpen } from "@store/cartStore";
+import cart from "@api/cart";
 import Button from "./Button";
-import { logoutUser } from "@api/user/logoutUser";
-import useLocalStorage from "@hooks/useLocalStorage";
 import user from "@api/user";
 import { cx } from "class-variance-authority";
 
@@ -10,35 +8,24 @@ interface Props {
 }
 
 const RightNav = ({ screen }: Props) => {
-  // const { get } = useLocalStorage();
-  const totalCartItems = cart.value?.items?.reduce(
+  const totalCartItems = cart.store.value?.items?.reduce(
     (acc, curVal) => acc + curVal.quantity,
     0
   );
 
-  // const localCustId = get("custId");
-  const userState = user.state.value;
-
-  const handleLogout = async () => {
-    await logoutUser();
-    localStorage.removeItem("custId");
-    localStorage.removeItem("cartId");
-    location.reload();
-  };
-
   return (
     <div
       class={cx(
-        "lg:flex lg:items-center  lg:justify-end",
-        screen === "mobile" ? "flex flex-col gap-4 mt-4" : "hidden"
+        "lg:flex lg:items-center lg:justify-end",
+        screen === 'mobile' ? 'flex flex-col gap-4 mt-4' : 'hidden'
       )}
     >
-      <div>
-        {userState === "authenticated" ? (
+      <div className={`ml-0 sm:ml-10`}>
+        {user.state.value === "authenticated" ? (
           <Button
             variant="primary"
             className="leading-6 !px-2 !py-1 !w-fit rounded-md"
-            onClick={handleLogout}
+            onClick={user.logout}
           >
             Log out
           </Button>
@@ -67,7 +54,7 @@ const RightNav = ({ screen }: Props) => {
           href="#"
           onClick={(e) => {
             e.preventDefault();
-            cartOpen.value = true;
+            cart.open.value = true;
           }}
           class="group -m-2 flex items-center p-2"
         >

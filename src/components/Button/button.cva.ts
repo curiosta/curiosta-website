@@ -1,7 +1,7 @@
 import { cva } from "class-variance-authority";
 
 const button = cva(
-  "inline-flex justify-center  rounded-md  text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
+  "inline-flex justify-center rounded-md text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
   {
     variants: {
       variant: {
@@ -27,6 +27,13 @@ const button = cva(
           "disabled:bg-secondary-200",
           "text-primary-600",
           "border border-gray-300",
+          "px-4 py-2 w-full",
+        ],
+        dropDown: [
+          "bg-secondary",
+          "hover:bg-gray-50",
+          "disabled:bg-secondary-200",
+          "text-primary-600",
           "px-4 py-2 w-full",
         ],
         danger: [
