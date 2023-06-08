@@ -24,7 +24,7 @@ const { order } = await getOrders(orderId || "");
             size="h5/bold"
             className=" tracking-tight sm:text-3xl"
           >
-            {`Order #${order.id.slice(-6, -1)}`}
+            {`Order #${order.id.slice(-6)}`}
           </Typography>
           <!-- <a
             href="#"
