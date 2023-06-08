@@ -167,8 +167,10 @@ class CartStore {
     if (!item) {
       throw new Error("Cannot find item with this id!");
     }
-    if (quantity > item.quantity) {
-      throw new Error(`Cannot set quantity exceeding ${item.quantity} !.`);
+    if (quantity > item.variant.inventory_quantity) {
+      throw new Error(
+        `Cannot set quantity exceeding ${item.variant.inventory_quantity} !.`
+      );
     }
     const response = await medusa.carts.lineItems.update(
       this.store.value.id,
