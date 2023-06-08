@@ -1,0 +1,16 @@
+---
+import Navbar from "@components/Navbar.astro";
+import Layout from "@layouts/Layout.astro";
+import Footer from "@components/Footer.astro";
+import CollectionGroup from "@components/CollectionGroup";
+import CollectionCard from "@components/CollectionGroup/CollectionCard";
+import CollectionContainer from "@components/CollectionGroup/CollectionContainer";
+---
+
+<Layout title="Collection" description="Our collection">
+  <Navbar />
+  <CollectionGroup title="Collections">
+    <CollectionContainer client:load />
+  </CollectionGroup>
+  <Footer />
+</Layout>

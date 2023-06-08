@@ -8,10 +8,13 @@ import ShortIntroSection from "@section/ShortIntroSection.astro";
 import PartnerCompanies from "@section/PartnerCompanies.astro";
 import { pageTitleDesc } from "content";
 import ProductCards from "@components/ProductCards";
+import Collection from "@pages/collection/index.astro";
 import CollectionGroup from "@components/CollectionGroup";
+import CollectionCard from "@components/CollectionGroup/CollectionCard";
+import { collectionList } from "@api/product/collectionList";
 
-const res = await listProducts({ limit: 3 });
-const products = res?.products;
+const res = await collectionList({ limit: 3 });
+const collections = res?.collections;
 ---
 
 <Layout
@@ -25,10 +28,13 @@ const products = res?.products;
   <ShortIntroSection />
 
   <!-- Feature Products -->
-  <CollectionGroup title='Featured Products' link='/products' linkText='View all products'>
-    <ProductCards products={products} client:load />
+  <CollectionGroup
+    title="Collections"
+    link="/collection"
+    linkText="View all collections"
+  >
+    <CollectionCard collections={collections} client:load />
   </CollectionGroup>
-
   <!-- Partner company Logo cloud -->
   <PartnerCompanies />
 

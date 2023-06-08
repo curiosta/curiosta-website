@@ -1,0 +1,23 @@
+---
+import Navbar from "@components/Navbar.astro";
+import Layout from "@layouts/Layout.astro";
+import Footer from "@components/Footer.astro";
+import Typography from "@components/Typography";
+import ProductContainer from "@components/CollectionGroup/ProductContainer";
+
+const handle = Astro.params.handle;
+---
+
+<Layout
+  title={handle ? handle : "handle not found"}
+  description="collection product"
+>
+  <Navbar />
+  <main class="mx-auto max-w-2xl px-4 py-16 sm:px-6 lg:max-w-7xl lg:px-8">
+    <Typography tag="h2" size="h5/bold" className=" tracking-tight capitalize">
+      {handle || "N/A"} Products
+    </Typography>
+    <ProductContainer handle={handle} client:load />
+  </main>
+  <Footer />
+</Layout>
