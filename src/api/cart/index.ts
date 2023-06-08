@@ -162,12 +162,15 @@ class CartStore {
     this.loading.value = "cart:line_items:update";
     const item = this.store.value.items.find((item) => item.id === id);
     if (quantity < 1) {
+      this.loading.value = undefined;
       throw new Error("Cannot set quantity less than 1.");
     }
     if (!item) {
+      this.loading.value = undefined;
       throw new Error("Cannot find item with this id!");
     }
     if (quantity > item.variant.inventory_quantity) {
+      this.loading.value = undefined;
       throw new Error(
         `Cannot set quantity exceeding ${item.variant.inventory_quantity} !.`
       );
@@ -178,6 +181,7 @@ class CartStore {
       { quantity }
     );
     this.store.value = response.cart;
+    this.loading.value = undefined;
   }
 
   // shipping methods
