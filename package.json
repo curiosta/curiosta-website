@@ -27,7 +27,7 @@
     "astro-sst": "^2.8.27",
     "class-variance-authority": "^0.6.0",
     "colorette": "^2.0.20",
-    "contentful": "^10.2.2",
+    "contentful": "^10.2.3",
     "meilisearch": "^0.33.0",
     "preact": "^10.15.1",
     "react-hook-form": "^7.44.2",
