@@ -14,14 +14,14 @@ import Typography from "@components/Typography";
 const stripe = await loadStripe(import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
 
 const CheckoutDrawer = () => {
-  const { add } = useKeyboard('Escape', { event: 'keydown' });
+  const { addListener } = useKeyboard('Escape');
   const selectedAddressId = useSignal<string | null>(null);
   const clientSecret = useSignal<string | undefined>(undefined);
 
   // remove app's default scroll if cart is open
   document.body.style.overflow = checkoutOpen.value ? "hidden" : "auto";
 
-  add('close-checkout-drawer', () => {
+  addListener(() => {
     checkoutOpen.value = false;
   })
 
@@ -29,14 +29,14 @@ const CheckoutDrawer = () => {
     if (!cart.store.value || !checkoutOpen.value) return;
     medusa.carts.createPaymentSessions(cart.store.value.id).then(({ cart: sessionCart }) => {
       const isStripeAvailable = sessionCart.payment_sessions?.some((s) => s.provider_id === 'stripe');
-      if (!isStripeAvailable) throw new Error('Stripe is not supported in this region, Please contact administrator & ask to add stripe in backend!.');
+      if (!isStripeAvailable) throw new Error('Stripe is not supported in this region, Please contact administrator & ask to addListener stripe in backend!.');
       if (!cart.store.value) return;
       medusa.carts.setPaymentSession(cart.store.value.id, { provider_id: 'stripe' }).then(({ cart: paymentSessionCart }) => {
         const _clientSecret = paymentSessionCart.payment_session?.data.client_secret as string
         if (_clientSecret) { clientSecret.value = _clientSecret }
       })
     });
-  }, [cart.store.value, checkoutOpen.value]);
+  }, [checkoutOpen.value]);
 
 
   return createPortal(
@@ -75,7 +75,7 @@ const CheckoutDrawer = () => {
           </div>
           {clientSecret.value ? (
             <Elements stripe={stripe} options={{ clientSecret: clientSecret.value }}>
-              <CheckoutElements clientSecret={clientSecret} selectedAddressId={selectedAddressId} stripe={stripe} />
+              {<CheckoutElements clientSecret={clientSecret} selectedAddressId={selectedAddressId} stripe={stripe} /> as any}
             </Elements>
           ) : (
             <div className='flex justify-center items-center h-full'>

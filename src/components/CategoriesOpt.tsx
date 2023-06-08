@@ -44,7 +44,7 @@ const CategoriesOpt = ({ categories }: Props) => {
         </div>
 
         <div class={`${isCategoriesOpen.value ? "block" : "hidden"} lg:block`}>
-          <form class="space-y-4 divide-y divide-gray-200">
+          <form class="space-y-4 divide-y divide-gray-200 mt-6">
             <div class="pt-10">
               <fieldset>
                 <Typography size="body1/semi-bold" className="block">

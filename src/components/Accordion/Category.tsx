@@ -28,13 +28,13 @@ const Category = ({ category, depth }: Props) => {
       );
       selectedCategoriesIds.value = [
         ...selectedCategoriesIds.value.filter(
-          (id) => !childIdsToRemove.includes(id)
+          (name) => !childIdsToRemove.includes(name)
         ),
         value,
       ];
     } else {
       selectedCategoriesIds.value = selectedCategoriesIds.value.filter(
-        (id) => id !== value
+        (name) => name !== value
       );
     }
   };
@@ -48,7 +48,7 @@ const Category = ({ category, depth }: Props) => {
     if (selectedChildCategoryCount.value) selectedChildCategoryCount.value = 0;
 
     // toggle accordion state.
-    if (activeCategory.value === category.id) {
+    if (activeCategory.value === category.name) {
       // get all current category's selected children count.
       selectedChildCategoryCount.value = getCategorySelectedChildIDs(
         selectedCategoriesIds.value,
@@ -57,7 +57,7 @@ const Category = ({ category, depth }: Props) => {
 
       activeCategory.value = null;
     } else {
-      activeCategory.value = category.id;
+      activeCategory.value = category.name;
     }
   };
 
@@ -65,19 +65,18 @@ const Category = ({ category, depth }: Props) => {
     <ul>
       <li>
         <div
-          class={`flex item-center my-1 rounded-md p-2 ${
-            activeCategory.value === category.id
+          class={`flex item-center my-1 rounded-md p-2 ${activeCategory.value === category.name
               ? "bg-gray-50"
               : "bg-transparent"
-          }`}
+            }`}
         >
           <Checkbox
             name={category.name}
             onChange={handleCheck}
-            value={category.id}
+            value={category.name}
             className={`${disabled ? "!text-disabled" : ""}`}
             checked={
-              disabled || selectedCategoriesIds.value.includes(category.id)
+              disabled || selectedCategoriesIds.value.includes(category.name)
             }
             disabled={!!disabled}
           />
@@ -115,9 +114,8 @@ const Category = ({ category, depth }: Props) => {
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  class={`text-gray-400 h-5 w-5 shrink-0  ${
-                    category.category_children.length ? "block" : "hidden"
-                  } `}
+                  class={`text-gray-400 h-5 w-5 shrink-0  ${category.category_children.length ? "block" : "hidden"
+                    } `}
                 >
                   <path
                     stroke-linecap="round"
@@ -146,16 +144,15 @@ const Category = ({ category, depth }: Props) => {
           </div>
         </div>
         <div
-          className={`${
-            disabled || activeCategory.value !== category.id
+          className={`${disabled || activeCategory.value !== category.name
               ? "hidden"
               : "block"
-          }`}
+            }`}
         >
           {category.category_children.length
             ? category.category_children.map((child_cate) => (
-                <Category category={child_cate} depth={depth + 1} />
-              ))
+              <Category category={child_cate} depth={depth + 1} />
+            ))
             : ""}
         </div>
       </li>

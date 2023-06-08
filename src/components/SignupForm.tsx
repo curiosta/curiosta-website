@@ -1,21 +1,14 @@
-import { User, createUser } from "@api/user/createUser";
 import Input from "@components/Input";
 import Button from "@components/Button";
 import FormControl from "@components/FormControl";
 import useLocalStorage from "@hooks/useLocalStorage";
+import user from "@api/user";
 
 const SignupForm = () => {
   const { set } = useLocalStorage();
-  const handleCreateUser = async (data: User) => {
+  const handleCreateUser = async (data: any) => {
     try {
-      const { first_name, last_name, email, password } = data;
-      const newUser = await createUser({
-        first_name,
-        last_name,
-        email,
-        password,
-      });
-      set("custId", newUser.customer.id);
+      user.register(data)
       history.back();
     } catch (err) {
       console.log(err);

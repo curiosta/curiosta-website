@@ -12,7 +12,7 @@ type TCustomerMetadata = {
 }
 
 export type TCustomer = Omit<Customer, "password_hash" | 'metadata'> & {
-  metadata: TCustomerMetadata
+  metadata?: TCustomerMetadata
 }
 
 export type TCustomerUpdatePayload = Omit<StorePostCustomersCustomerReq, 'metadata'> & {
@@ -46,6 +46,22 @@ class User {
   async updateUser(payload: TCustomerUpdatePayload) {
     const response = await medusa.customers.update(payload);
     this.customer.value = response.customer;
+  }
+
+  async login({ email, password }: { email: string, password: string }) {
+    const result = await medusa.auth.authenticate({ email, password })
+    this.customer.value = result.customer;
+    this.state.value = 'authenticated';
+  }
+  async register({ email, password, first_name, last_name }: { email: string, password: string, first_name: string, last_name: string }) {
+    const createCustomerResult = await medusa.customers.create({ email, password, first_name, last_name })
+    if (createCustomerResult.customer.id) {
+      await this.login({ email, password });
+    }
+  }
+
+  async logout() {
+    await medusa.auth.deleteSession()
   }
 }
 
