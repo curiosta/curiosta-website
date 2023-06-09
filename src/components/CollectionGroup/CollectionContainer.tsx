@@ -1,26 +1,45 @@
 import { collectionList } from "@api/product/collectionList";
-import type { ProductCollection } from "@medusajs/medusa";
-import { useSignal } from "@preact/signals";
-import { useEffect } from "preact/hooks";
-import CollectionCard from "./CollectionCard";
-import Pagination from "@components/Pagination";
+import { listProducts } from "@api/product/listProducts";
+import ProductCards from "@components/ProductCards";
 import Typography from "@components/Typography";
+import type { PricedProduct } from "@medusajs/medusa/dist/types/pricing";
+import { useSignal } from "@preact/signals";
+import type { FunctionComponent } from "preact";
+import { useEffect } from "preact/hooks";
+import Pagination from "@components/Pagination";
+import CollectionNav from "./CollectionNav";
+import type { ProductCollection } from "@medusajs/medusa";
 
-const CollectionContainer = () => {
-  const collections = useSignal<ProductCollection[]>([]);
+type TCollectionContainer = {
+  handle: string | undefined;
+};
+
+const CollectionContainer: FunctionComponent<TCollectionContainer> = ({
+  handle,
+}) => {
   const isLoading = useSignal(false);
+  const product = useSignal<PricedProduct[]>([]);
+  const collections = useSignal<ProductCollection[]>([]);
   const count = useSignal<null | number>(null);
   const limit = useSignal<number>(10);
   const offset = useSignal<number>(0);
 
-  const getCollectionList = async () => {
+  const getProductList = async () => {
     try {
       isLoading.value = true;
-      const res = await collectionList({
+      if (!handle) return;
+      const collectionResponse = await collectionList({});
+      collections.value = collectionResponse.collections;
+      const collectionId = collectionResponse.collections.find(
+        (collection) => collection.handle === handle
+      )?.id;
+      const res = await listProducts({
+        collection_id: [collectionId || ""],
         limit: limit.value,
         offset: offset.value,
       });
-      collections.value = res?.collections;
+      product.value = res?.products;
+
       count.value = res?.count;
     } catch (error) {
     } finally {
@@ -29,13 +48,22 @@ const CollectionContainer = () => {
   };
 
   useEffect(() => {
-    getCollectionList();
+    getProductList();
   }, [offset.value]);
 
   return (
     <div>
       {!isLoading.value ? (
-        <CollectionCard collections={collections.value} />
+        <div>
+          <CollectionNav collections={collections.value} handle={handle} />
+          <Typography
+            size="h5/semi-bold"
+            className=" tracking-tight capitalize"
+          >
+            {product.value[0]?.collection?.title}
+          </Typography>
+          <ProductCards products={product.value} />
+        </div>
       ) : (
         <Typography
           size="body1/semi-bold"

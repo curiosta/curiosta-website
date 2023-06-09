@@ -8,14 +8,15 @@ import ShortIntroSection from "@section/ShortIntroSection.astro";
 import PartnerCompanies from "@section/PartnerCompanies.astro";
 import { pageTitleDesc } from "content";
 import ProductCards from "@components/ProductCards";
-import Collection from "@pages/collection/index.astro";
 import CollectionGroup from "@components/CollectionGroup";
-import CollectionCard from "@components/CollectionGroup/CollectionCard";
 import { collectionList } from "@api/product/collectionList";
 
-const res = await collectionList({ limit: 3 });
-const collections = res?.collections;
-// await listProducts({collection_id:collections})
+const { collections } = await collectionList({ limit: 3 });
+const res = await listProducts({
+  collection_id: [collections[0].id],
+  limit: 3,
+});
+const product = res?.products;
 ---
 
 <Layout
@@ -30,11 +31,11 @@ const collections = res?.collections;
 
   <!-- Feature Products -->
   <CollectionGroup
-    title="Collections"
+    title="Feature Product"
     link="/collection"
     linkText="View all collections"
   >
-    <CollectionCard collections={collections} client:load />
+    <ProductCards products={product} client:load />
   </CollectionGroup>
   <!-- Partner company Logo cloud -->
   <PartnerCompanies />

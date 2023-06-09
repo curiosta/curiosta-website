@@ -2,15 +2,19 @@
 import Navbar from "@components/Navbar.astro";
 import Layout from "@layouts/Layout.astro";
 import Footer from "@components/Footer.astro";
-import CollectionGroup from "@components/CollectionGroup";
-import CollectionCard from "@components/CollectionGroup/CollectionCard";
+import { collectionList } from "@api/product/collectionList";
 import CollectionContainer from "@components/CollectionGroup/CollectionContainer";
+import Typography from "@components/Typography";
+
+const { collections } = await collectionList({ limit: 3 });
 ---
 
 <Layout title="Collection" description="Our collection">
   <Navbar />
-  <CollectionGroup title="Collections">
-    <CollectionContainer client:load />
-  </CollectionGroup>
+  <main class="mx-auto max-w-2xl px-4 py-4 sm:px-6 lg:max-w-7xl lg:px-8">
+    <Typography tag="h1" size="h3/semi-bold">Collections</Typography>
+
+    <CollectionContainer handle={collections[0].handle} client:load />
+  </main>
   <Footer />
 </Layout>
