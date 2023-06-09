@@ -1,14 +1,12 @@
 import Input from "@components/Input";
 import Button from "@components/Button";
 import FormControl from "@components/FormControl";
-import useLocalStorage from "@hooks/useLocalStorage";
 import user from "@api/user";
 
 const SignupForm = () => {
-  const { set } = useLocalStorage();
   const handleCreateUser = async (data: any) => {
     try {
-      user.register(data)
+      await user.register(data)
       history.back();
     } catch (err) {
       console.log(err);

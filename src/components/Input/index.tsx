@@ -1,5 +1,5 @@
 import { Controller, RegisterOptions, ValidationRule, useFormContext } from 'react-hook-form';
-import { forwardRef, useEffect } from 'preact/compat';
+import { FunctionComponent, useEffect } from 'preact/compat';
 import InputCore, { BaseInputProps } from './core';
 
 
@@ -7,7 +7,7 @@ export type TInputProps = BaseInputProps & Omit<RegisterOptions, 'validate' | 'r
   required?: ValidationRule<boolean>;
 };
 
-const Input = forwardRef<HTMLInputElement, TInputProps>(
+const Input: FunctionComponent<TInputProps> = (
   (
     {
       rules,
@@ -15,7 +15,6 @@ const Input = forwardRef<HTMLInputElement, TInputProps>(
       validator,
       ...props
     },
-    ref
   ) => {
     const controller = useFormContext();
 
@@ -26,7 +25,7 @@ const Input = forwardRef<HTMLInputElement, TInputProps>(
     }, [value]);
 
     if (!controller) {
-      return <InputCore value={value} {...props} ref={ref} />
+      return <InputCore value={value} {...props} />
     }
 
     return (
@@ -37,7 +36,7 @@ const Input = forwardRef<HTMLInputElement, TInputProps>(
           name={props.name || ''}
           rules={{ ...rules, ...props, validate: validator }}
           render={({ field, fieldState: { error } }) => (
-            <InputCore error={error} {...field} {...props} value={value} rules={rules} ref={ref} /> as any
+            <InputCore error={error} {...field} {...props} value={value} rules={rules} /> as any
           )} />
       </>
     );

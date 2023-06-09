@@ -1,12 +1,12 @@
-import {
-  InstantMeiliSearchInstance,
-  instantMeiliSearch,
-} from "@meilisearch/instant-meilisearch";
 import type { Product } from "@store/productStore";
-import type { SearchParams } from "meilisearch";
+import type { CurrencyMap } from "@utils/CurrencyMap";
+import { SearchParams, MeiliSearch, Index } from "meilisearch";
+
+type TProductSearchOptions = { sort?: "asc" | "desc"; categories?: string[], region?: keyof CurrencyMap }
 
 class Search {
-  client: InstantMeiliSearchInstance;
+  client: MeiliSearch;
+  productIndex: Index<any>;
   constructor() {
     if (
       !import.meta.env.PUBLIC_MEILISEARCH_HOST ||
@@ -16,11 +16,8 @@ class Search {
         "PUBLIC_MEILISEARCH_HOST or PUBLIC_MEILISEARCH_API was not found in environment variables!"
       );
     }
-
-    this.client = instantMeiliSearch(
-      import.meta.env.PUBLIC_MEILISEARCH_HOST,
-      import.meta.env.PUBLIC_MEILISEARCH_API
-    );
+    this.client = new MeiliSearch({ host: import.meta.env.PUBLIC_MEILISEARCH_HOST, apiKey: import.meta.env.PUBLIC_MEILISEARCH_API })
+    this.productIndex = this.client.index('products')
   }
 
   async getProducts(
@@ -28,21 +25,18 @@ class Search {
     {
       sort,
       categories,
-    }: { sort: "asc" | "desc"; categories: undefined | string[] }
+      region = 'usd'
+    }: TProductSearchOptions
   ) {
     const searchOptions: SearchParams = {};
     if (sort) {
-      searchOptions.sort = [`prices.usd:${sort}`];
+      searchOptions.sort = [`prices.${region}:${sort}`];
     }
     if (categories?.length) {
-      searchOptions.filter = [`categories IN [${categories.join(", ")}]`];
+      searchOptions.filter = `categories IN [${categories.join(', ')}]`;
     }
 
-    const res = (
-      await this.client.search([
-        { indexName: "products", facet: "", query, params: searchOptions },
-      ])
-    ).results[0];
+    const res = await this.productIndex.search(query, searchOptions);
 
     const products = res?.hits.map((hit: any) => {
       return {
@@ -57,10 +51,11 @@ class Search {
 
     return {
       products: products || [],
-      count: res.nbHits,
+      count: res.estimatedTotalHits,
     };
   }
 }
 
-const search = new Search();
+const search = new Search()
+
 export default search;

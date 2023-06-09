@@ -100,6 +100,7 @@ class CartStore {
       const { set } = useLocalStorage();
       set("cartId", result.cart.id);
     }
+    this.listShippingMethods()
     this.loading.value = undefined;
   }
   async updateCart(payload: TCartUpdatePayload) {

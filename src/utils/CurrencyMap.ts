@@ -6,3 +6,10 @@ export const currencyMap: CurrencyMap = {
   eur: "€",
   inr: "₹",
 };
+
+
+export const regionCurrencyMap: Record<'us' | 'in' | 'eu', SupportedCurrencies> = {
+  'us': 'usd',
+  'in': 'inr',
+  'eu': 'eur'
+}

@@ -6,6 +6,7 @@ import Radio from "@components/Radio";
 import { cx } from "class-variance-authority";
 import countriesMap from "@utils/countriesMap";
 import Button from "../Button";
+import region from "@api/region";
 
 interface Props {
   address: Address;
@@ -23,6 +24,10 @@ const AddressCard = ({
   deleteAddress
 }: Props) => {
   const disabled = isLoading.value;
+
+  // current address is of different region from currently selected,
+  // medusa does not supports that so removing address that are not of same region
+  if (address && region.selectedCountry.value && address.country_code !== region.selectedCountry.value.iso_2) return null;
   return (
     <label
       class={cx(`relative flex w-52 h-full min-h-[10rem] cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none focus:ring-primary-600 focus:ring-2`,

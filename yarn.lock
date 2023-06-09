@@ -1125,12 +1125,12 @@
     typeorm "^0.3.16"
     ulid "^2.3.0"
 
-"@meilisearch/instant-meilisearch@^0.13.1":
-  version "0.13.1"
-  resolved "https://registry.yarnpkg.com/@meilisearch/instant-meilisearch/-/instant-meilisearch-0.13.1.tgz#fb531c673f32fd1c51b42df616d8c08a40a8683f"
-  integrity sha512-odPECQHYIYxwgYAvN6xpDLB0zgEaxCr+8/jDMaZ9V/c8xgD2Jr5BNkKSGTE+g46QJcqgi/a7ehnpt4lKoUnWpw==
+"@meilisearch/instant-meilisearch@^0.13.2":
+  version "0.13.2"
+  resolved "https://registry.yarnpkg.com/@meilisearch/instant-meilisearch/-/instant-meilisearch-0.13.2.tgz#877a9d064ad8c58db2e39ad60cf84e2c0a4be89a"
+  integrity sha512-Yo7ceLmtJWFz5MDzW2gs9iMliZWx4dZiFIFMvwcJlrhwCZT3TN6kRB3qiaOUlQkoJ0fY7yqfhAPN/tdHEWU59w==
   dependencies:
-    meilisearch "^0.32.1"
+    meilisearch "^0.33.0"
 
 "@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.2":
   version "3.0.2"
@@ -5696,13 +5696,6 @@ medusa-test-utils@^1.1.40:
     "@babel/plugin-transform-classes" "^7.9.5"
     medusa-core-utils "^1.2.0"
     randomatic "^3.1.1"
-
-meilisearch@^0.32.1:
-  version "0.32.5"
-  resolved "https://registry.yarnpkg.com/meilisearch/-/meilisearch-0.32.5.tgz#811e7df8586910a3b5dc3356c7ed669442dbe51e"
-  integrity sha512-pVccjGAGP1IDSLg3lx9VhyQjUo7kN8x/HVjSurtb8U24V5/pALpf5H2hj6f60QhJd0Ea4tnGRv8fGr2YqWMo9A==
-  dependencies:
-    cross-fetch "^3.1.6"
 
 meilisearch@^0.33.0:
   version "0.33.0"
