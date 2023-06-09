@@ -1,46 +1,48 @@
-import { useEffect } from "preact/compat";
+import { useEffect, useRef } from "preact/compat";
 import { useSignal } from "@preact/signals";
 import { listProducts } from "@api/product/listProducts";
 import Typography from "./Typography";
 import CategoriesOpt from "./CategoriesOpt";
 import {
+  Product,
   count,
   limit,
   offset,
-  order,
   products,
   selectedCategoriesIds,
+  sortOrder,
 } from "@store/productStore";
 
 import Pagination from "@components/Pagination";
 import type { ProductCategory } from "@medusajs/medusa";
 import ProductCards from "@components/ProductCards";
 import Button from "@components/Button";
+import { productSort } from "@api/product/productSort";
+import search from "@api/search";
 
 interface Props {
   categories: ProductCategory[];
 }
 
 const ProductFilter = ({ categories }: Props) => {
-  // const isSortPopUp = useSignal(false);
+  const isSortPopUp = useSignal(false);
   const isLoading = useSignal(false);
+  const sortContainerRef = useRef<HTMLDivElement>(null);
 
-  // const sortOptions = [
-  //   { id: 1, title: "Newest", value: "-created_at" },
-  //   { id: 2, title: "Oldest", value: "created_at" },
-  // ];
+  const sortOptions = [
+    { id: 1, title: "Price: High to Low", value: "desc" },
+    { id: 2, title: "Price: Low to High", value: "asc" },
+  ];
 
   const productsList = async () => {
     try {
       isLoading.value = true;
-      const res = await listProducts({
-        category_id: selectedCategoriesIds.value,
-        limit: limit.value,
-        offset: offset.value,
-        order: order.value ? order.value : undefined,
+      const sortRes = await search.getProducts(undefined, {
+        categories: selectedCategoriesIds.value,
+        sort: sortOrder.value as 'asc' | 'desc',
       });
-      products.value = res?.products;
-      count.value = res?.count;
+      products.value = sortRes.products;
+      count.value = sortRes.count;
     } catch (error) {
       console.log(error);
     } finally {
@@ -50,12 +52,25 @@ const ProductFilter = ({ categories }: Props) => {
 
   useEffect(() => {
     productsList();
-  }, [selectedCategoriesIds.value, offset.value, order.value]);
+  }, [selectedCategoriesIds.value, offset.value, sortOrder.value]);
+
+  useEffect(() => {
+    const clickAwayListener = (e: MouseEvent) => {
+      if (sortContainerRef.current?.contains(e.target as any)) return;
+      isSortPopUp.value = false
+    }
+
+    window.addEventListener('click', clickAwayListener)
+
+    return () => {
+      window.removeEventListener('click', clickAwayListener)
+    }
+  }, [])
 
   return (
     <div class="mx-auto max-w-2xl !pb-0 px-4  sm:px-6  lg:max-w-7xl lg:px-8">
-      {/* <div class="flex items-center justify-end">
-        <div class="relative inline-block text-left">
+      <div class="flex items-center justify-end">
+        <div class="relative inline-block text-left" ref={sortContainerRef}>
           <div>
             <Button
               type="button"
@@ -88,13 +103,13 @@ const ProductFilter = ({ categories }: Props) => {
               {sortOptions.map((sortOption) => (
                 <Button
                   type="button"
-                  variant="secondary"
-                  className={` ${sortOption.value === order.value
-                      ? "bg-gray-50"
-                      : "!font-normal"
+                  variant="dropDown"
+                  className={`!shadow-none ${sortOption.value === sortOrder.value
+                    ? "!bg-gray-100"
+                    : "!font-normal"
                     }`}
                   onClick={() => {
-                    order.value = sortOption.value;
+                    sortOrder.value = sortOption.value;
                   }}
                 >
                   {sortOption.title}
@@ -103,7 +118,7 @@ const ProductFilter = ({ categories }: Props) => {
             </div>
           </div>
         </div>
-      </div> */}
+      </div>
       <div class="lg:grid lg:grid-cols-3 lg:gap-x-8 xl:grid-cols-4">
         <CategoriesOpt categories={categories} />
 

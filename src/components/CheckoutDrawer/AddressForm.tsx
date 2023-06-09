@@ -5,15 +5,15 @@ import Input from "@components/Input";
 import type { AddressCreatePayload } from "@medusajs/medusa";
 import useLocalStorage from "@hooks/useLocalStorage";
 import user from "@api/user";
-import { updateCart } from "@api/cart/updateCart";
+import cart from "@api/cart";
 import { Signal, useSignal } from "@preact/signals";
 import { useRef } from "preact/hooks";
 
 const AddressForm = ({ selectedAddressId, isNewAddress }: { selectedAddressId: Signal<string | null>, isNewAddress: Signal<boolean> }) => {
   const isLoading = useSignal<boolean>(false);
+  const resetButtonRef = useRef<HTMLButtonElement>(null)
   const { get } = useLocalStorage();
   const localCartId = get("cartId");
-  const resetButtonRef = useRef<HTMLButtonElement>(null)
 
   const handleShippingAddress = async (data: AddressCreatePayload) => {
     try {
@@ -26,8 +26,7 @@ const AddressForm = ({ selectedAddressId, isNewAddress }: { selectedAddressId: S
       const latestAddress = [...addShipping.customer.shipping_addresses].pop();
       // add shipping address in cart
       if (localCartId) {
-        await updateCart({
-          cartId: localCartId,
+        await cart.updateCart({
           shipping_address: latestAddress?.id,
           billing_address: latestAddress?.id
         });
