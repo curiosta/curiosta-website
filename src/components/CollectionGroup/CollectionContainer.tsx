@@ -1,6 +1,5 @@
 import { collectionList } from "@api/product/collectionList";
 import { listProducts } from "@api/product/listProducts";
-import ProductCards from "@components/ProductCards";
 import Typography from "@components/Typography";
 import type { PricedProduct } from "@medusajs/medusa/dist/types/pricing";
 import { useSignal } from "@preact/signals";
@@ -9,6 +8,7 @@ import { useEffect } from "preact/hooks";
 import Pagination from "@components/Pagination";
 import CollectionNav from "./CollectionNav";
 import type { ProductCollection } from "@medusajs/medusa";
+import ProductContainer from "@components/ProductContainer";
 
 type TCollectionContainer = {
   handle: string | undefined;
@@ -62,7 +62,7 @@ const CollectionContainer: FunctionComponent<TCollectionContainer> = ({
           >
             {product.value[0]?.collection?.title}
           </Typography>
-          <ProductCards products={product.value} />
+          <ProductContainer products={product.value} />
         </div>
       ) : (
         <Typography

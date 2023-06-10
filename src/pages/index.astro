@@ -7,9 +7,9 @@ import Layout from "@layouts/Layout.astro";
 import ShortIntroSection from "@section/ShortIntroSection.astro";
 import PartnerCompanies from "@section/PartnerCompanies.astro";
 import { pageTitleDesc } from "content";
-import ProductCards from "@components/ProductCards";
 import CollectionGroup from "@components/CollectionGroup";
 import { collectionList } from "@api/product/collectionList";
+import ProductContainer from "@components/ProductContainer";
 
 const { collections } = await collectionList({ limit: 3 });
 const res = await listProducts({
@@ -35,7 +35,7 @@ const product = res?.products;
     link="/collection"
     linkText="View all collections"
   >
-    <ProductCards products={product} client:load />
+    <ProductContainer products={product} client:load />
   </CollectionGroup>
   <!-- Partner company Logo cloud -->
   <PartnerCompanies />
