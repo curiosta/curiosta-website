@@ -11,9 +11,12 @@ import CollectionGroup from "@components/CollectionGroup";
 import { collectionList } from "@api/product/collectionList";
 import ProductContainer from "@components/ProductContainer";
 
-const { collections } = await collectionList({ limit: 3 });
+const { collections } = await collectionList();
+const collectionId = collections.find((collection) =>
+  collection.handle?.includes("feature")
+)?.id;
 const res = await listProducts({
-  collection_id: [collections[0].id],
+  collection_id: [collectionId || ""],
   limit: 3,
 });
 const product = res?.products;
@@ -31,9 +34,9 @@ const product = res?.products;
 
   <!-- Feature Products -->
   <CollectionGroup
-    title="Feature Product"
-    link="/collection"
-    linkText="View all collections"
+    title={product[0]?.collection?.title}
+    link={`/collection/${product[0]?.collection?.title}`}
+    linkText="View all products"
   >
     <ProductContainer products={product} client:load />
   </CollectionGroup>

@@ -11,11 +11,11 @@ import type { ProductCollection } from "@medusajs/medusa";
 import ProductContainer from "@components/ProductContainer";
 
 type TCollectionContainer = {
-  handle: string | undefined;
+  title: string | undefined;
 };
 
 const CollectionContainer: FunctionComponent<TCollectionContainer> = ({
-  handle,
+  title,
 }) => {
   const isLoading = useSignal(false);
   const product = useSignal<PricedProduct[]>([]);
@@ -27,11 +27,11 @@ const CollectionContainer: FunctionComponent<TCollectionContainer> = ({
   const getProductList = async () => {
     try {
       isLoading.value = true;
-      if (!handle) return;
-      const collectionResponse = await collectionList({});
+      if (!title) return;
+      const collectionResponse = await collectionList();
       collections.value = collectionResponse.collections;
       const collectionId = collectionResponse.collections.find(
-        (collection) => collection.handle === handle
+        (collection) => collection.title === title
       )?.id;
       const res = await listProducts({
         collection_id: [collectionId || ""],
@@ -55,7 +55,7 @@ const CollectionContainer: FunctionComponent<TCollectionContainer> = ({
     <div>
       {!isLoading.value ? (
         <div>
-          <CollectionNav collections={collections.value} handle={handle} />
+          <CollectionNav collections={collections.value} title={title} />
           <Typography
             size="h5/semi-bold"
             className=" tracking-tight capitalize"

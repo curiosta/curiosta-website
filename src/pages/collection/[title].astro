@@ -1,0 +1,38 @@
+---
+import Navbar from "@components/Navbar.astro";
+import Layout from "@layouts/Layout.astro";
+import Footer from "@components/Footer.astro";
+import Typography from "@components/Typography";
+import CollectionContainer from "@components/CollectionGroup/CollectionContainer";
+import { collectionList } from "@api/product/collectionList";
+import { listProducts } from "@api/product/listProducts";
+import CollectionNav from "@components/CollectionGroup/CollectionNav";
+import ProductContainer from "@components/ProductContainer";
+
+const title = Astro.params.title;
+const { collections } = await collectionList();
+const collectionId = collections.find(
+  (collection) => collection.title === title
+)?.id;
+const res = await listProducts({
+  collection_id: [collectionId || ""],
+  limit: 10,
+});
+const product = res?.products;
+---
+
+<Layout
+  title={title ? title : "title not found"}
+  description="collection product"
+>
+  <Navbar />
+  <main class="mx-auto max-w-2xl px-4 py-4 sm:px-6 lg:max-w-7xl lg:px-8">
+    <Typography tag="h1" size="h3/semi-bold">Collections</Typography>
+    <CollectionNav collections={collections} title={title} />
+    <Typography size="h5/semi-bold" className=" tracking-tight capitalize">
+      {title}
+    </Typography>
+    <ProductContainer products={product} client:load />
+  </main>
+  <Footer />
+</Layout>

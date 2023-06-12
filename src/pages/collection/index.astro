@@ -5,16 +5,56 @@ import Footer from "@components/Footer.astro";
 import { collectionList } from "@api/product/collectionList";
 import CollectionContainer from "@components/CollectionGroup/CollectionContainer";
 import Typography from "@components/Typography";
+import CollectionNav from "@components/CollectionGroup/CollectionNav";
+import ProductContainer from "@components/ProductContainer";
+import { listProducts } from "@api/product/listProducts";
+import { signal } from "@preact/signals";
 
-const { collections } = await collectionList({ limit: 3 });
+const offset = signal<number>(0);
+const limit = signal<number>(1);
+
+// const lastProduct = Astro.url.searchParams.get("lastProduct");
+
+const { collections } = await collectionList();
+
+const res = await listProducts({
+  collection_id: [collections[0].id],
+  limit: limit.value,
+  offset: offset.value,
+});
+const product = res?.products;
+const count = res?.count;
+// const hasMoreItems = (offset.value + limit.value) < count;
+
+// const curLastProductId = product?.at(-1)?.id;
+// const curFirstProductId = product?.at(0)?.id;
+
+// const prvBtnDisabled =
+//   (!hasMoreItems && Astro.url.searchParams.has("firstProduct")) ||
+//   Astro.url.search === "";
+// const nextBtnDisabled =
+//   !hasMoreItems && Astro.url.searchParams.has("lastProduct");
 ---
 
 <Layout title="Collection" description="Our collection">
   <Navbar />
   <main class="mx-auto max-w-2xl px-4 py-4 sm:px-6 lg:max-w-7xl lg:px-8">
     <Typography tag="h1" size="h3/semi-bold">Collections</Typography>
+    <CollectionNav collections={collections} title={collections[0].title} />
+    <Typography size="h5/semi-bold" className=" tracking-tight capitalize">
+      {collections[0]?.title}
+    </Typography>
+    <ProductContainer products={product} client:load />
 
-    <CollectionContainer handle={collections[0].handle} client:load />
+    <!-- <div class="pagination-container flex justify-between">
+      <a
+        data-disabled={prvBtnDisabled}
+        href={`?offset=${curFirstProductId}`}>&larr; Prv</a
+      >
+      <a data-disabled={nextBtnDisabled} href={`?offset=${}`}
+        >Next &rarr;</a
+      >
+    </div> -->
   </main>
   <Footer />
 </Layout>
