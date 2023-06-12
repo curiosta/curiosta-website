@@ -3,37 +3,26 @@ import Navbar from "@components/Navbar.astro";
 import Layout from "@layouts/Layout.astro";
 import Footer from "@components/Footer.astro";
 import { collectionList } from "@api/product/collectionList";
-import CollectionContainer from "@components/CollectionGroup/CollectionContainer";
 import Typography from "@components/Typography";
 import CollectionNav from "@components/CollectionGroup/CollectionNav";
 import ProductContainer from "@components/ProductContainer";
 import { listProducts } from "@api/product/listProducts";
 import { signal } from "@preact/signals";
+import OffsetPagination from "@components/OffsetPagination";
 
-const offset = signal<number>(0);
-const limit = signal<number>(1);
-
-// const lastProduct = Astro.url.searchParams.get("lastProduct");
+const params = Astro.url.searchParams;
+const offsetValue = parseInt(params.get("offset") as string) || 0;
+const limit = signal<number>(10);
 
 const { collections } = await collectionList();
 
 const res = await listProducts({
   collection_id: [collections[0].id],
   limit: limit.value,
-  offset: offset.value,
+  offset: offsetValue,
 });
 const product = res?.products;
 const count = res?.count;
-// const hasMoreItems = (offset.value + limit.value) < count;
-
-// const curLastProductId = product?.at(-1)?.id;
-// const curFirstProductId = product?.at(0)?.id;
-
-// const prvBtnDisabled =
-//   (!hasMoreItems && Astro.url.searchParams.has("firstProduct")) ||
-//   Astro.url.search === "";
-// const nextBtnDisabled =
-//   !hasMoreItems && Astro.url.searchParams.has("lastProduct");
 ---
 
 <Layout title="Collection" description="Our collection">
@@ -44,17 +33,27 @@ const count = res?.count;
     <Typography size="h5/semi-bold" className=" tracking-tight capitalize">
       {collections[0]?.title}
     </Typography>
-    <ProductContainer products={product} client:load />
 
-    <!-- <div class="pagination-container flex justify-between">
-      <a
-        data-disabled={prvBtnDisabled}
-        href={`?offset=${curFirstProductId}`}>&larr; Prv</a
-      >
-      <a data-disabled={nextBtnDisabled} href={`?offset=${}`}
-        >Next &rarr;</a
-      >
-    </div> -->
+    {
+      offsetValue < count ? (
+        <div>
+          <ProductContainer products={product} client:load />
+          <OffsetPagination
+            limit={limit.value}
+            offsetValue={offsetValue}
+            count={count}
+          />
+        </div>
+      ) : (
+        <Typography
+          size="body1/semi-bold"
+          variant="secondary"
+          className="text-center py-20"
+        >
+          No page found
+        </Typography>
+      )
+    }
   </main>
   <Footer />
 </Layout>
