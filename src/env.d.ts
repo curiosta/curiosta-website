@@ -4,7 +4,7 @@ interface ImportMeta {
 }
 type ImportMetaEnv = Partial<
   Record<`PUBLIC_${keyof PublicEnvironmentVariables}`, string>
-> & Partial<Record<keyof PrivateEnvironmentVariables, string>>;
+> & Partial<Record<keyof PrivateEnvVariables, string>>;
 
 // Do not prefix 'PUBLIC_' here, we are already adding that in type above.
 interface PublicEnvironmentVariables {
@@ -14,7 +14,7 @@ interface PublicEnvironmentVariables {
   MEILISEARCH_API: string;
 }
 
-interface PrivateEnvironmentVariables {
+interface PrivateEnvVariables {
   CONTENTFUL_SPACE_ID: string;
   CONTENTFUL_ACCESS_TOKEN: string;
 }
