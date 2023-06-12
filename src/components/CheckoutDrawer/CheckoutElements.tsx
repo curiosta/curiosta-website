@@ -35,7 +35,6 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({ selectedA
 
     const selectedAddress = currentCustomer?.billing_address_id && currentCustomer.shipping_addresses.find((address) => address.id === currentCustomer.billing_address_id);
 
-
     if (!selectedAddress) {
       processingPayment.value = false
       throw new Error('User does not have any address selected!');
@@ -54,7 +53,6 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({ selectedA
         },
         name: `${selectedAddress.customer?.first_name || ''} ${selectedAddress.customer?.last_name || ''}`.trim(),
       }
-
       const { error } = await stripeInstance.confirmPayment({
         elements,
         clientSecret: clientSecret.value,
@@ -66,6 +64,7 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({ selectedA
               email: selectedAddress.customer?.email,
             }
           },
+          receipt_email: selectedAddress.customer?.email,
           shipping: userDetails
         },
       });

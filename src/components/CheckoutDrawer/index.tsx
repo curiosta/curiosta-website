@@ -35,7 +35,7 @@ const CheckoutDrawer = () => {
         const _clientSecret = paymentSessionCart.payment_session?.data.client_secret as string
         if (_clientSecret) { clientSecret.value = _clientSecret }
       })
-    });
+    })
   }, [checkoutOpen.value]);
 
 
@@ -75,7 +75,7 @@ const CheckoutDrawer = () => {
           </div>
           {clientSecret.value ? (
             <Elements stripe={stripe} options={{ clientSecret: clientSecret.value }}>
-              {<CheckoutElements clientSecret={clientSecret} selectedAddressId={selectedAddressId} stripe={stripe} /> as any}
+              <CheckoutElements clientSecret={clientSecret} selectedAddressId={selectedAddressId} stripe={stripe} />
             </Elements>
           ) : (
             <div className='flex justify-center items-center h-full'>
