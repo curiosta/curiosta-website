@@ -1,4 +1,4 @@
-import { useSignal } from "@preact/signals";
+import { useComputed, useSignal } from "@preact/signals";
 import AddToCartForm from "@components/AddToCartForm";
 import Typography from "@components/Typography";
 import { CurrencyMap, currencyMap } from "@utils/CurrencyMap";
@@ -10,22 +10,8 @@ interface Props {
 }
 
 const ProductInfo = ({ product }: Props) => {
-  const defaultVariant = product?.variants?.at(0);
-
-  const amount = defaultVariant?.prices.find(
-    (item) => item.currency_code === region.selectedCountry.value?.region?.currency_code,
-  )?.amount;
-
-  const currency = region.selectedCountry.value?.region?.currency_code as keyof CurrencyMap;
-
-  const selectedVariant = {
-    id: useSignal(defaultVariant?.id),
-    title: useSignal(defaultVariant?.title),
-    price: useSignal<number | undefined>(undefined),
-  };
-
-  selectedVariant.price.value = amount
-
+  const selectedProductVariantIndex = useSignal(0)
+  const selectedVariantPrice = useComputed(() => product.variants[selectedProductVariantIndex.value].prices.find((p) => p.currency_code === region.selectedCountry.value?.region.currency_code))
   return (
     <div class="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
       <Typography
@@ -44,9 +30,9 @@ const ProductInfo = ({ product }: Props) => {
           variant="primary"
           className="tracking-tight"
         >
-          {selectedVariant.price.value && currencyMap[currency]}
-          {selectedVariant.price.value
-            ? (selectedVariant.price?.value / 100).toFixed(2)
+          {selectedVariantPrice.value && currencyMap[selectedVariantPrice.value.currency_code as keyof CurrencyMap]}
+          {selectedVariantPrice.value
+            ? (selectedVariantPrice?.value.amount / 100).toFixed(2)
             : "Price not available"}
         </Typography>
       </div>
@@ -86,7 +72,7 @@ const ProductInfo = ({ product }: Props) => {
         </div>
       </div>
 
-      <AddToCartForm product={product} selectedVariant={selectedVariant} />
+      <AddToCartForm product={product} productIndex={selectedProductVariantIndex} />
 
       <section aria-labelledby="details-heading" class="mt-12">
         <Typography id="details-heading" className="sr-only">
