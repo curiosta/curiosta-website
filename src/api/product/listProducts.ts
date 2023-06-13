@@ -4,6 +4,7 @@ interface ListProduct {
   category_id?: string[];
   offset?: number;
   order?: string;
+  collection_id?: string[];
 }
 
 export const listProducts = async ({
@@ -11,6 +12,13 @@ export const listProducts = async ({
   offset,
   category_id,
   order,
+  collection_id,
 }: ListProduct) => {
-  return medusa.products.list({ limit, offset, category_id, order });
+  return medusa.products.list({
+    limit,
+    offset,
+    category_id,
+    order,
+    collection_id,
+  });
 };

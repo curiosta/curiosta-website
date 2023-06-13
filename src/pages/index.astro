@@ -7,11 +7,19 @@ import Layout from "@layouts/Layout.astro";
 import ShortIntroSection from "@section/ShortIntroSection.astro";
 import PartnerCompanies from "@section/PartnerCompanies.astro";
 import { pageTitleDesc } from "content";
-import ProductCards from "@components/ProductCards";
 import CollectionGroup from "@components/CollectionGroup";
+import { collectionList } from "@api/product/collectionList";
+import ProductContainer from "@components/ProductContainer";
 
-const res = await listProducts({ limit: 3 });
-const products = res?.products;
+const { collections } = await collectionList();
+const collectionId = collections.find((collection) =>
+  collection.handle?.includes("feature")
+)?.id;
+const res = await listProducts({
+  collection_id: [collectionId || ""],
+  limit: 3,
+});
+const product = res?.products;
 ---
 
 <Layout
@@ -25,10 +33,13 @@ const products = res?.products;
   <ShortIntroSection />
 
   <!-- Feature Products -->
-  <CollectionGroup title='Featured Products' link='/products' linkText='View all products'>
-    <ProductCards products={products} client:load />
+  <CollectionGroup
+    title={product[0]?.collection?.title}
+    link={`/collection/${product[0]?.collection?.title}`}
+    linkText="View all products"
+  >
+    <ProductContainer products={product} client:load />
   </CollectionGroup>
-
   <!-- Partner company Logo cloud -->
   <PartnerCompanies />
 
