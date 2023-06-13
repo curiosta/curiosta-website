@@ -28,7 +28,6 @@ const CartReset: FunctionComponent<TCleanupProps> = ({ params }) => {
   }
 
   useEffect(() => {
-    console.log('called');
     refreshCart()
   }, [])
   return (
