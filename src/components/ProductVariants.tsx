@@ -1,30 +1,18 @@
 import type { Signal } from "@preact/signals";
 import Typography from "@components/Typography";
-import useLocalStorage from "@hooks/useLocalStorage";
 import type { PricedVariant } from "@medusajs/medusa/dist/types/pricing";
-import type { Region } from "@medusajs/medusa";
-import region from "@api/region";
+import { cx } from "class-variance-authority";
 
 interface Props {
   productVariants?: PricedVariant[];
-  selectedVariant: {
-    id: Signal<string | undefined>;
-    title: Signal<string | undefined>;
-    price: Signal<number | undefined>;
-  };
+  productIndex: Signal<number>
 }
 
-const ProductVariants = ({ productVariants, selectedVariant }: Props) => {
+const ProductVariants = ({ productVariants, productIndex }: Props) => {
   const handleVariant = (
-    id: string,
-    title: string,
-    prices: { currency_code: string; amount: number }[]
+    index: number
   ) => {
-    selectedVariant.id.value = id;
-    selectedVariant.title.value = title;
-    selectedVariant.price.value = prices.find(
-      (item) => item.currency_code === region.selectedCountry.value?.region?.currency_code
-    )?.amount;
+    productIndex.value = index
   };
 
   return (
@@ -38,12 +26,11 @@ const ProductVariants = ({ productVariants, selectedVariant }: Props) => {
         <legend class="sr-only">Choose a Variant</legend>
         <div class="grid grid-cols-3 gap-3 sm:grid-cols-6">
           {productVariants?.length
-            ? productVariants.map((variant) => (
+            ? productVariants.map((variant, index) => (
               <label
-                class={`flex items-center ${variant.title === selectedVariant.title.value
+                class={cx(`flex items-center justify-center rounded-md border py-3 px-3 text-sm font-medium uppercase sm:flex-1 cursor-pointer focus:outline-none`, index === productIndex.value
                   ? "border-transparent bg-primary-600 text-white hover:bg-primary-700"
-                  : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
-                  } justify-center rounded-md border py-3 px-3 text-sm font-medium uppercase sm:flex-1 cursor-pointer focus:outline-none`}
+                  : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50")}
               >
                 <input
                   type="radio"
@@ -52,11 +39,7 @@ const ProductVariants = ({ productVariants, selectedVariant }: Props) => {
                   class="sr-only"
                   onInput={() =>
                     variant.id && variant.title && variant.prices
-                      ? handleVariant(
-                        variant.id,
-                        variant.title,
-                        variant.prices
-                      )
+                      ? handleVariant(index)
                       : undefined
                   }
                   aria-labelledby="variant-choice-0-label"
