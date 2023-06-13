@@ -65,7 +65,7 @@ const InputCore: FunctionComponent<InputCoreProps> = ({
           {rules?.required ? <Typography variant="error">*</Typography> : ""}
         </label>
       ) : null}
-      <div className="flex rounded-md shadow-sm">
+      <div className="flex rounded-md ">
         {leftAdornment ? (
           <span className="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 px-3 text-gray-500 sm:text-sm">
             {leftAdornment}
