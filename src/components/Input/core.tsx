@@ -50,7 +50,7 @@ const InputCore: FunctionComponent<InputCoreProps> = ({
   useEffect(() => {
     if (inputRef.current?.value) {
       // we need to get the input's value on initial page load since browsers can autofill the form before the javascript gets executed
-      props.onChange?.(new Event('change', { bubbles: true }))
+      props.onChange?.({ target: { value: inputRef.current.value } })
     }
   }, [])
 

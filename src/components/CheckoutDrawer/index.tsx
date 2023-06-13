@@ -40,7 +40,7 @@ const CheckoutDrawer = () => {
         const _clientSecret = paymentSessionCart.payment_session?.data.client_secret as string
         if (_clientSecret) { clientSecret.value = _clientSecret }
       })
-    })
+    });
   }, [checkoutOpen.value]);
 
 
