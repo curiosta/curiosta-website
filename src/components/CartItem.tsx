@@ -9,40 +9,19 @@ import Input from "@components/Input";
 import type { ChangeEvent } from "preact/compat";
 
 const CartItem = ({ item }: { item: LineItem }) => {
-  const loadingQty = useSignal<boolean>(false);
   const loadingRemove = useSignal<boolean>(false);
-  const increaseQty = async () => {
-    loadingQty.value = true;
-    try {
-      await cart.setItemQuantity(item.id, item.quantity + 1);
-    } catch {
-      // handle error
-    } finally {
-      loadingQty.value = false;
-    }
-  };
-  const decreaseQty = async () => {
-    loadingQty.value = true;
-    try {
-      await cart.setItemQuantity(item.id, item.quantity - 1);
-    } catch {
-      // handle error
-    } finally {
-      loadingQty.value = false;
-    }
-  };
+  const errorMessage = useSignal<string|null>(null);
 
   const handleQty = async (e: ChangeEvent<HTMLInputElement>) => {
     const quantity = e.currentTarget.valueAsNumber;
-
     try {
-      if (!quantity) return;
-      // loadingQty.value = true;
       await cart.setItemQuantity(item.id, quantity);
+      errorMessage.value = null
     } catch (error) {
       console.log(error);
-    } finally {
-      loadingQty.value = false;
+      if(error instanceof Error){
+        errorMessage.value = error.message
+      }
     }
   };
 
@@ -90,83 +69,19 @@ const CartItem = ({ item }: { item: LineItem }) => {
           </Typography>
         </div>
         <div className="flex justify-between items-center">
-          <div className="flex gap-2 items-center">
-            {/* decrease cart quantity */}
-            {/* <Button
-              type="button"
-              variant="icon"
-              className="w-4 !p-0"
-              onClick={decreaseQty}
-              disabled={loadingQty.value}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="2"
-                stroke="currentColor"
-                class="w-4 stroke-primary-600"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M19.5 12h-15"
-                />
-              </svg>
-            </Button> */}
-
-            {/* quantity input */}
-            {/* {loadingQty.value ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class={"animate-spin w-4 stroke-primary-600 duration-500"}
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
-                />
-              </svg>
-            ) : (
-            
-            )}  */}
+          <div className="flex flex-col gap-2 items-center my-2">
             <Input
               type="number"
               min="1"
               value={item.quantity}
-              onInput={handleQty}
-              className={`!w-12 !px-0 text-center ${
-                loadingQty.value ? "opacity-75" : "opacity-100"
-              }`}
-              disabled={loadingQty.value}
+              onBlur={handleQty}
+              className={`!w-12 !px-0 text-center`}
+              
             />
-            {/* increase cart quantity */}
-            {/* <Button
-              type="button"
-              variant="icon"
-              className="w-4 !p-0"
-              onClick={increaseQty}
-              disabled={loadingQty.value}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="2"
-                stroke="currentColor"
-                class="w-4 stroke-primary-600"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 4.5v15m7.5-7.5h-15"
-                />
-              </svg>
-            </Button> */}
+            <Typography size="body2/semi-bold"  variant='error'
+             className={`${errorMessage.value?'block':'hidden'}`}>
+              {errorMessage.value}
+            </Typography>
           </div>
           <Button type="button" variant="icon" onClick={removeProductFromCart}>
             <Typography variant="app-primary" size="small/medium">
