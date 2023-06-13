@@ -33,9 +33,11 @@ const ShipmentRegions = ({ screen }: Props) => {
             );
             if (answer) {
               await cart.resetCartId();
+              await region.setCountry(countryId)
             }
+          } else {
+            await region.setCountry(countryId)
           }
-          await region.setCountry(countryId)
         }}
         value={region.selectedCountry.value?.id}
       >
