@@ -27,6 +27,11 @@ const CheckoutDrawer = () => {
 
   useEffect(() => {
     if (!cart.store.value || !checkoutOpen.value) return;
+    try {
+      cart.listShippingMethods()
+    } catch (error) {
+
+    }
     medusa.carts.createPaymentSessions(cart.store.value.id).then(({ cart: sessionCart }) => {
       const isStripeAvailable = sessionCart.payment_sessions?.some((s) => s.provider_id === 'stripe');
       if (!isStripeAvailable) throw new Error('Stripe is not supported in this region, Please contact administrator & ask to addListener stripe in backend!.');
@@ -36,7 +41,7 @@ const CheckoutDrawer = () => {
         if (_clientSecret) { clientSecret.value = _clientSecret }
       })
     });
-  }, [cart.store.value, checkoutOpen.value]);
+  }, [checkoutOpen.value]);
 
 
   return createPortal(

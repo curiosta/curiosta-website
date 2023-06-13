@@ -21,12 +21,10 @@ const ProductInfo = ({ product }: Props) => {
   const selectedVariant = {
     id: useSignal(defaultVariant?.id),
     title: useSignal(defaultVariant?.title),
-    price: useSignal(amount),
+    price: useSignal<number | undefined>(undefined),
   };
 
-  if (defaultVariant && selectedVariant.id.value === defaultVariant.id) {
-    selectedVariant.price.value = amount
-  }
+  selectedVariant.price.value = amount
 
   return (
     <div class="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">

@@ -8,6 +8,7 @@ type TOrderProps = {
 };
 
 const OrdersInfo: FunctionComponent<TOrderProps> = ({ order }) => {
+
   return (
     <div class="space-y-8">
       {order.items.map((item) => (

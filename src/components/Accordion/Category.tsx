@@ -28,13 +28,13 @@ const Category = ({ category, depth }: Props) => {
       );
       selectedCategoriesIds.value = [
         ...selectedCategoriesIds.value.filter(
-          (name) => !childIdsToRemove.includes(name)
+          (id) => !childIdsToRemove.includes(id)
         ),
         value,
       ];
     } else {
       selectedCategoriesIds.value = selectedCategoriesIds.value.filter(
-        (name) => name !== value
+        (id) => id !== value
       );
     }
   };
@@ -48,7 +48,7 @@ const Category = ({ category, depth }: Props) => {
     if (selectedChildCategoryCount.value) selectedChildCategoryCount.value = 0;
 
     // toggle accordion state.
-    if (activeCategory.value === category.name) {
+    if (activeCategory.value === category.id) {
       // get all current category's selected children count.
       selectedChildCategoryCount.value = getCategorySelectedChildIDs(
         selectedCategoriesIds.value,
@@ -57,7 +57,7 @@ const Category = ({ category, depth }: Props) => {
 
       activeCategory.value = null;
     } else {
-      activeCategory.value = category.name;
+      activeCategory.value = category.id;
     }
   };
 
@@ -66,7 +66,7 @@ const Category = ({ category, depth }: Props) => {
       <li>
         <div
           class={`flex item-center my-1 rounded-md p-2 ${
-            activeCategory.value === category.name
+            activeCategory.value === category.id
               ? "bg-gray-50"
               : "bg-transparent"
           }`}
@@ -74,10 +74,10 @@ const Category = ({ category, depth }: Props) => {
           <Checkbox
             name={category.name}
             onChange={handleCheck}
-            value={category.name}
+            value={category.id}
             className={`${disabled ? "!text-disabled" : ""}`}
             checked={
-              disabled || selectedCategoriesIds.value.includes(category.name)
+              disabled || selectedCategoriesIds.value.includes(category.id)
             }
             disabled={!!disabled}
           />
@@ -147,7 +147,7 @@ const Category = ({ category, depth }: Props) => {
         </div>
         <div
           className={`${
-            disabled || activeCategory.value !== category.name
+            disabled || activeCategory.value !== category.id
               ? "hidden"
               : "block"
           }`}

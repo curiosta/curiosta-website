@@ -21,9 +21,14 @@ const AddToCartForm = ({ product, selectedVariant }: Props) => {
     e.preventDefault();
     if (selectedVariant.id.value) {
       loadingSignal.value = true;
-      await cart.addItem(selectedVariant.id.value)
-      loadingSignal.value = false
-      cart.open.value = true;
+      try {
+        await cart.addItem(selectedVariant.id.value)
+        cart.open.value = true;
+      } catch (error) {
+
+      } finally {
+        loadingSignal.value = false
+      }
     } else {
       alert("Can't add to card because variant id not found");
     }
@@ -40,10 +45,10 @@ const AddToCartForm = ({ product, selectedVariant }: Props) => {
           <Button
             type="submit"
             title="Add to cart"
-            disabled={loadingSignal.value}
+            disabled={loadingSignal.value || cart.loading.value === 'cart:get'}
             variant={"primary"}
           >
-            {loadingSignal.value ? "Loading..." : "Add to cart"}
+            {loadingSignal.value || cart.loading.value === 'cart:get' ? "Loading..." : "Add to cart"}
           </Button>
         </div>
       </form>

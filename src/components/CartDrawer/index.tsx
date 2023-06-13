@@ -90,7 +90,9 @@ const CartDrawer = () => {
                 <Button
                   type="button"
                   variant="primary"
+                  disabled={user.state.value === 'loading'}
                   onClick={() => {
+                    console.log(user.state.value);
                     if (user.state.value === 'authenticated') {
                       checkoutOpen.value = true;
                     } else {

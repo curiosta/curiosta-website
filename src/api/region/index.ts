@@ -57,6 +57,7 @@ class Region {
       set('countryId', id)
     }
     await cart.updateCart({ region_id: country.region_id || undefined });
+    await cart.listShippingMethods()
     this.selectedCountry.value = country
   }
 

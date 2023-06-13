@@ -34,8 +34,8 @@ const ProductCard: FunctionComponent<TProductCard> = ({ product }) => {
               "Description not available"}
           </Typography>
           <Typography size="body2/medium" variant="primary" className="mt-1 ">
-            {currency ? currencyMap[currency] : ''}
-            {amount ? (amount / 100).toFixed(2) : "Price not available"}
+            {currency && amount && amount !== 0 ? currencyMap[currency] : ''}
+            {amount || amount === 0 ? (amount / 100).toFixed(2) : "Price not available"}
           </Typography>
         </div>
       </div>

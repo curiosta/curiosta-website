@@ -1,5 +1,4 @@
-import medusa from '@api/medusa';
-import user from '@api/user';
+import cart from '@api/cart';
 import Typography from '@components/Typography';
 import type { FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
@@ -16,13 +15,20 @@ const CartReset: FunctionComponent<TCleanupProps> = ({ params }) => {
 
   const refreshCart = async () => {
     if (params.cart && params.status === 'succeeded' && params.paymentIntentId?.length) {
-      await medusa.carts.complete(params.cart);
-      user.resetCartId();
-      window.location.replace('/orders/success')
+      try {
+        await cart.resetCartId();
+        window.location.replace('/orders/success')
+      } catch (error) {
+        await cart.resetCartId();
+        window.location.replace('/orders/failed')
+      }
+    } else if (params.status !== 'succeeded') {
+      window.location.replace('/orders/failed')
     }
   }
 
   useEffect(() => {
+    console.log('called');
     refreshCart()
   }, [])
   return (
