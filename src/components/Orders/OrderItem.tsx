@@ -124,7 +124,7 @@ const OrderItem: FunctionComponent<TOrderItemProps> = ({ order }) => {
                     {item.title}
                   </Typography>
                   <Typography className="mt-2 sm:mt-0">
-                    {priceToCurrency(item.unit_price)}
+                    {priceToCurrency(item.unit_price,order.currency_code)}
                   </Typography>
                 </div>
                 <Typography

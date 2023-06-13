@@ -119,25 +119,25 @@ const { order } = await getOrders(orderId || "");
             <div class="flex items-center justify-between pb-4">
               <dt class="text-gray-600">Subtotal</dt>
               <dd class="font-medium text-gray-900">
-                {priceToCurrency(order.subtotal)}
+                {priceToCurrency(order.subtotal, order.currency_code)}
               </dd>
             </div>
             <div class="flex items-center justify-between py-4">
               <dt class="text-gray-600">Shipping</dt>
               <dd class="font-medium text-gray-900">
-                {priceToCurrency(order.shipping_total)}
+                {priceToCurrency(order.shipping_total, order.currency_code)}
               </dd>
             </div>
             <div class="flex items-center justify-between py-4">
               <dt class="text-gray-600">Tax</dt>
               <dd class="font-medium text-gray-900">
-                {priceToCurrency(order.tax_total)}
+                {priceToCurrency(order.tax_total, order.currency_code)}
               </dd>
             </div>
             <div class="flex items-center justify-between pt-4">
               <dt class="font-medium text-gray-900">Order total</dt>
               <dd class="font-medium text-indigo-600">
-                {priceToCurrency(order.total)}
+                {priceToCurrency(order.total, order.currency_code)}
               </dd>
             </div>
           </dl>

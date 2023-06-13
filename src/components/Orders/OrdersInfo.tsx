@@ -29,7 +29,7 @@ const OrdersInfo: FunctionComponent<TOrderProps> = ({ order }) => {
                   </a>
                 </Typography>
                 <Typography size="body2/medium" className="mt-2 ">
-                  {priceToCurrency(item.unit_price)}
+                  {priceToCurrency(item.unit_price,order.currency_code)}
                 </Typography>
                 <Typography size="body2/normal" className="mt-3 text-gray-500">
                   {item.description}
