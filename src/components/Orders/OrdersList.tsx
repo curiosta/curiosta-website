@@ -50,7 +50,7 @@ const OrdersList = () => {
               ) : (
                 <div class="text-center my-20">
                   <Typography size="body1/semi-bold" className="my-2">
-                    You didn't order anyitem yet
+                    You didn't order any item yet
                   </Typography>
                   <Typography size="body1/normal" variant={"secondary"}>
                     Explore{" "}

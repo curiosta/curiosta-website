@@ -100,7 +100,7 @@ class CartStore {
       const { set } = useLocalStorage();
       set("cartId", result.cart.id);
     }
-    this.listShippingMethods()
+    await this.listShippingMethods()
     this.loading.value = undefined;
   }
   async updateCart(payload: TCartUpdatePayload) {
@@ -183,6 +183,7 @@ class CartStore {
     );
     this.store.value = response.cart;
     this.loading.value = undefined;
+    await this.listShippingMethods()
   }
 
   // shipping methods
@@ -190,6 +191,7 @@ class CartStore {
   async listShippingMethods() {
     if (!this.store.value?.id) return null;
     this.loading.value = "cart:shipping:all";
+
     const response = await medusa.shippingOptions.listCartOptions(
       this.store.value.id
     );
