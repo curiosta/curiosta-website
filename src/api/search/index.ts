@@ -2,7 +2,7 @@ import type { Product } from "@store/productStore";
 import type { CurrencyMap } from "@utils/CurrencyMap";
 import { SearchParams, MeiliSearch, Index } from "meilisearch";
 
-type TProductSearchOptions = { sort?: "asc" | "desc"; categories?: string[], region?: keyof CurrencyMap }
+type TProductSearchOptions = { sort?: "asc" | "desc"; categories?: string | string[], region?: keyof CurrencyMap }
 
 class Search {
   client: MeiliSearch;
@@ -25,15 +25,15 @@ class Search {
     {
       sort,
       categories,
-      region = 'usd'
+      region = 'inr'
     }: TProductSearchOptions
-  ) {
+  ): Promise<{ products: Product[], count: number }> {
     const searchOptions: SearchParams = {};
     if (sort) {
       searchOptions.sort = [`prices.${region}:${sort}`];
     }
     if (categories?.length) {
-      searchOptions.filter = `categories IN [${categories.join(', ')}]`;
+      searchOptions.filter = `categories IN [${Array.isArray(categories) ? categories.join(', ') : categories}]`;
     }
 
     const res = await this.productIndex.search(query, searchOptions);

@@ -1,19 +1,24 @@
 import Checkbox from "@components/Checkbox";
+import type { TProductsQueryParam } from "@components/Products";
 import Typography from "@components/Typography";
 import type { ProductCategory } from "@medusajs/medusa";
-import { useSignal } from "@preact/signals";
-import { selectedCategoriesIds } from "@store/productStore";
+import { Signal, useSignal } from "@preact/signals";
+import type { Product } from "@store/productStore";
+import getProductsFromUrl from "@utils/getProductsFromUrl";
 import getCategorySelectedChildIDs from "@utils/getSelectedParentChildrenCategories";
 import { cx } from "class-variance-authority";
 import type { ChangeEvent } from "preact/compat";
 interface Props {
   category: ProductCategory;
   depth: number;
+  params: Signal<Partial<TProductsQueryParam>>;
+  products: Signal<Product[]>
 }
 
-const Category = ({ category, depth }: Props) => {
+const Category = ({ category, products, depth, params }: Props) => {
   const activeCategory = useSignal<string | null>(null);
   const selectedChildCategoryCount = useSignal<number>(0);
+  const selectedCategoriesIds = useSignal(!params.value.categories ? [] : (typeof params.value.categories === 'string' ? [params.value.categories] : params.value.categories))
   const disabled =
     category.parent_category_id &&
     selectedCategoriesIds.value.includes(category.parent_category_id);
@@ -37,6 +42,12 @@ const Category = ({ category, depth }: Props) => {
         (id) => id !== value
       );
     }
+
+    const url = new URL(window.location.href)
+    url.searchParams.set('categories', selectedCategoriesIds.value.join(','))
+    window.history.replaceState(undefined, '', url.href);
+    const { result } = await getProductsFromUrl(url.href);
+    products.value = result.products;
   };
 
   // accordion item click
@@ -65,11 +76,10 @@ const Category = ({ category, depth }: Props) => {
     <ul>
       <li>
         <div
-          class={`flex item-center my-1 rounded-md p-2 ${
-            activeCategory.value === category.id
-              ? "bg-gray-50"
-              : "bg-transparent"
-          }`}
+          class={`flex item-center my-1 rounded-md p-2 ${activeCategory.value === category.id
+            ? "bg-gray-50"
+            : "bg-transparent"
+            }`}
         >
           <Checkbox
             name={category.name}
@@ -115,9 +125,8 @@ const Category = ({ category, depth }: Props) => {
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  class={`text-gray-400 h-5 w-5 shrink-0  ${
-                    category.category_children.length ? "block" : "hidden"
-                  } `}
+                  class={`text-gray-400 h-5 w-5 shrink-0  ${category.category_children.length ? "block" : "hidden"
+                    } `}
                 >
                   <path
                     stroke-linecap="round"
@@ -146,16 +155,15 @@ const Category = ({ category, depth }: Props) => {
           </div>
         </div>
         <div
-          className={`${
-            disabled || activeCategory.value !== category.id
-              ? "hidden"
-              : "block"
-          }`}
+          className={`${disabled || activeCategory.value !== category.id
+            ? "hidden"
+            : "block"
+            }`}
         >
           {category.category_children.length
             ? category.category_children.map((child_cate) => (
-                <Category category={child_cate} depth={depth + 1} />
-              ))
+              <Category products={products} params={params} category={child_cate} depth={depth + 1} />
+            ))
             : ""}
         </div>
       </li>

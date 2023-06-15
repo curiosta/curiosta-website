@@ -6,11 +6,10 @@ interface Props {
   offset: Signal<number>;
   count: Signal<number | null>;
   limit: Signal<number>;
-  isLoading: Signal<boolean>;
 }
 
-const index = ({ offset, count, limit, isLoading }: Props) => {
-  const hanldeNext = () => {
+const index = ({ offset, count, limit }: Props) => {
+  const handleNext = () => {
     if (count.value) {
       if (offset.value + limit.value < count.value) {
         offset.value = Math.min(
@@ -53,21 +52,19 @@ const index = ({ offset, count, limit, isLoading }: Props) => {
       <div class="flex flex-1 justify-between sm:justify-end gap-4">
         <Button
           type="button"
-          className={`!w-fit !px-3 !py-2 ${
-            offset.value <= 0 ? "hidden" : "inline-flex"
-          }`}
+          className={`!w-fit !px-3 !py-2 ${offset.value <= 0 ? "hidden" : "inline-flex"
+            }`}
           onClick={handlePrev}
-          disabled={isLoading.value || offset.value <= 0}
+          disabled={offset.value <= 0}
         >
           Previous
         </Button>
         <Button
           type="button"
-          className={`!w-fit !px-3 !py-2 ${
-            isEndResult ? "hidden" : "inline-flex"
-          }`}
-          onClick={hanldeNext}
-          disabled={isLoading.value || isEndResult === true}
+          className={`!w-fit !px-3 !py-2 ${isEndResult ? "hidden" : "inline-flex"
+            }`}
+          onClick={handleNext}
+          disabled={isEndResult === true}
         >
           Next
         </Button>

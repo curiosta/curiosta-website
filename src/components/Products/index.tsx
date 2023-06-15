@@ -1,62 +1,37 @@
 import { useEffect, useRef } from "preact/compat";
 import { useSignal } from "@preact/signals";
-import Typography from "../Typography";
 import CategoriesOpt from "../CategoriesOpt";
 import {
+  Product,
   count,
   limit,
   offset,
-  products,
-  selectedCategoriesIds,
-  sortOrder,
 } from "@store/productStore";
 import Pagination from "@components/Pagination";
 import type { ProductCategory } from "@medusajs/medusa";
-import { Hits, InstantSearch, SearchBox } from 'react-instantsearch-dom'
 import Button from "@components/Button";
-import search from "@api/search";
 import ProductCard from "../ProductCard";
 import './product.css'
 import ProductCards from "@components/ProductCards";
 import SearchInput from "./SearchInput";
-import { regionCurrencyMap } from "@utils/CurrencyMap";
-import region from "@api/region";
+import getProductsFromUrl from "@utils/getProductsFromUrl";
 
+export type TProductsQueryParam = { sort: 'asc' | 'desc', q: string, page: number, categories: string | string[] }
 interface Props {
   categories: ProductCategory[];
+  initialProducts: Product[];
+  queryParams: Partial<TProductsQueryParam>,
 }
 
-const ProductFilter = ({ categories }: Props) => {
+const Products = ({ categories, initialProducts, queryParams }: Props) => {
   const isSortPopUp = useSignal(false);
-  const isLoading = useSignal(false);
   const sortContainerRef = useRef<HTMLDivElement>(null);
-
+  const products = useSignal(initialProducts);
+  const params = useSignal(queryParams)
   const sortOptions = [
     { id: 1, title: "Price: High to Low", value: "desc" },
     { id: 2, title: "Price: Low to High", value: "asc" },
   ];
-
-  const productsList = async () => {
-    try {
-      isLoading.value = true;
-      const sortRes = await search.getProducts(undefined, {
-        categories: selectedCategoriesIds.value,
-        sort: sortOrder.value as 'asc' | 'desc',
-        region: regionCurrencyMap[(region.selectedCountry.value?.iso_2 || 'us') as keyof typeof regionCurrencyMap]
-      });
-
-      products.value = sortRes.products;
-      count.value = sortRes.count || 0;
-    } catch (error) {
-      console.log(error);
-    } finally {
-      isLoading.value = false;
-    }
-  };
-
-  useEffect(() => {
-    productsList();
-  }, [selectedCategoriesIds.value, offset.value, sortOrder.value]);
 
   useEffect(() => {
     const clickAwayListener = (e: MouseEvent) => {
@@ -69,12 +44,12 @@ const ProductFilter = ({ categories }: Props) => {
     return () => {
       window.removeEventListener('click', clickAwayListener)
     }
-  }, [])
+  }, []);
 
   return (
     <div class="mx-auto max-w-2xl !pb-0 px-4  sm:px-6  lg:max-w-7xl lg:px-8">
       <div class="lg:grid lg:grid-cols-3 lg:gap-x-8 xl:grid-cols-4">
-        <CategoriesOpt categories={categories} />
+        <CategoriesOpt products={products} categories={categories} params={params} />
 
         {/* <!-- Product grid --> */}
         <div class="mt-6 lg:col-span-2 lg:mt-0 xl:col-span-3 ">
@@ -91,7 +66,9 @@ const ProductFilter = ({ categories }: Props) => {
                   variant="icon"
                   className="!border-none"
                   id="menu-button"
-                  onClick={() => (isSortPopUp.value = !isSortPopUp.value)}
+                  onClick={() => {
+                    isSortPopUp.value = !isSortPopUp.value
+                  }}
                 >
                   Sort
                   <svg
@@ -116,14 +93,22 @@ const ProductFilter = ({ categories }: Props) => {
                 <div class="py-1" role="none">
                   {sortOptions.map((sortOption) => (
                     <Button
+                      key={sortOption.id}
                       type="button"
                       variant="dropDown"
-                      className={`!shadow-none ${sortOption.value === sortOrder.value
+                      className={`!shadow-none ${sortOption.value === params.value.sort
                         ? "!bg-gray-100"
                         : "!font-normal"
                         }`}
-                      onClick={() => {
-                        sortOrder.value = sortOption.value;
+                      onClick={async () => {
+                        const url = new URL(window.location.href)
+                        url.searchParams.set('sort', sortOption.value);
+                        window.history.replaceState(undefined, '', url.href);
+                        // get results and show
+                        const { result } = await getProductsFromUrl(url.href);
+                        products.value = result.products
+                        // update selected sort option
+                        params.value = { ...params.value, sort: sortOption.value as 'asc' | 'desc' | undefined }
                       }}
                     >
                       {sortOption.title}
@@ -133,20 +118,13 @@ const ProductFilter = ({ categories }: Props) => {
               </div>
             </div>
           </div>
-          {!isLoading.value ? (
-            <ProductCards products={products.value} />
-          ) : (
-            <Typography tag="h5" size="h5/semi-bold">
-              Loading...
-            </Typography>
-          )}
+          <ProductCards products={products.value} />
         </div>
 
 
       </div>
 
       <Pagination
-        isLoading={isLoading}
         offset={offset}
         limit={limit}
         count={count}
@@ -160,4 +138,4 @@ const Hit = ({ hit }: { hit: any }) => (
 );
 
 
-export default ProductFilter;
+export default Products;
