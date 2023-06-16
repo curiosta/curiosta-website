@@ -18,7 +18,7 @@ const {params, result} = await getProductsFromUrl(Astro.url.searchParams);
 >
   <Navbar />
   <main class="bg-white">
-    <Products categories={categories} initialProducts={result.products} client:load queryParams={params} />
+    <Products categories={categories} productResult={result} client:load queryParams={params} />
   </main>
   <Footer />
 </Layout>

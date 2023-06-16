@@ -15,15 +15,22 @@ import './product.css'
 import ProductCards from "@components/ProductCards";
 import SearchInput from "./SearchInput";
 import getProductsFromUrl from "@utils/getProductsFromUrl";
+import type { TGetProductResult } from "@api/search";
 
-export type TProductsQueryParam = { sort: 'asc' | 'desc', q: string, page: number, categories: string | string[] }
+export type TProductsQueryParam = {
+  sort: 'asc' | 'desc',
+  q: string,
+  page: number,
+  categories: string | string[],
+}
 interface Props {
   categories: ProductCategory[];
-  initialProducts: Product[];
+  productResult: TGetProductResult;
   queryParams: Partial<TProductsQueryParam>,
 }
 
-const Products = ({ categories, initialProducts, queryParams }: Props) => {
+const Products = ({ categories, productResult, queryParams }: Props) => {
+  const { products: initialProducts, ...paginationResult } = productResult
   const isSortPopUp = useSignal(false);
   const sortContainerRef = useRef<HTMLDivElement>(null);
   const products = useSignal(initialProducts);
@@ -53,7 +60,6 @@ const Products = ({ categories, initialProducts, queryParams }: Props) => {
 
         {/* <!-- Product grid --> */}
         <div class="mt-6 lg:col-span-2 lg:mt-0 xl:col-span-3 ">
-
 
           <div class={`flex justify-between mb-6 items-center`}>
             {/* search option */}
@@ -120,15 +126,13 @@ const Products = ({ categories, initialProducts, queryParams }: Props) => {
           </div>
           <ProductCards products={products.value} />
         </div>
-
-
       </div>
-
       <Pagination
-        offset={offset}
-        limit={limit}
-        count={count}
+        products={products}
+        {...params}
+        {...paginationResult}
       />
+
     </div>
   );
 };

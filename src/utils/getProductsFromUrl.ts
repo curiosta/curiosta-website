@@ -7,7 +7,7 @@ const getProductsFromUrl = async (url: string | URLSearchParams) => {
     url = new URL(url).searchParams;
   }
   const params = parseQuery<TProductsQueryParam>(url);
-  const result = await search.getProducts(params.q, { sort: params.sort, categories: params.categories })
+  const result = await search.getProducts(params.q, params)
   return {
     result,
     params

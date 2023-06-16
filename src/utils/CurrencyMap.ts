@@ -1,14 +1,13 @@
-export type SupportedCurrencies = 'usd' | 'eur' | 'inr';
-export type CurrencyMap = Record<SupportedCurrencies, string>
+export type CurrencyMap = keyof typeof currencyMap;
 
-export const currencyMap: CurrencyMap = {
+export const currencyMap = {
   usd: "$",
   eur: "€",
   inr: "₹",
 };
 
 
-export const regionCurrencyMap: Record<'us' | 'in' | 'eu', SupportedCurrencies> = {
+export const regionCurrencyMap: Record<'us' | 'in' | 'eu', CurrencyMap> = {
   'us': 'usd',
   'in': 'inr',
   'eu': 'eur'

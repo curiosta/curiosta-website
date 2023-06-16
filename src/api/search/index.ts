@@ -1,12 +1,28 @@
+import region from "@api/region";
 import type { Product } from "@store/productStore";
-import type { CurrencyMap } from "@utils/CurrencyMap";
+import { regionCurrencyMap, type CurrencyMap } from "@utils/CurrencyMap";
 import { SearchParams, MeiliSearch, Index } from "meilisearch";
 
-type TProductSearchOptions = { sort?: "asc" | "desc"; categories?: string | string[], region?: keyof CurrencyMap }
+type TProductSearchOptions = {
+  sort?: "asc" | "desc";
+  categories?: string | string[],
+  currencyRegion?: CurrencyMap,
+  page?: number;
+}
+export type TGetProductResult = {
+  count: number;
+  limit: number;
+  offset: number;
+  page: number;
+  products: Product[];
+}
+
 
 class Search {
   client: MeiliSearch;
   productIndex: Index<any>;
+  limit: number = 4;
+
   constructor() {
     if (
       !import.meta.env.PUBLIC_MEILISEARCH_HOST ||
@@ -25,16 +41,22 @@ class Search {
     {
       sort,
       categories,
-      region = 'inr'
+      currencyRegion = regionCurrencyMap[region.selectedCountry.value?.iso_3 as keyof typeof regionCurrencyMap] || 'usd',
+      page = 1,
     }: TProductSearchOptions
-  ): Promise<{ products: Product[], count: number }> {
+  ): Promise<TGetProductResult> {
     const searchOptions: SearchParams = {};
     if (sort) {
-      searchOptions.sort = [`prices.${region}:${sort}`];
+      searchOptions.sort = [`prices.${currencyRegion}:${sort}`];
     }
     if (categories?.length) {
       searchOptions.filter = `categories IN [${Array.isArray(categories) ? categories.join(', ') : categories}]`;
     }
+
+    const offset = page <= 1 ? 0 : (page - 1) * this.limit;
+
+    searchOptions.offset = offset;
+    searchOptions.limit = this.limit;
 
     const res = await this.productIndex.search(query, searchOptions);
 
@@ -48,10 +70,12 @@ class Search {
         thumbnail: hit.thumbnail,
       } as Product;
     });
-
     return {
       products: products || [],
       count: res.estimatedTotalHits,
+      offset: res.offset,
+      limit: res.limit,
+      page,
     };
   }
 }
