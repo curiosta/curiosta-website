@@ -20,7 +20,7 @@ const RightNav = ({ screen }: Props) => {
         screen === 'mobile' ? 'flex flex-col gap-4 mt-4' : 'hidden'
       )}
     >
-      <div className={`ml-0 sm:ml-10`}>
+      <div>
         {user.state.value === "authenticated" ? (
           <Button
             variant="primary"
