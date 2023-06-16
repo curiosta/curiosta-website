@@ -14,11 +14,20 @@ interface Props {
 
 const CategoriesOpt = ({ categories, products, params }: Props) => {
   const isCategoriesOpen = useSignal(false);
+  const selectedCategoriesIds = useSignal(!params.value.categories ? [] : (typeof params.value.categories === 'string' ? [params.value.categories] : params.value.categories))
 
   // filter top categories
   const topCategories = categories.filter(
     (category) => category.parent_category_id === null
   );
+
+  const toggleSelectedIds = (id: string) => {
+    if (selectedCategoriesIds.value.includes(id)) {
+      selectedCategoriesIds.value = selectedCategoriesIds.value.filter((v) => v !== id);
+    } else {
+      selectedCategoriesIds.value = [...selectedCategoriesIds.value, id]
+    }
+  }
 
   return (
     <div>
@@ -57,7 +66,7 @@ const CategoriesOpt = ({ categories, products, params }: Props) => {
 
                 <div class="space-y-2 pt-6">
                   {topCategories?.map((category) => (
-                    <Category products={products} category={category} params={params} depth={0} />
+                    <Category toggleSelectedIds={toggleSelectedIds} products={products} selectedCategoriesIds={selectedCategoriesIds} category={category} params={params} depth={0} />
                   ))}
                 </div>
               </fieldset>
