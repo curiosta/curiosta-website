@@ -1,5 +1,4 @@
 ---
-import { Picture } from "@astrojs/image/components";
 import Button from "@components/Button";
 import Typography from "@components/Typography";
 import { introSection } from "content";
@@ -8,13 +7,10 @@ import { introSection } from "content";
 <section aria-labelledby="social-impact-heading" class="mx-auto max-w-7xl px-4">
   <div class="relative overflow-hidden rounded-lg">
     <div class="absolute inset-0">
-      <Picture
+      <img
         src={"/images/engineer.jpg"}
         alt=""
         class="h-full w-full object-cover object-center"
-        widths={[400, 800, 1200]}
-        aspectRatio={16 / 9}
-        formats={["avif", "webp"]}
       />
     </div>
     <div
