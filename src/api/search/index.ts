@@ -1,6 +1,6 @@
 import region from "@api/region";
 import type { Product } from "@store/productStore";
-import { regionCurrencyMap, type CurrencyMap } from "@utils/CurrencyMap";
+import type { CurrencyMap } from "@utils/CurrencyMap";
 import { SearchParams, MeiliSearch, Index } from "meilisearch";
 
 type TProductSearchOptions = {
@@ -21,7 +21,7 @@ export type TGetProductResult = {
 class Search {
   client: MeiliSearch;
   productIndex: Index<any>;
-  limit: number = 4;
+  limit: number = 12;
 
   constructor() {
     if (
@@ -41,12 +41,12 @@ class Search {
     {
       sort,
       categories,
-      currencyRegion = regionCurrencyMap[region.selectedCountry.value?.iso_3 as keyof typeof regionCurrencyMap] || 'usd',
+      currencyRegion = region.selectedCountry.value?.region.currency_code as CurrencyMap,
       page = 1,
     }: TProductSearchOptions
   ): Promise<TGetProductResult> {
     const searchOptions: SearchParams = {};
-    if (sort) {
+    if (sort && currencyRegion) {
       searchOptions.sort = [`prices.${currencyRegion}:${sort}`];
     }
     if (categories?.length) {
