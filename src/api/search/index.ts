@@ -20,7 +20,7 @@ export type TGetProductResult = {
 
 class Search {
   client: MeiliSearch;
-  productIndex: Index<any>;
+  productIndex: Index<Product>;
   limit: number = 12;
 
   constructor() {
@@ -60,7 +60,7 @@ class Search {
 
     const res = await this.productIndex.search(query, searchOptions);
 
-    const products = res?.hits.map((hit: any) => {
+    const products = res?.hits.map((hit) => {
       return {
         title: hit.title,
         description: hit.description,
@@ -68,7 +68,7 @@ class Search {
         id: hit.id,
         prices: hit.prices,
         thumbnail: hit.thumbnail,
-      } as Product;
+      }
     });
     return {
       products: products || [],
