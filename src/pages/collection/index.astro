@@ -1,0 +1,59 @@
+---
+import Navbar from "@components/Navbar.astro";
+import Layout from "@layouts/Layout.astro";
+import Footer from "@components/Footer.astro";
+import { collectionList } from "@api/product/collectionList";
+import Typography from "@components/Typography";
+import CollectionNav from "@components/CollectionGroup/CollectionNav";
+import ProductContainer from "@components/ProductContainer";
+import { listProducts } from "@api/product/listProducts";
+import { signal } from "@preact/signals";
+import OffsetPagination from "@components/OffsetPagination";
+
+const params = Astro.url.searchParams;
+const offsetValue = parseInt(params.get("offset") as string) || 0;
+const limit = signal<number>(10);
+
+const { collections } = await collectionList();
+
+const res = await listProducts({
+  collection_id: [collections[0].id],
+  limit: limit.value,
+  offset: offsetValue,
+});
+const product = res?.products;
+const count = res?.count;
+---
+
+<Layout title="Collection" description="Our collection">
+  <Navbar />
+  <main class="mx-auto max-w-2xl px-4 py-4 sm:px-6 lg:max-w-7xl lg:px-8">
+    <Typography tag="h1" size="h3/semi-bold">Collections</Typography>
+    <CollectionNav collections={collections} title={collections[0].title} />
+    <Typography size="h5/semi-bold" className=" tracking-tight capitalize">
+      {collections[0]?.title}
+    </Typography>
+
+    {
+      offsetValue < count ? (
+        <div>
+          <ProductContainer products={product} client:load />
+          <OffsetPagination
+            limit={limit.value}
+            offsetValue={offsetValue}
+            count={count}
+          />
+        </div>
+      ) : (
+        <Typography
+          size="body1/semi-bold"
+          variant="secondary"
+          className="text-center py-20"
+        >
+          No page found
+        </Typography>
+      )
+    }
+  </main>
+  <Footer />
+</Layout>

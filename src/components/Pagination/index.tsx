@@ -27,7 +27,7 @@ const index = ({ offset, count, limit, isLoading }: Props) => {
   };
 
   const isEndResult = count.value
-    ? offset.value + limit.value > count.value
+    ? offset.value + limit.value >= count.value
     : null;
 
   return (
@@ -52,6 +52,7 @@ const index = ({ offset, count, limit, isLoading }: Props) => {
       </div>
       <div class="flex flex-1 justify-between sm:justify-end gap-4">
         <Button
+          type="button"
           className={`!w-fit !px-3 !py-2 ${
             offset.value <= 0 ? "hidden" : "inline-flex"
           }`}
@@ -61,6 +62,7 @@ const index = ({ offset, count, limit, isLoading }: Props) => {
           Previous
         </Button>
         <Button
+          type="button"
           className={`!w-fit !px-3 !py-2 ${
             isEndResult ? "hidden" : "inline-flex"
           }`}

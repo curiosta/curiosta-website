@@ -19,10 +19,11 @@ class Region {
   }
 
   async initialize() {
-
+    if (!cart.store.value) return;
     const userCountryId = user.customer.value?.metadata?.country_id
     const result = await medusa.regions.list();
-    const { regions } = result
+    const { regions } = result;
+
     const countries = regions.map((region) => region.countries).flat(1).sort((a, z) => a.display_name > z.display_name ? 1 : -1).map((country) => {
       const countryRegion = regions.find((r) => r.id == country.region_id);
       if (countryRegion) {
@@ -30,6 +31,7 @@ class Region {
       }
       return country
     })
+
     this.countries.value = countries;
 
 
@@ -39,11 +41,17 @@ class Region {
       const { get } = useLocalStorage()
       countryId = get('countryId') || undefined;
     }
+
+    if (user.state.value === 'unauthenticated' && !countryId && cart.store.value) {
+      this.setCountry(this.countries.value?.[0].id)
+    }
+
     if (countryId) {
       const country = this.countries.value.find((country) => country.id === countryId);
       this.selectedCountry.value = country
       return;
     }
+
   }
 
   async setCountry(id: number) {
