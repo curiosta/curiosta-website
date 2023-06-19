@@ -9,7 +9,13 @@ import { Signal, useSignal } from "@preact/signals";
 import { useRef } from "preact/hooks";
 import region from "@api/region";
 
-const AddressForm = ({ selectedAddressId, isNewAddress }: { selectedAddressId: Signal<string | null>, isNewAddress: Signal<boolean> }) => {
+const AddressForm = ({
+  selectedAddressId,
+  isNewAddress,
+}: {
+  selectedAddressId: Signal<string | null>;
+  isNewAddress: Signal<boolean>;
+}) => {
   const isLoading = useSignal<boolean>(false);
   const resetButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -21,7 +27,7 @@ const AddressForm = ({ selectedAddressId, isNewAddress }: { selectedAddressId: S
       if (region.selectedCountry.value?.iso_2) {
         payloadAddress.country_code = region.selectedCountry.value?.iso_2;
       } else {
-        throw new Error('Country not selected, Try reloading page!.')
+        throw new Error("Country not selected, Try reloading page!.");
       }
 
       const addShipping = await addShippingAddress(payloadAddress);
@@ -30,13 +36,13 @@ const AddressForm = ({ selectedAddressId, isNewAddress }: { selectedAddressId: S
       // add shipping address in cart
       await cart.updateCart({
         shipping_address: latestAddress?.id,
-        billing_address: latestAddress?.id
+        billing_address: latestAddress?.id,
       });
 
       await user.refetch();
       selectedAddressId.value = latestAddress?.id || null;
-      latestAddress?.id && (isNewAddress.value = false)
-      resetButtonRef.current?.click()
+      latestAddress?.id && (isNewAddress.value = false);
+      resetButtonRef.current?.click();
     } catch (error) {
       console.log(error);
     } finally {
@@ -117,13 +123,20 @@ const AddressForm = ({ selectedAddressId, isNewAddress }: { selectedAddressId: S
           </div>
 
           <div class="mt-5 border-t border-gray-200 pt-6">
-            <div className='flex justify-end items-center gap-4'>
-              <Button variant='danger' type='reset' className='!w-max' ref={resetButtonRef}>Reset</Button>
+            <div className="flex justify-end items-center gap-4">
+              <Button
+                variant="danger"
+                type="reset"
+                className="!w-max"
+                ref={resetButtonRef}
+              >
+                Reset
+              </Button>
               <Button
                 type="submit"
                 variant="primary"
                 title="Save address"
-                className="!w-auto"
+                className="!w-auto max-xs:!px-4"
                 disabled={isLoading.value}
               >
                 {isLoading.value ? "Loading..." : "Save Address"}
