@@ -13,7 +13,7 @@ const OrderItem: FunctionComponent<TOrderItemProps> = ({ order }) => {
   const isThreeDots = useSignal<boolean>(false);
 
   return (
-    <div class="border-b border-t border-gray-200 bg-white shadow-sm sm:rounded-lg sm:border">
+    <div class="border-b border-t border-gray-200 bg-white shadow-sm rounded-lg border">
       <div class="flex items-center border-b border-gray-200 p-4 sm:grid sm:grid-cols-4 sm:gap-x-6 sm:p-6">
         <dl class="grid flex-1 grid-cols-2 gap-x-6 text-sm sm:col-span-3 sm:grid-cols-3 lg:col-span-2">
           <div>
@@ -71,7 +71,7 @@ const OrderItem: FunctionComponent<TOrderItemProps> = ({ order }) => {
 
           <div
             class={cx(
-              "absolute top-4 right-0 z-10 mt-2 w-40 origin-bottom-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none",
+              "absolute top-8 right-0 z-10  w-40 origin-bottom-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none",
               isThreeDots.value ? "block" : "hidden"
             )}
             role="menu"
@@ -124,7 +124,7 @@ const OrderItem: FunctionComponent<TOrderItemProps> = ({ order }) => {
                     {item.title}
                   </Typography>
                   <Typography className="mt-2 sm:mt-0">
-                    {priceToCurrency(item.unit_price,order.currency_code)}
+                    {priceToCurrency(item.unit_price, order.currency_code)}
                   </Typography>
                 </div>
                 <Typography
