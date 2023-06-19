@@ -277,14 +277,7 @@
     undici "^5.22.0"
     which-pm-runs "^1.1.0"
 
-"@astrojs/webapi@^2.0.1", "@astrojs/webapi@^2.1.0":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@astrojs/webapi/-/webapi-2.1.1.tgz#965bcc35a72ca40e60e1ed4c2e4350f215bee179"
-  integrity sha512-mHZ7VgPNMeV3TYIw3SGHTKaJosBxA8bTzZ3QhNw509qvCJca4Lkjes8JywimuwTn+TMjEiv7ksNfwRluad3jqA==
-  dependencies:
-    undici "^5.22.0"
-
-"@astrojs/webapi@^2.2.0":
+"@astrojs/webapi@^2.0.1", "@astrojs/webapi@^2.1.0", "@astrojs/webapi@^2.2.0":
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/@astrojs/webapi/-/webapi-2.2.0.tgz#fd142a468d5d690bc5ab884b532ef4db44f090b2"
   integrity sha512-mHAOApWyjqSe5AQMOUD9rsZJqbMQqe3Wosb1a40JV6Okvyxj1G6GTlthwYadWCymq/lbgwh0PLiY8Fr4eFxtuQ==
@@ -2164,10 +2157,10 @@ astro-eslint-parser@^0.14.0:
     espree "^9.0.0"
     semver "^7.3.8"
 
-astro-sst@^2.12.0:
-  version "2.12.0"
-  resolved "https://registry.yarnpkg.com/astro-sst/-/astro-sst-2.12.0.tgz#0479c374e23c5f52908c6d959a1d679aa21789df"
-  integrity sha512-Go7VQUpyqUb+Hlsbon0JakxdI3iy7mqbTIt2taV2HBLgVESIfW8GCJIeG0BNgJ/Uht8ATQs4+KEDHo/KWkgkMA==
+astro-sst@^2.13.6:
+  version "2.13.6"
+  resolved "https://registry.yarnpkg.com/astro-sst/-/astro-sst-2.13.6.tgz#13510d15acfe37bdf59ee34cbb5d6741836e03fe"
+  integrity sha512-8glh5o652IdgC1Y5AYCzUA5N+x2TzAgG2r8yRzjIPfHOA70DGJxNc9bYP3geNG51TJnxz+pm1oqv2q5pt2yGUA==
   dependencies:
     "@astrojs/webapi" "^2.1.0"
 
