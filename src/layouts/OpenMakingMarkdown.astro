@@ -9,10 +9,12 @@ const { frontmatter } = Astro.props;
 
 <Layout title={frontmatter.title} description={frontmatter.description}>
   <Navbar />
-  <OpenMakingNav />
+  <OpenMakingNav client:load />
   <header class="py-8 px-4 text-center">
     <div class="w-full">
-      <Typography tag="h1" size="h1/semi-bold">{frontmatter.title}</Typography>
+      <Typography tag="h1" size="h1/semi-bold" className="break-words">
+        {frontmatter.title}
+      </Typography>
     </div>
   </header>
   <main class="pr py-8 mx-auto w-full lg:max-w-[80%] px-6 lg:px-8">
