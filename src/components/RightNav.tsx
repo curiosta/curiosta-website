@@ -17,17 +17,17 @@ const RightNav = ({ screen }: Props) => {
     <div
       class={cx(
         "lg:flex lg:items-center lg:justify-end",
-        screen === 'mobile' ? 'flex flex-col gap-4 mt-4' : 'hidden'
+        screen === "mobile" ? "flex flex-col gap-4 mt-4" : "hidden"
       )}
     >
-      <div className={`ml-0 sm:ml-10`}>
+      <div>
         {user.state.value === "authenticated" ? (
           <Button
             variant="primary"
             className="leading-6 !px-2 !py-1 !w-fit rounded-md"
             onClick={async () => {
-              await user.logout()
-              window.location.href = '/login'
+              await user.logout();
+              window.location.href = "/login";
             }}
           >
             Log out
