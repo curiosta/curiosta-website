@@ -17,6 +17,7 @@ const getCategorySelectedChildIDs = (selectedIDs: string[], category: ProductCat
     })
   }
 
+  childIds.push(category.id)
   getAllChildIDs(category.category_children)
 
   const selectedChildIds: string[] = [];
