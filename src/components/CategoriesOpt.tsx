@@ -1,21 +1,41 @@
 import Button from "@components/Button";
 import Typography from "@components/Typography";
-import { useSignal } from "@preact/signals";
+import { Signal, useSignal } from "@preact/signals";
 import Category from "./Accordion/Category";
 import type { ProductCategory } from "@medusajs/medusa";
-import { selectedCategoriesIds } from "@store/productStore";
+import type { TProductsQueryParam } from "./Products";
+import type { Product } from "@store/productStore";
 
 interface Props {
   categories: ProductCategory[];
+  params: Signal<Partial<TProductsQueryParam>>;
+  products: Signal<Product[]>;
 }
 
-const CategoriesOpt = ({ categories }: Props) => {
+const CategoriesOpt = ({ categories, products, params }: Props) => {
   const isCategoriesOpen = useSignal(false);
+  const selectedCategoriesIds = useSignal(
+    !params.value.categories
+      ? []
+      : typeof params.value.categories === "string"
+      ? [params.value.categories]
+      : params.value.categories
+  );
 
   // filter top categories
   const topCategories = categories.filter(
-    (categ) => categ.parent_category_id === null
+    (category) => category.parent_category_id === null
   );
+
+  const toggleSelectedIds = (id: string) => {
+    if (selectedCategoriesIds.value.includes(id)) {
+      selectedCategoriesIds.value = selectedCategoriesIds.value.filter(
+        (v) => v !== id
+      );
+    } else {
+      selectedCategoriesIds.value = [...selectedCategoriesIds.value, id];
+    }
+  };
 
   return (
     <div>
@@ -80,7 +100,14 @@ const CategoriesOpt = ({ categories }: Props) => {
 
                 <div class="space-y-2 pt-6">
                   {topCategories?.map((category) => (
-                    <Category category={category} depth={0} />
+                    <Category
+                      toggleSelectedIds={toggleSelectedIds}
+                      products={products}
+                      selectedCategoriesIds={selectedCategoriesIds}
+                      category={category}
+                      params={params}
+                      depth={0}
+                    />
                   ))}
                 </div>
               </fieldset>
@@ -123,7 +150,14 @@ const CategoriesOpt = ({ categories }: Props) => {
               </div>
               <div class="space-y-2 pt-6 ">
                 {topCategories?.map((category) => (
-                  <Category category={category} depth={0} />
+                  <Category
+                    toggleSelectedIds={toggleSelectedIds}
+                    products={products}
+                    selectedCategoriesIds={selectedCategoriesIds}
+                    category={category}
+                    params={params}
+                    depth={0}
+                  />
                 ))}
               </div>
             </fieldset>

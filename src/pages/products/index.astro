@@ -1,14 +1,15 @@
 ---
-import type { Product } from "@api/product";
 import { categoriesList } from "@api/product/categoriesList";
-import { listProducts } from "@api/product/listProducts";
 import Footer from "@components/Footer.astro";
 import Navbar from "@components/Navbar.astro";
 import Products from "@components/Products";
 import Layout from "@layouts/Layout.astro";
+import getProductsFromUrl from '@utils/getProductsFromUrl'
 
 const categoryRes = await categoriesList();
 const categories = categoryRes?.product_categories;
+
+const {params, result} = await getProductsFromUrl(Astro.url.searchParams);
 ---
 
 <Layout
@@ -17,7 +18,7 @@ const categories = categoryRes?.product_categories;
 >
   <Navbar />
   <main class="bg-white">
-    <Products categories={categories} client:load />
+    <Products categories={categories} productResult={result} client:load queryParams={params} />
   </main>
   <Footer />
 </Layout>
