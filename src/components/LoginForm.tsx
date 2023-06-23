@@ -5,7 +5,6 @@ import FormControl from "@components/FormControl";
 import user from "@api/user";
 
 const LoginForm = () => {
-
   const handleLoginUser = async (data: any) => {
     try {
       await user.login(data);
@@ -44,8 +43,8 @@ const LoginForm = () => {
         minLength={6}
         placeholder="Your Curiosta password"
       />
-      <div class="flex items-center justify-between">
-        <Checkbox name="remember-me" label="Remember me" />
+      <div class="flex items-center justify-end">
+        {/* <Checkbox name="remember-me" label="Remember me" /> */}
         <div class="text-sm leading-6">
           <a
             href="#"
