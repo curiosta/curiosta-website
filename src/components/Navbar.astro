@@ -58,11 +58,11 @@ const navLinks = [
           stroke-width="1.5"
           stroke="currentColor"
           aria-hidden="true"
-          >
+        >
           <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
         </svg>
       </Button>
     </div>
@@ -73,8 +73,8 @@ const navLinks = [
             href={nav.link}
             title={nav.description}
             class="text-sm font-semibold leading-6 text-gray-900"
-            >
-              {nav.title}
+          >
+            {nav.title}
           </a>
         ))
       }
@@ -101,9 +101,10 @@ const navLinks = [
             alt="Curiosta"
           />
         </a>
-        <button
+        <Button
           type="button"
-          class="-m-2.5 rounded-md p-2.5 text-gray-700"
+          variant="icon"
+          className="-m-2.5 rounded-md p-2.5 text-gray-700"
           id="close-menu"
         >
           <span class="sr-only">Close menu</span>
@@ -120,7 +121,7 @@ const navLinks = [
               stroke-linejoin="round"
               d="M6 18L18 6M6 6l12 12"></path>
           </svg>
-        </button>
+        </Button>
       </div>
       <div class="mt-6 flow-root">
         <div class="-my-6 divide-y divide-gray-500/10">
@@ -138,9 +139,11 @@ const navLinks = [
             }
           </div>
           <div class="py-4">
-            <!-- <ShipmentRegions screen="mobile" client:load /> -->
+            <ShipmentRegions screen="mobile" client:load />
             <RightNav screen="mobile" client:load />
-          </div>  
+            <CartDrawer client:only="preact" />
+            <CheckoutDrawer client:only="preact" />
+          </div>
         </div>
       </div>
     </div>
@@ -154,8 +157,10 @@ const navLinks = [
 
   openMenu.addEventListener("click", () => {
     navLinks.style.display = "block";
+    document.body.style.overflow = "hidden";
   });
   closeMenu.addEventListener("click", () => {
     navLinks.style.display = "none";
+    document.body.style.overflow = "auto";
   });
 </script>

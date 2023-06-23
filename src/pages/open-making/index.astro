@@ -5,7 +5,6 @@ import Footer from "@components/Footer.astro";
 import OpenMakingNav from "@components/OpenMakingNav";
 import Typography from "@components/Typography";
 import Button from "@components/Button";
-import { Picture } from "@astrojs/image/components";
 import OpenMakingCard from "@components/Card/OpenMakingCard";
 
 const redirectPages = [
@@ -53,7 +52,7 @@ const websiteUsesExamples = [
 
 <Layout title="Open Making" description="Open Making">
   <Navbar />
-  <OpenMakingNav />
+  <OpenMakingNav client:load />
   <main class="space-y-8">
     <Typography tag="h1" size="h3/bold" className="text-center my-8">
       A global platform for local making
@@ -61,13 +60,10 @@ const websiteUsesExamples = [
     <section class="mx-auto max-w-7xl px-4">
       <div class="relative overflow-hidden rounded-lg">
         <div class="absolute inset-0">
-          <Picture
+          <img
             src={"/images/open-making-img1.webp"}
             alt=""
             class="h-full w-full object-cover object-center"
-            widths={[400, 800, 1200]}
-            aspectRatio={16 / 9}
-            formats={["avif", "webp"]}
           />
         </div>
         <div
