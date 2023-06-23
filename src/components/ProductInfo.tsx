@@ -10,8 +10,13 @@ interface Props {
 }
 
 const ProductInfo = ({ product }: Props) => {
-  const selectedProductVariantIndex = useSignal(0)
-  const selectedVariantPrice = useComputed(() => product.variants[selectedProductVariantIndex.value].prices.find((p) => p.currency_code === region.selectedCountry.value?.region.currency_code))
+  const selectedProductVariantIndex = useSignal(0);
+  const selectedVariantPrice = useComputed(() =>
+    product.variants[selectedProductVariantIndex.value].prices.find(
+      (p) =>
+        p.currency_code === region.selectedCountry.value?.region.currency_code
+    )
+  );
   return (
     <div class="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
       <Typography
@@ -30,14 +35,17 @@ const ProductInfo = ({ product }: Props) => {
           variant="primary"
           className="tracking-tight"
         >
-          {selectedVariantPrice.value && currencyMap[selectedVariantPrice.value.currency_code as keyof CurrencyMap]}
+          {selectedVariantPrice.value &&
+            currencyMap[
+              selectedVariantPrice.value.currency_code as keyof CurrencyMap
+            ]}
           {selectedVariantPrice.value
             ? (selectedVariantPrice?.value.amount / 100).toFixed(2)
             : "Price not available"}
         </Typography>
       </div>
       {/* Reviews  */}
-      <div class="mt-3">
+      {/* <div class="mt-3">
         <Typography className="sr-only">Reviews</Typography>
         <div class="flex items-center">
           <div class="flex items-center">
@@ -61,7 +69,7 @@ const ProductInfo = ({ product }: Props) => {
           </div>
           <Typography className="sr-only">4 out of 5 stars</Typography>
         </div>
-      </div>
+      </div> */}
       <div class="mt-6">
         <Typography className="sr-only">Description</Typography>
 
@@ -72,9 +80,12 @@ const ProductInfo = ({ product }: Props) => {
         </div>
       </div>
 
-      <AddToCartForm product={product} productIndex={selectedProductVariantIndex} />
+      <AddToCartForm
+        product={product}
+        productIndex={selectedProductVariantIndex}
+      />
 
-      <section aria-labelledby="details-heading" class="mt-12">
+      {/* <section aria-labelledby="details-heading" class="mt-12">
         <Typography id="details-heading" className="sr-only">
           Additional details
         </Typography>
@@ -141,7 +152,7 @@ const ProductInfo = ({ product }: Props) => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 };
