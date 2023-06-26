@@ -12,7 +12,7 @@ const SignupForm = () => {
       errorMessage.value = ''
     }
     try {
-      await user.login(data);
+      await user.register(data);
       if (['/signup', '/login', '/forgot-password', '/password-reset'].filter((i) => document.referrer.indexOf(i) < 0 ? false : true).length) {
         window.location.href = '/';
       } else {
