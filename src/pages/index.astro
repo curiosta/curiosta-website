@@ -10,6 +10,7 @@ import { pageTitleDesc } from "content";
 import CollectionGroup from "@components/CollectionGroup";
 import { collectionList } from "@api/product/collectionList";
 import ProductContainer from "@components/ProductContainer";
+import Typography from "@components/Typography";
 
 const { collections } = await collectionList();
 const collectionId = collections.find((collection) =>
@@ -33,13 +34,25 @@ const product = res?.products;
   <ShortIntroSection />
 
   <!-- Feature Products -->
-  <CollectionGroup
-    title={product[0]?.collection?.title}
-    link={`/collection/${product[0]?.collection?.title}`}
-    linkText="View all products"
-  >
-    <ProductContainer products={product} client:load />
-  </CollectionGroup>
+  {
+    collectionId ? (
+      <CollectionGroup
+        title={product[0]?.collection?.title}
+        link={`/collection/${product[0]?.collection?.handle}`}
+        linkText="View all products"
+      >
+        <ProductContainer products={product} client:load />
+      </CollectionGroup>
+    ) : (
+      <Typography
+        size="body1/semi-bold"
+        variant="secondary"
+        className="text-center py-10"
+      >
+        Featured products not found
+      </Typography>
+    )
+  }
   <!-- Partner company Logo cloud -->
   <PartnerCompanies />
 

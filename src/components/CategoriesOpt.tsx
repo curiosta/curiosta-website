@@ -8,13 +8,19 @@ import type { Product } from "@store/productStore";
 
 interface Props {
   categories: ProductCategory[];
-  params: Signal<Partial<TProductsQueryParam>>
+  params: Signal<Partial<TProductsQueryParam>>;
   products: Signal<Product[]>;
 }
 
 const CategoriesOpt = ({ categories, products, params }: Props) => {
   const isCategoriesOpen = useSignal(false);
-  const selectedCategoriesIds = useSignal(!params.value.categories ? [] : (typeof params.value.categories === 'string' ? [params.value.categories] : params.value.categories))
+  const selectedCategoriesIds = useSignal(
+    !params.value.categories
+      ? []
+      : typeof params.value.categories === "string"
+        ? [params.value.categories]
+        : params.value.categories
+  );
 
   // filter top categories
   const topCategories = categories.filter(
@@ -23,11 +29,13 @@ const CategoriesOpt = ({ categories, products, params }: Props) => {
 
   const toggleSelectedIds = (id: string) => {
     if (selectedCategoriesIds.value.includes(id)) {
-      selectedCategoriesIds.value = selectedCategoriesIds.value.filter((v) => v !== id);
+      selectedCategoriesIds.value = selectedCategoriesIds.value.filter(
+        (v) => v !== id
+      );
     } else {
-      selectedCategoriesIds.value = [...selectedCategoriesIds.value, id]
+      selectedCategoriesIds.value = [...selectedCategoriesIds.value, id];
     }
-  }
+  };
 
   return (
     <div>
@@ -91,7 +99,14 @@ const CategoriesOpt = ({ categories, products, params }: Props) => {
 
                 <div class="space-y-2 pt-6">
                   {topCategories?.map((category) => (
-                    <Category toggleSelectedIds={toggleSelectedIds} products={products} selectedCategoriesIds={selectedCategoriesIds} category={category} params={params} depth={0} />
+                    <Category
+                      toggleSelectedIds={toggleSelectedIds}
+                      products={products}
+                      selectedCategoriesIds={selectedCategoriesIds}
+                      category={category}
+                      params={params}
+                      depth={0}
+                    />
                   ))}
                 </div>
               </fieldset>
@@ -134,7 +149,14 @@ const CategoriesOpt = ({ categories, products, params }: Props) => {
               </div>
               <div class="space-y-2 pt-6 ">
                 {topCategories?.map((category) => (
-                  <Category params={params} products={products} selectedCategoriesIds={selectedCategoriesIds} toggleSelectedIds={toggleSelectedIds} category={category} depth={0} />
+                  <Category
+                    toggleSelectedIds={toggleSelectedIds}
+                    products={products}
+                    selectedCategoriesIds={selectedCategoriesIds}
+                    category={category}
+                    params={params}
+                    depth={0}
+                  />
                 ))}
               </div>
             </fieldset>

@@ -8,11 +8,10 @@ type TOrderProps = {
 };
 
 const OrdersInfo: FunctionComponent<TOrderProps> = ({ order }) => {
-
   return (
-    <div class="space-y-8">
+    <div class="space-y-8 max-sm:p-4">
       {order.items.map((item) => (
-        <div class="border-b border-t border-gray-200 bg-white shadow-sm sm:rounded-lg sm:border">
+        <div class="border-b border-t border-gray-200 bg-white shadow-sm rounded-lg sm:border">
           <div class="px-4 py-6 sm:px-6 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:p-8">
             <div class="sm:flex lg:col-span-7">
               <div class="aspect-h-1 aspect-w-1 w-full flex-shrink-0 overflow-hidden rounded-lg sm:aspect-none sm:h-40 sm:w-40">
@@ -30,7 +29,7 @@ const OrdersInfo: FunctionComponent<TOrderProps> = ({ order }) => {
                   </a>
                 </Typography>
                 <Typography size="body2/medium" className="mt-2 ">
-                  {priceToCurrency(item.unit_price,order.currency_code)}
+                  {priceToCurrency(item.unit_price, order.currency_code)}
                 </Typography>
                 <Typography size="body2/normal" className="mt-3 text-gray-500">
                   {item.description}

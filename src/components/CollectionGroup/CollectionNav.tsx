@@ -3,15 +3,17 @@ import type { FunctionComponent } from "preact";
 
 type TCollections = {
   collections: ProductCollection[];
-  title: string | undefined;
+  handle: string | undefined;
 };
 
 const CollectionNav: FunctionComponent<TCollections> = ({
   collections,
-  title,
+  handle,
 }) => {
-  const activeTitle = title
-    ? collections?.find((collection) => collection.title === title)?.title
+  const activeHandle = handle
+    ? collections?.find(
+        (collection) => collection.handle.toLowerCase() === handle.toLowerCase()
+      )?.handle
     : null;
 
   return (
@@ -24,13 +26,13 @@ const CollectionNav: FunctionComponent<TCollections> = ({
         {collections.map((collection) => (
           <li
             class={`${
-              collection.title === activeTitle
+              collection.handle === activeHandle
                 ? "font-semibold border-b border-gray-400"
                 : ""
             }`}
           >
             <a
-              href={`/collection/${collection.title}`}
+              href={`/collection/${collection.handle}`}
               class="text-base leading-6 text-gray-600 hover:text-gray-900"
             >
               {collection.title}

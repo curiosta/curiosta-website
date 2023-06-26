@@ -1,5 +1,4 @@
 ---
-import { Picture } from "@astrojs/image/components";
 import Button from "@components/Button";
 import Typography from "@components/Typography";
 import { heroContent } from "content";
@@ -75,13 +74,10 @@ import { heroContent } from "content";
           >
             <div class="w-44 flex-none space-y-8 pt-52 lg:pt-0">
               <div class="relative">
-                <Picture
+                <img
                   alt=""
                   src={"/images/hero-img1.webp"}
-                  class="w-full rounded-xl bg-gray-900/5 object-cover shadow-lg"
-                  aspectRatio={2 / 3}
-                  widths={[400]}
-                  formats={["avif", "webp"]}
+                  class="w-full aspect-[2/3] rounded-xl bg-gray-900/5 object-cover shadow-lg"
                 />
                 <div
                   class="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-gray-900/10"
@@ -89,13 +85,10 @@ import { heroContent } from "content";
                 </div>
               </div>
               <div class="relative">
-                <Picture
+                <img
                   src={"/images/hero-img2.webp"}
                   alt=""
-                  aspectRatio={2 / 3}
-                  widths={[400]}
-                  formats={["avif", "webp"]}
-                  class="w-full rounded-xl bg-gray-900/5 object-cover shadow-lg"
+                  class="w-full aspect-[2/3] rounded-xl bg-gray-900/5 object-cover shadow-lg"
                 />
                 <div
                   class="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-gray-900/10"
@@ -108,13 +101,10 @@ import { heroContent } from "content";
               class="mr-auto w-44 flex-none space-y-8 sm:mr-0 sm:pt-52 lg:pt-36"
             >
               <div class="relative">
-                <Picture
+                <img
                   src={"/images/hero-img3.webp"}
                   alt=""
-                  aspectRatio={2 / 3}
-                  widths={[400]}
-                  formats={["avif", "webp"]}
-                  class="w-full rounded-xl bg-gray-900/5 object-cover shadow-lg"
+                  class="w-full aspect-[2/3] rounded-xl bg-gray-900/5 object-cover shadow-lg"
                 />
                 <div
                   class="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-gray-900/10"
@@ -122,13 +112,10 @@ import { heroContent } from "content";
                 </div>
               </div>
               <div class="relative">
-                <Picture
+                <img
                   src={"/images/hero-img4.webp"}
                   alt=""
-                  aspectRatio={2 / 3}
-                  widths={[400]}
-                  formats={["avif", "webp"]}
-                  class="w-full rounded-xl bg-gray-900/5 object-cover shadow-lg"
+                  class="w-full aspect-[2/3] rounded-xl bg-gray-900/5 object-cover shadow-lg"
                 />
                 <div
                   class="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-gray-900/10"
@@ -140,13 +127,10 @@ import { heroContent } from "content";
               class="ml-auto w-44 flex-none space-y-8 pt-32 sm:ml-0 sm:pt-80 lg:order-last lg:pt-36 xl:order-none xl:pt-80"
             >
               <div class="relative">
-                <Picture
+                <img
                   src={"/images/hero-img5.webp"}
                   alt=""
-                  aspectRatio={2 / 3}
-                  widths={[400]}
-                  formats={["avif", "webp"]}
-                  class="w-full rounded-xl bg-gray-900/5 object-cover shadow-lg"
+                  class="w-full aspect-[2/3] rounded-xl bg-gray-900/5 object-cover shadow-lg"
                 />
                 <div
                   class="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-gray-900/10"
