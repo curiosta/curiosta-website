@@ -10,7 +10,7 @@ import ProductContainer from "@components/ProductContainer";
 import { signal } from "@preact/signals";
 import OffsetPagination from "@components/OffsetPagination";
 
-const title = Astro.params.title;
+const handle = Astro.params.handle;
 const params = Astro.url.searchParams;
 
 const offsetValue = parseInt(params.get("offset") as string) || 0;
@@ -18,7 +18,8 @@ const limit = signal<number>(10);
 
 const { collections } = await collectionList();
 const collectionId = collections.find(
-  (collection) => collection.title === title
+  (collection) =>
+    collection.handle.toLocaleLowerCase() === handle?.toLocaleLowerCase()
 )?.id;
 const res = await listProducts({
   collection_id: [collectionId || ""],
@@ -30,15 +31,17 @@ const count = res?.count;
 ---
 
 <Layout
-  title={title ? title : "title not found"}
+  title={product[0]?.collection?.title
+    ? product[0]?.collection?.title
+    : "Page not found"}
   description="collection product"
 >
   <Navbar />
   <main class="mx-auto max-w-2xl px-4 py-4 sm:px-6 lg:max-w-7xl lg:px-8">
     <Typography tag="h1" size="h3/semi-bold">Collections</Typography>
-    <CollectionNav collections={collections} title={title} />
+    <CollectionNav collections={collections} handle={handle} />
     <Typography size="h5/semi-bold" className=" tracking-tight capitalize">
-      {title}
+      {product[0]?.collection?.title}
     </Typography>
 
     {
