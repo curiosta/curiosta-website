@@ -149,14 +149,7 @@ const CategoriesOpt = ({ categories, products, params }: Props) => {
               </div>
               <div class="space-y-2 pt-6 ">
                 {topCategories?.map((category) => (
-                  <Category
-                    toggleSelectedIds={toggleSelectedIds}
-                    products={products}
-                    selectedCategoriesIds={selectedCategoriesIds}
-                    category={category}
-                    params={params}
-                    depth={0}
-                  />
+                  <Category params={params} products={products} selectedCategoriesIds={selectedCategoriesIds} toggleSelectedIds={toggleSelectedIds} category={category} depth={0} />
                 ))}
               </div>
             </fieldset>
