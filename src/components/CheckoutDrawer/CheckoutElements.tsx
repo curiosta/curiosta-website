@@ -51,20 +51,22 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({ selectedA
           postal_code: selectedAddress.postal_code || '',
           state: selectedAddress.province || '',
         },
-        name: `${selectedAddress.customer?.first_name || ''} ${selectedAddress.customer?.last_name || ''}`.trim(),
+        name: `${selectedAddress?.first_name || ''} ${selectedAddress?.last_name || ''}`.trim(),
       }
+
       const { error } = await stripeInstance.confirmPayment({
         elements,
         clientSecret: clientSecret.value,
         confirmParams: {
-          return_url: `${window.location.origin}/orders/confirm?cart=${cart.store.value.id}`,
+          return_url: `javascript:void(0);`,
+          save_payment_method: true,
           payment_method_data: {
             billing_details: {
               ...userDetails,
               email: selectedAddress.customer?.email,
             }
           },
-          receipt_email: selectedAddress.customer?.email,
+          receipt_email: user.customer.value?.email,
           shipping: userDetails
         },
       });

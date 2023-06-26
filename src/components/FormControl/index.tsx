@@ -9,7 +9,7 @@ export type TFormControlProps = Omit<HTMLAttributes<HTMLFormElement>, 'onSubmit'
 };
 
 const FormControl = forwardRef<HTMLFormElement, TFormControlProps>(
-  ({ children, mode = 'onChange', ...props }, ref) => {
+  ({ children, mode = 'onSubmit', ...props }, ref) => {
     const form = useForm({ mode, ...props });
     return (
       <>
