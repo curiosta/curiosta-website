@@ -59,7 +59,7 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({ selectedA
         elements,
         clientSecret: clientSecret.value,
         confirmParams: {
-          return_url: `${window.origin}/orders/confirm?cart=${cart.store.value.id}`,
+          return_url: `${window.location.origin}/orders/confirm?cart=${cart.store.value.id}`,
           save_payment_method: true,
           payment_method_data: {
             billing_details: {
