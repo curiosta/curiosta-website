@@ -23,7 +23,9 @@ const useLocalStorage = () => {
     try {
       const value =
         typeof payload === "object" ? JSON.stringify(payload) : payload;
-      localStorage.setItem(key as string, value as string);
+
+      // setting value with project prefix so it doesn't conflict with other apps in development.
+      localStorage.setItem(`curiosta:${key}` as string, value as string);
     } catch (error) {
       console.warn(`Error setting local storage key "${key}": `, error);
     }
@@ -33,7 +35,7 @@ const useLocalStorage = () => {
     key: T
   ): LocalStorageItems[T] | null => {
     try {
-      let value = localStorage.getItem(key as string);
+      let value = localStorage.getItem(`curiosta:${key}` as string);
       if (value === null) {
         return null;
       }
@@ -48,7 +50,7 @@ const useLocalStorage = () => {
   };
 
   const removeLocalStorage = (key: keyof LocalStorageItems) => {
-    localStorage.removeItem(key as string);
+    localStorage.removeItem(`curiosta:${key}` as string);
   };
 
   return {
