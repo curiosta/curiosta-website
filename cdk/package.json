@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@astro-aws/constructs": "^0.3.0",
-    "aws-cdk-lib": "2.75.0",
+    "aws-cdk-lib": "2.80.0",
     "constructs": "^10.0.0",
     "source-map-support": "^0.5.21",
     "tsx": "^3.12.6"
