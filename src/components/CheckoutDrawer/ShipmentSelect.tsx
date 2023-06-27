@@ -32,7 +32,6 @@ const ShipmentSelect = () => {
                 return (
                   <div class={cx(`relative flex cursor-pointer rounded-lg bg-white p-4 shadow-sm focus:outline-none focus:border focus:ring-primary-600 focus:ring-2`, activeOption && `outline-none border ring-2 ring-primary-600`, disabled && `!bg-gray-100 pointer-events-none`)} tabIndex={1} onClick={() => {
                     if (disabled) return;
-
                     !disabled && option.id && option.id !== cart.shipping.selectedOption.value && cart.updateShippingMethod(option.id)
                   }}>
                     <span class="flex flex-1">
