@@ -2,14 +2,27 @@ import Input from "@components/Input";
 import Button from "@components/Button";
 import FormControl from "@components/FormControl";
 import user from "@api/user";
+import { useSignal } from "@preact/signals";
+import Typography from "./Typography";
 
 const SignupForm = () => {
+  const errorMessage = useSignal<string>('');
   const handleCreateUser = async (data: any) => {
+    if (errorMessage.value) {
+      errorMessage.value = ''
+    }
     try {
-      await user.register(data)
-      history.back();
-    } catch (err) {
-      console.log(err);
+      await user.register(data);
+      if (['/signup', '/login', '/forgot-password', '/password-reset'].filter((i) => document.referrer.indexOf(i) < 0 ? false : true).length) {
+        window.location.href = '/';
+      } else {
+        history.back();
+      }
+    } catch (error) {
+      const errorResponse = (error as any)?.toJSON?.();
+      if (errorResponse) {
+        errorMessage.value = 'Email already exists!'
+      }
     }
   };
   return (
@@ -73,6 +86,7 @@ const SignupForm = () => {
       <Button type="submit" variant="primary" className="mt-4">
         Sign Up
       </Button>
+      <Typography variant='error'>{errorMessage}</Typography>
     </FormControl>
   );
 };

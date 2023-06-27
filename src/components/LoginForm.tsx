@@ -1,16 +1,33 @@
 import Button from "@components/Button";
 import Input from "@components/Input";
-import Checkbox from "@components/Checkbox";
 import FormControl from "@components/FormControl";
 import user from "@api/user";
+import { useSignal } from "@preact/signals";
+import Typography from "./Typography";
 
 const LoginForm = () => {
+  const errorMessage = useSignal<string>("");
   const handleLoginUser = async (data: any) => {
+    if (errorMessage.value) {
+      errorMessage.value = "";
+    }
     try {
       await user.login(data);
-      history.back();
+      if (
+        ["/signup", "/login", "/forgot-password", "/password-reset"].filter(
+          (i) => (document.referrer.indexOf(i) < 0 ? false : true)
+        ).length
+      ) {
+        window.location.href = "/";
+      } else {
+        history.back();
+      }
     } catch (error) {
-      console.log(error);
+      const errorResponse = (error as any)?.toJSON?.();
+      if (errorResponse) {
+        errorMessage.value =
+          "Failed to login, Please check email and password!.";
+      }
     }
   };
 
@@ -39,25 +56,14 @@ const LoginForm = () => {
         type="password"
         label="Password"
         autocomplete="current-password"
-        required
-        minLength={6}
+        required={{ value: true, message: "Password is required!" }}
+        minLength={{ value: 6, message: "Minimum 6 characters are required!" }}
         placeholder="Your Curiosta password"
       />
-      <div class="flex items-center justify-end">
-        {/* <Checkbox name="remember-me" label="Remember me" /> */}
-        <div class="text-sm leading-6">
-          <a
-            href="#"
-            class="font-semibold text-app-primary-600 hover:text-app-primary-500"
-          >
-            Forgot password?
-          </a>
-        </div>
-      </div>
-
       <Button type="submit" variant={"primary"} className="mt-4">
         Log In
       </Button>
+      <Typography variant="error">{errorMessage}</Typography>
     </FormControl>
   );
 };
