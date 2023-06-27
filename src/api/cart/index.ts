@@ -57,16 +57,17 @@ class CartStore {
   async initialize() {
     // function re runs since we are storing new cart value which makes a render again.
     if (this.store.value) return;
-    let cartId: string | undefined;
     this.loading.value = "cart:get";
+    let cartId: string | undefined;
+    const { get } = useLocalStorage();
+    const localStorageCartId = get('cartId') || undefined;
+
     if (user.state.value === "authenticated") {
       // if user is authenticated, get cart id from server
       cartId = user.customer.value?.metadata?.cart_id || undefined;
     } else if (user.state.value === "unauthenticated") {
-      // if user is unauthenticated, get cart id from local storage
-
-      const { get } = useLocalStorage();
-      cartId = get("cartId") || undefined;
+      // if user is unauthenticated, set cart id from local storage
+      cartId = localStorageCartId;
     }
 
     if (!cartId && user.state.value !== "loading") {
@@ -76,7 +77,13 @@ class CartStore {
 
     if (cartId) {
       const cart = await this.getCart(cartId);
+
       this.store.value = cart;
+
+      if (localStorageCartId && user.state.value === 'authenticated') {
+        this.mergeCartItems(localStorageCartId)
+      }
+
     }
     this.loading.value = undefined;
   }
@@ -128,6 +135,13 @@ class CartStore {
     this.store.value = response.cart;
     this.loading.value = undefined;
     return response.cart;
+  }
+
+  async mergeCartItems(fromCartId: string) {
+    const fromCart = await this.getCart(fromCartId);
+    fromCart.items.map((item) => item.variant_id && this.addItem(item.variant_id, item.quantity))
+    const { remove } = useLocalStorage()
+    remove('cartId')
   }
 
   // line items

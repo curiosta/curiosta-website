@@ -1,7 +1,7 @@
 import Typography from "@components/Typography";
 import { cx } from "class-variance-authority";
 import type { ComponentChildren, FunctionComponent } from "preact";
-import type { HTMLAttributes } from "preact/compat";
+import { forwardRef, type HTMLAttributes } from "preact/compat";
 import { useEffect, useId, useImperativeHandle, useRef } from "preact/hooks";
 import './input.css';
 import type {
@@ -9,6 +9,7 @@ import type {
   RegisterOptions,
   UseControllerProps,
 } from "react-hook-form";
+import { twMerge } from "tailwind-merge";
 
 export type BaseInputProps = Omit<
   HTMLAttributes<HTMLInputElement>,
@@ -33,7 +34,7 @@ type InputCoreProps = BaseInputProps &
     error?: FieldError;
   };
 
-const InputCore: FunctionComponent<InputCoreProps> = ({
+const InputCore: FunctionComponent<InputCoreProps> = forwardRef<HTMLInputElement, InputCoreProps>(({
   label,
   rules,
   leftAdornment,
@@ -43,7 +44,7 @@ const InputCore: FunctionComponent<InputCoreProps> = ({
   placeholder,
   error,
   ...props
-}) => {
+}, ref) => {
   const id = useId();
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -52,20 +53,22 @@ const InputCore: FunctionComponent<InputCoreProps> = ({
       // we need to get the input's value on initial page load since browsers can autofill the form before the javascript gets executed
       props.onChange?.({ target: { value: inputRef.current.value } })
     }
-  }, [])
+  }, []);
+
+  if (ref) (ref as any)(inputRef.current)
 
   return (
     <div className="w-full">
       {label ? (
         <label
           htmlFor={id}
-          className="text-sm font-medium leading-6 text-gray-900 flex gap-1"
+          className="text-sm font-medium leading-6 text-gray-900 flex gap-1 mb-1"
         >
           {label}
           {rules?.required ? <Typography variant="error">*</Typography> : ""}
         </label>
       ) : null}
-      <div className="flex rounded-md ">
+      <div className="flex rounded-md">
         {leftAdornment ? (
           <span className="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 px-3 text-gray-500 sm:text-sm">
             {leftAdornment}
@@ -75,13 +78,13 @@ const InputCore: FunctionComponent<InputCoreProps> = ({
           id={id}
           disabled={disabled}
           ref={inputRef}
-          className={cx(
+          className={twMerge(cx(
             `block w-full rounded-md border-0 p-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600  sm:text-sm sm:leading-6 focus-visible:outline-none`,
             leftAdornment ? "rounded-l-none" : "rounded-l-md",
             rightAdornment ? "rounded-r-none" : "rounded-r-md",
-            error && "!ring-danger-600 focus:!ring-danger-600",
+            error && "!ring-danger-600 focus:!ring-danger-600 ring-2",
             className
-          )}
+          ))}
           placeholder={placeholder || label || ""}
           {...props}
           pattern={undefined}
@@ -90,11 +93,11 @@ const InputCore: FunctionComponent<InputCoreProps> = ({
         />
         {rightAdornment || null}
       </div>
-      <Typography size="body1/normal" className="text-danger-600 mt-0.5">
+      <Typography variant='error'>
         {error ? error.message : ""}
       </Typography>
     </div>
   );
-};
+});
 
 export default InputCore;
