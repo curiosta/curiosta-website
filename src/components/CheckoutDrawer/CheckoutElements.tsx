@@ -24,6 +24,7 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({ selectedA
   const handlePayment = async () => {
     processingPayment.value = true
     const stripeInstance = await stripe;
+
     if (!stripeInstance || !elements || !clientSecret.value || !cart.store.value) return;
 
     const element = elements.getElement(PaymentElement);
@@ -58,7 +59,7 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({ selectedA
         elements,
         clientSecret: clientSecret.value,
         confirmParams: {
-          return_url: `javascript:void(0);`,
+          return_url: `${window.origin}/orders/confirm?cart=${cart.store.value.id}`,
           save_payment_method: true,
           payment_method_data: {
             billing_details: {

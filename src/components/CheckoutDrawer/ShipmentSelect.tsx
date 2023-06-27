@@ -15,7 +15,8 @@ const ShipmentSelect = () => {
   }
 
   useEffect(() => {
-    listOfAvailableShipmentProviders();
+    console.log('brrr');
+    // listOfAvailableShipmentProviders();
   }, [])
 
   const disabled = cart.loading.value?.startsWith('cart:shipping');
