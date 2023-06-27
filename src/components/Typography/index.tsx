@@ -72,7 +72,7 @@ const Typography: FC<TypographyProps> = ({
   return (
     <Component
       class={cx(
-        typography({ disabled, size: styleSize, weight: styleWeight, variant }),
+        typography({ disabled, variant, size: styleSize, weight: styleWeight }),
         className
       )}
       style={style}

@@ -18,8 +18,8 @@ const CategoriesOpt = ({ categories, products, params }: Props) => {
     !params.value.categories
       ? []
       : typeof params.value.categories === "string"
-      ? [params.value.categories]
-      : params.value.categories
+        ? [params.value.categories]
+        : params.value.categories
   );
 
   // filter top categories
@@ -56,9 +56,8 @@ const CategoriesOpt = ({ categories, products, params }: Props) => {
             <Typography
               size="body2/medium"
               variant="app-primary"
-              className={`bg-primary-600/10 w-6 h-6 mx-1 items-center justify-center rounded-full ${
-                selectedCategoriesIds.value.length ? "flex" : "hidden"
-              }`}
+              className={`bg-primary-600/10 w-6 h-6 mx-1 items-center justify-center rounded-full ${selectedCategoriesIds.value.length ? "flex" : "hidden"
+                }`}
             >
               {selectedCategoriesIds.value.length}
             </Typography>
@@ -150,14 +149,7 @@ const CategoriesOpt = ({ categories, products, params }: Props) => {
               </div>
               <div class="space-y-2 pt-6 ">
                 {topCategories?.map((category) => (
-                  <Category
-                    toggleSelectedIds={toggleSelectedIds}
-                    products={products}
-                    selectedCategoriesIds={selectedCategoriesIds}
-                    category={category}
-                    params={params}
-                    depth={0}
-                  />
+                  <Category params={params} products={products} selectedCategoriesIds={selectedCategoriesIds} toggleSelectedIds={toggleSelectedIds} category={category} depth={0} />
                 ))}
               </div>
             </fieldset>
