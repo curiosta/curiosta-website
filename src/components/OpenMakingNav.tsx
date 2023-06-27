@@ -1,7 +1,12 @@
 import { useSignal } from "@preact/signals";
 import Button from "./Button";
+import type { FunctionComponent } from "preact";
 
-const OpenMakingNav = () => {
+type TOpenMaking = {
+  title: string;
+};
+
+const OpenMakingNav: FunctionComponent<TOpenMaking> = ({ title }) => {
   const isOpenMakingNav = useSignal<boolean>(false);
 
   const openMakingPages = [
@@ -26,6 +31,10 @@ const OpenMakingNav = () => {
       link: "/open-making/collaboration",
     },
   ];
+
+  const activeTitle = openMakingPages.find(
+    (page) => page.title.toLowerCase() === title.toLowerCase()
+  )?.title;
 
   return (
     <nav class="sm:flex justify-center bg-gray-50 sm:p-4 ">
@@ -74,7 +83,13 @@ const OpenMakingNav = () => {
         } `}
       >
         {openMakingPages.map((page) => (
-          <li className={`px-4 py-2 sm:p-0`}>
+          <li
+            className={`px-4 py-2 sm:p-0 ${
+              page.title === activeTitle
+                ? "font-semibold bg-white sm:bg-transparent sm:border-b sm:border-gray-400"
+                : ""
+            }`}
+          >
             <a
               href={page.link}
               class="text-base leading-6 text-gray-600 hover:text-gray-900"
