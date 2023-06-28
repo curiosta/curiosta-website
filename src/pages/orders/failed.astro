@@ -3,6 +3,7 @@ import Layout from "@layouts/Layout.astro";
 import Navbar from "@components/Navbar.astro";
 import Footer from "@components/Footer.astro";
 import Typography from "@components/Typography";
+import Countdown from "@components/Countdown";
 ---
 
 <Layout title="Orders Failed" description="Your orders is failed">
@@ -26,6 +27,7 @@ import Typography from "@components/Typography";
       <Typography tag="h2" size="h2/semi-bold" className="text-center">
         Your order was failed
       </Typography>
+      <Countdown client:only="preact" />
     </div>
   </main>
   <Footer />

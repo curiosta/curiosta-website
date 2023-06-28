@@ -3,6 +3,7 @@ import Layout from "@layouts/Layout.astro";
 import Navbar from "@components/Navbar.astro";
 import Footer from "@components/Footer.astro";
 import Typography from "@components/Typography";
+import Countdown from "@components/Countdown";
 ---
 
 <Layout title="Orders Success" description="Your orders is success">
@@ -30,6 +31,7 @@ import Typography from "@components/Typography";
       <Typography size="body1/semi-bold" className="mt-4">
         Order invoice has been sent to your email
       </Typography>
+      <Countdown client:only="preact" />
     </div>
   </main>
   <Footer />
