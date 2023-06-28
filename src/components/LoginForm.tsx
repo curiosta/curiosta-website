@@ -55,6 +55,18 @@ const LoginForm = () => {
         minLength={{ value: 6, message: 'Minimum 6 characters are required!' }}
         placeholder="Your Curiosta password"
       />
+      <div class="flex items-center justify-end">
+        {/* <Checkbox name="remember-me" label="Remember me" /> */}
+        <div class="text-sm leading-6">
+          <a
+            href="#"
+            class="font-semibold text-app-primary-600 hover:text-app-primary-500"
+          >
+            Forgot password?
+          </a>
+        </div>
+      </div>
+
       <Button type="submit" variant={"primary"} className="mt-4">
         Log In
       </Button>

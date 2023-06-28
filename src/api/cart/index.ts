@@ -217,6 +217,7 @@ class CartStore {
   async updateShippingMethod(id: string) {
     if (!this.store.value?.id) return null;
     this.loading.value = "cart:shipping:set";
+    console.log('updating...');
     const result = await medusa.carts.addShippingMethod(this.store.value.id, {
       option_id: id,
     });

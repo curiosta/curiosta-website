@@ -20,10 +20,7 @@ const AddressList: FunctionComponent<TAddressListProps> = ({ selectedAddressId }
   const isNewAddress = useSignal<boolean>(true);
   const isLoading = useSignal<boolean>(false);
 
-  const { get } = useLocalStorage();
-  const localCartId = get("cartId");
-
-  const handleSelectAddress = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleSelectAddress = async (e: ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.currentTarget;
     if (checked) {
       selectedAddressId.value = value;
@@ -34,23 +31,22 @@ const AddressList: FunctionComponent<TAddressListProps> = ({ selectedAddressId }
   // update shipping address
   const updateShippingAddress = async () => {
     try {
-      if (selectedAddressId.value === currentCustomer?.billing_address_id) return;
-      if (!localCartId || !selectedAddressId.value) return;
-
-      isLoading.value = true;
-
+      if (!cart.store.value?.id || !selectedAddressId.value) return;
       await cart.updateCart({
         shipping_address: selectedAddressId.value,
         billing_address: selectedAddressId.value,
       });
       await user.updateUser({ billing_address: selectedAddressId.value })
+      isLoading.value = true;
     } catch (error) {
+
     } finally {
       isLoading.value = false;
     }
   };
 
   useEffect(() => {
+    console.log('updating address...', selectedAddressId.value);
     updateShippingAddress();
   }, [selectedAddressId.value]);
 
