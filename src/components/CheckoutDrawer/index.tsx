@@ -7,7 +7,7 @@ import { checkoutOpen } from "@store/checkoutStore";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { cx } from "class-variance-authority";
-import { createPortal, useEffect } from "preact/compat";
+import { createPortal, useEffect, useMemo } from "preact/compat";
 import CheckoutElements from "./CheckoutElements";
 import Typography from "@components/Typography";
 
@@ -17,7 +17,6 @@ const CheckoutDrawer = () => {
   const { addListener } = useKeyboard('Escape');
   const selectedAddressId = useSignal<string | null>(null);
   const clientSecret = useSignal<string | undefined>(undefined);
-
   // remove app's default scroll if cart is open
   document.body.style.overflow = checkoutOpen.value ? "hidden" : "auto";
 
@@ -38,11 +37,11 @@ const CheckoutDrawer = () => {
       if (!cart.store.value) return;
       medusa.carts.setPaymentSession(cart.store.value.id, { provider_id: 'stripe' }).then(({ cart: paymentSessionCart }) => {
         const _clientSecret = paymentSessionCart.payment_session?.data.client_secret as string
+        console.log(_clientSecret);
         if (_clientSecret) { clientSecret.value = _clientSecret }
       })
     });
   }, [checkoutOpen.value]);
-
 
   return createPortal(
     <div
@@ -79,14 +78,15 @@ const CheckoutDrawer = () => {
             </Button>
           </div>
           {clientSecret.value ? (
-            <Elements stripe={stripe} options={{ clientSecret: clientSecret.value }}>
-              <CheckoutElements clientSecret={clientSecret} selectedAddressId={selectedAddressId} stripe={stripe} />
-            </Elements>
+            <>
+              <Elements stripe={stripe} options={{ clientSecret: clientSecret.value }}>
+                <CheckoutElements clientSecret={clientSecret} selectedAddressId={selectedAddressId} stripe={stripe} />
+              </Elements>
+            </>
           ) : (
             <div className='flex justify-center items-center h-full'>
-              <Typography size='h4/normal' className='animate-pulse duration-75'>Please wait...</Typography>
+              <Typography size='h4/normal' className='animate-pulse duration-75'>Shit wait...</Typography>
             </div>
-
           )}
         </div>
       </div>
