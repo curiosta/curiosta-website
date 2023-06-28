@@ -5,14 +5,13 @@ import { useEffect } from "preact/hooks";
 import { useSignal } from "@preact/signals";
 import type { Order } from "@medusajs/medusa";
 import { ordersList } from "@api/user/ordersList";
-import Pagination from "@components/Pagination";
 
 const OrdersList = () => {
   const userState = user.state.value;
   const orders = useSignal<Order[]>([]);
   const isLoading = useSignal(false);
   const count = useSignal<null | number>(null);
-  const limit = useSignal<number>(10);
+  const limit = useSignal<number>(0);
   const offset = useSignal<number>(0);
 
   const getOrdersList = async () => {
@@ -88,12 +87,6 @@ const OrdersList = () => {
           </div>
         )}
       </div>
-      <Pagination
-        isLoading={isLoading}
-        count={count}
-        limit={limit}
-        offset={offset}
-      />
     </div>
   );
 };

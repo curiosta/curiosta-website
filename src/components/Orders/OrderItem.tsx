@@ -18,7 +18,7 @@ const OrderItem: FunctionComponent<TOrderItemProps> = ({ order }) => {
         <dl class="grid flex-1 grid-cols-2 gap-x-6 text-sm sm:col-span-3 sm:grid-cols-3 lg:col-span-2">
           <div>
             <dt class="font-medium text-gray-900">Order number</dt>
-            <dd class="mt-1 text-gray-500 break-words">{order.id}</dd>
+            <dd class="mt-1 text-gray-500 truncate">{order.id}</dd>
           </div>
           <div class="hidden sm:block">
             <dt class="font-medium text-gray-900">Date placed</dt>
