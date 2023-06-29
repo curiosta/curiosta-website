@@ -73,7 +73,7 @@ const LoginForm = () => {
       </div>
 
       <Button type="submit" variant={"primary"} className="mt-4">
-        Log In
+        Login
       </Button>
       <Typography variant="error">{errorMessage}</Typography>
     </FormControl>
