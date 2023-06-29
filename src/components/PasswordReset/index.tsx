@@ -7,31 +7,31 @@ import { useSignal } from "@preact/signals";
 
 type Props = {
   token: string | null;
+  email: string | null;
 };
 
-const PasswordResetForm = ({ token }: Props) => {
+const PasswordResetForm = ({ email, token }: Props) => {
   const isLoading = useSignal<boolean>(false);
   const errorMessage = useSignal<string>("");
+
   const handlePasswordReset = async (data: any) => {
     isLoading.value = true;
-    const { email, password, cpassword } = data;
+    const { password, cpassword } = data;
     if (errorMessage.value) {
       errorMessage.value = "";
     }
     try {
-      if (!token) return;
+      if (!token || !email) return;
       if (password === cpassword) {
         await user.passwordReset({ email, password, token });
-        await user.login({ email, password });
-        window.location.href = "/";
+        window.location.href = "/login";
       } else {
         errorMessage.value = "Password and confirmation password do not match.";
       }
     } catch (error) {
       const errorResponse = (error as any)?.toJSON?.();
       if (errorResponse) {
-        errorMessage.value =
-          "Failed to login, Please check email and password!.";
+        errorMessage.value = "Failed to add new password!.";
       }
     } finally {
       isLoading.value = false;
@@ -39,54 +39,49 @@ const PasswordResetForm = ({ token }: Props) => {
   };
 
   return (
-    <FormControl
-      noValidate
-      mode="onSubmit"
-      onSubmit={handlePasswordReset}
-      className="flex flex-col gap-2"
-    >
-      <Input
-        name="email"
-        type="email"
-        label="Email address"
-        autocomplete="email"
-        placeholder={"example@gmail.com"}
-        validator={(value) =>
-          !/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(value)
-            ? "Invalid email!"
-            : true
-        }
-      />
-
-      <Input
-        name="password"
-        type="password"
-        label="New Password"
-        autocomplete="current-password"
-        required={{ value: true, message: "Password is required!" }}
-        minLength={{ value: 6, message: "Minimum 6 characters are required!" }}
-        placeholder="New password"
-      />
-      <Input
-        name="cpassword"
-        type="password"
-        label="Confirm Password"
-        autocomplete="current-password"
-        required={{ value: true, message: "Password is required!" }}
-        minLength={{ value: 6, message: "Minimum 6 characters are required!" }}
-        placeholder="Confirm new password"
-      />
-
-      <Button
-        type="submit"
-        variant={"primary"}
-        className="mt-4"
-        disabled={isLoading.value}
+    <div class="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
+      <FormControl
+        noValidate
+        mode="onSubmit"
+        onSubmit={handlePasswordReset}
+        className="flex flex-col gap-2"
       >
-        {isLoading.value ? "Loading..." : "Log in"}
-      </Button>
-      <Typography variant="error">{errorMessage}</Typography>
-    </FormControl>
+        <Input
+          name="password"
+          type="password"
+          label="New Password"
+          autocomplete="current-password"
+          required={{ value: true, message: "Password is required!" }}
+          minLength={{
+            value: 6,
+            message: "Minimum 6 characters are required!",
+          }}
+          placeholder="New password"
+        />
+        <Input
+          name="cpassword"
+          type="password"
+          label="Confirm Password"
+          autocomplete="current-password"
+          required={{ value: true, message: "Password is required!" }}
+          minLength={{
+            value: 6,
+            message: "Minimum 6 characters are required!",
+          }}
+          placeholder="Confirm new password"
+        />
+
+        <Button
+          type="submit"
+          variant={"primary"}
+          className="mt-4"
+          disabled={isLoading.value}
+        >
+          {isLoading.value ? "Loading..." : "Change Password "}
+        </Button>
+        <Typography variant="error">{errorMessage}</Typography>
+      </FormControl>
+    </div>
   );
 };
 

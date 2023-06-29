@@ -17,12 +17,13 @@ const RequestTokenForm = () => {
     }
     try {
       await user.requestPasswordReset(data);
-      successMessage.value = "Please check your email";
+      successMessage.value =
+        "An email has been sent. Please click on the link when you get it.";
     } catch (error) {
       const errorResponse = (error as any)?.toJSON?.();
       if (errorResponse) {
         errorMessage.value =
-          "Failed to send, Please check email and try again!.";
+          "Failed to send, Please enter valid email and try again!.";
       }
     } finally {
       isLoading.value = false;
@@ -31,39 +32,47 @@ const RequestTokenForm = () => {
 
   return (
     <div class="bg-white px-6 py-12 pt-4 shadow sm:rounded-lg sm:px-12">
-      <FormControl
-        noValidate
-        mode="onSubmit"
-        onSubmit={handleRequestToken}
-        className="flex flex-col gap-2"
-      >
-        <Typography size="body1/normal" variant="secondary" className="my-4 ">
-          Enter the email address which is associated with your account and
-          we'll send you a link to rest your password.
-        </Typography>
-        <Input
-          name="email"
-          type="email"
-          label="Email address"
-          autocomplete="email"
-          placeholder={"example@gmail.com"}
-          validator={(value) =>
-            !/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(value)
-              ? "Invalid email!"
-              : true
-          }
-        />
-        <Button
-          type="submit"
-          variant={"primary"}
-          className="mt-4"
-          disabled={isLoading.value}
+      {!successMessage.value ? (
+        <FormControl
+          noValidate
+          mode="onSubmit"
+          onSubmit={handleRequestToken}
+          className="flex flex-col gap-2"
         >
-          {isLoading.value ? "Loading..." : "Send"}
-        </Button>
-        <Typography variant="primary">{successMessage}</Typography>
-        <Typography variant="error">{errorMessage}</Typography>
-      </FormControl>
+          <Typography size="body1/normal" variant="secondary" className="my-4 ">
+            Enter the email address which is associated with your account and
+            we'll send you a link to rest your password.
+          </Typography>
+          <Input
+            name="email"
+            type="email"
+            label="Email address"
+            autocomplete="email"
+            placeholder={"example@gmail.com"}
+            validator={(value) =>
+              !/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(value)
+                ? "Invalid email!"
+                : true
+            }
+          />
+          <Button
+            type="submit"
+            variant={"primary"}
+            className="mt-4"
+            disabled={isLoading.value}
+          >
+            {isLoading.value ? "Loading..." : "Send"}
+          </Button>
+          <Typography variant="error">{errorMessage}</Typography>
+        </FormControl>
+      ) : (
+        <div>
+          <Typography size="body1/semi-bold" className="my-4 ">
+            Recover Password
+          </Typography>
+          <Typography variant="secondary">{successMessage}</Typography>
+        </div>
+      )}
     </div>
   );
 };
