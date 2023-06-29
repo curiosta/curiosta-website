@@ -46,7 +46,6 @@ const AddressList: FunctionComponent<TAddressListProps> = ({ selectedAddressId }
   };
 
   useEffect(() => {
-    console.log('updating address...', selectedAddressId.value);
     updateShippingAddress();
   }, [selectedAddressId.value]);
 

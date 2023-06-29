@@ -37,7 +37,6 @@ const CheckoutDrawer = () => {
       if (!cart.store.value) return;
       medusa.carts.setPaymentSession(cart.store.value.id, { provider_id: 'stripe' }).then(({ cart: paymentSessionCart }) => {
         const _clientSecret = paymentSessionCart.payment_session?.data.client_secret as string
-        console.log(_clientSecret);
         if (_clientSecret) { clientSecret.value = _clientSecret }
       })
     });
@@ -85,7 +84,7 @@ const CheckoutDrawer = () => {
             </>
           ) : (
             <div className='flex justify-center items-center h-full'>
-              <Typography size='h4/normal' className='animate-pulse duration-75'>Shit wait...</Typography>
+              <Typography size='h4/normal' className='animate-pulse duration-75'>Please wait...</Typography>
             </div>
           )}
         </div>
