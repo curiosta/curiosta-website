@@ -2,7 +2,7 @@ import Typography from "@components/Typography";
 import { cx } from "class-variance-authority";
 import type { ComponentChildren, FunctionComponent } from "preact";
 import { forwardRef, type HTMLAttributes } from "preact/compat";
-import { useEffect, useId, useImperativeHandle, useRef } from "preact/hooks";
+import { useEffect, useId, useRef } from "preact/hooks";
 import './input.css';
 import type {
   FieldError,

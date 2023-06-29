@@ -24,7 +24,7 @@ const OrdersInfo: FunctionComponent<TOrderProps> = ({ order }) => {
 
               <div class="mt-6 sm:ml-6 sm:mt-0">
                 <Typography tag="h3" size="body1/medium">
-                  <a href={`/products/${item.variant.product_id}`}>
+                  <a href={`/products/${item.variant.product.handle}`}>
                     {item.title}
                   </a>
                 </Typography>
