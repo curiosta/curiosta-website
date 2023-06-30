@@ -1,12 +1,6 @@
 import { useEffect, useRef } from "preact/compat";
 import { useSignal } from "@preact/signals";
 import CategoriesOpt from "../CategoriesOpt";
-import {
-  Product,
-  count,
-  limit,
-  offset,
-} from "@store/productStore";
 import Pagination from "@components/Pagination";
 import type { ProductCategory } from "@medusajs/medusa";
 import Button from "@components/Button";
@@ -15,7 +9,7 @@ import './product.css'
 import ProductCards from "@components/ProductCards";
 import SearchInput from "./SearchInput";
 import getProductsFromUrl from "@utils/getProductsFromUrl";
-import type { TGetProductResult } from "@api/search";
+import { countState, limitState, offsetState, pageState, type TGetProductResult } from "@api/search";
 
 export type TProductsQueryParam = {
   sort: 'asc' | 'desc',
@@ -30,15 +24,28 @@ interface Props {
 }
 
 const Products = ({ categories, productResult, queryParams }: Props) => {
-  const { products: initialProducts, ...paginationResult } = productResult
+  const { products: initialProducts, count, limit, offset, page } = productResult
+
+
   const isSortPopUp = useSignal(false);
   const sortContainerRef = useRef<HTMLDivElement>(null);
+
   const products = useSignal(initialProducts);
-  const params = useSignal(queryParams)
+  const params = useSignal(queryParams);
+
   const sortOptions = [
     { id: 1, title: "Price: High to Low", value: "desc" },
     { id: 2, title: "Price: Low to High", value: "asc" },
   ];
+
+  // update signal state
+  useEffect(() => {
+    countState.value = count;
+    limitState.value = limit;
+    offsetState.value = offset;
+    pageState.value = page;
+  }, [])
+
 
   useEffect(() => {
     const clickAwayListener = (e: MouseEvent) => {
@@ -129,17 +136,11 @@ const Products = ({ categories, productResult, queryParams }: Props) => {
       </div>
       <Pagination
         products={products}
-        {...params}
-        {...paginationResult}
       />
 
     </div>
   );
 };
-
-const Hit = ({ hit }: { hit: any }) => (
-  <ProductCard product={hit} />
-);
 
 
 export default Products;
