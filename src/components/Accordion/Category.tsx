@@ -23,7 +23,7 @@ const Category = ({ category, products, selectedCategoriesIds, toggleSelectedIds
     const url = new URL(window.location.href)
     url.searchParams.set('categories', selectedCategoriesIds.value.join(','))
     window.history.replaceState(undefined, '', url.href);
-    const { result } = await getProductsFromUrl(url.href);
+    const { result, params } = await getProductsFromUrl(url.href);
     products.value = result.products;
   };
 
