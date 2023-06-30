@@ -6,8 +6,8 @@ import ProductImage from "@components/ProductImage";
 import Layout from "@layouts/Layout.astro";
 import ProductInfo from "@components/ProductInfo";
 
-const productId = Astro.params.id;
-const { product } = await getProduct(productId || "");
+const handle = Astro.params.handle;
+const product = await getProduct(handle || "");
 ---
 
 <Layout
@@ -26,7 +26,7 @@ const { product } = await getProduct(productId || "");
 
         <!-- Product info -->
         {
-          productId ? (
+          handle ? (
             <ProductInfo product={product} client:load />
           ) : (
             "No product found"
