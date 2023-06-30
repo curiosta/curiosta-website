@@ -114,11 +114,11 @@ const AddressForm = ({
             />
             <Input
               name="phone"
-              type="number"
+              type="tel"
               label="Phone Number"
               autocomplete="phone"
               required={{ message: "Phone number is required!", value: true }}
-              placeholder={"1234567890"}
+              placeholder={"+91 1234567890"}
               validator={(value) =>
                 !/^\+\d{1,3}[-.\s]?\(?\d{1,3}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(
                   value
