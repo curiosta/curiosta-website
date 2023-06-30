@@ -24,7 +24,10 @@ const PasswordResetForm = ({ email, token }: Props) => {
       successMessage.value = "";
     }
     try {
-      if (!token || !email) return;
+      if (!token || !email) {
+        return (errorMessage.value = "Email or Token not found in url params");
+      }
+
       if (password === cpassword) {
         await user.passwordReset({ email, password, token });
         successMessage.value = "Your password has been changed successfully!";
@@ -50,10 +53,18 @@ const PasswordResetForm = ({ email, token }: Props) => {
         className="flex flex-col gap-2"
       >
         <Input
+          name="email"
+          type="email"
+          autocomplete="email"
+          placeholder={"example@gmail.com"}
+          className="hidden"
+          value={email ? email : ""}
+        />
+        <Input
           name="password"
           type="password"
           label="New Password"
-          autocomplete="current-password"
+          autocomplete="new-password"
           required={{ value: true, message: "Password is required!" }}
           minLength={{
             value: 6,
@@ -66,7 +77,7 @@ const PasswordResetForm = ({ email, token }: Props) => {
           name="cpassword"
           type="password"
           label="Confirm Password"
-          autocomplete="current-password"
+          autocomplete="new-password"
           required={{ value: true, message: "Password is required!" }}
           minLength={{
             value: 6,
