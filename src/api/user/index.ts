@@ -1,23 +1,24 @@
 import medusa from "@api/medusa";
-import type {
-  Customer,
-  StorePostCustomersCustomerReq,
-} from "@medusajs/medusa";
+import type { Customer, StorePostCustomersCustomerReq } from "@medusajs/medusa";
 import { signal } from "@preact/signals";
+import { reset } from "colorette";
 
 type TCustomerMetadata = {
   cart_id?: string | null;
   stripe_id?: string;
   country_id?: number;
-}
+};
 
-export type TCustomer = Omit<Customer, "password_hash" | 'metadata'> & {
-  metadata?: TCustomerMetadata
-}
+export type TCustomer = Omit<Customer, "password_hash" | "metadata"> & {
+  metadata?: TCustomerMetadata;
+};
 
-export type TCustomerUpdatePayload = Omit<StorePostCustomersCustomerReq, 'metadata'> & {
-  metadata?: TCustomerMetadata
-}
+export type TCustomerUpdatePayload = Omit<
+  StorePostCustomersCustomerReq,
+  "metadata"
+> & {
+  metadata?: TCustomerMetadata;
+};
 
 class User {
   state = signal<"authenticated" | "loading" | "unauthenticated">("loading");
@@ -48,20 +49,51 @@ class User {
     this.customer.value = response.customer;
   }
 
-  async login({ email, password }: { email: string, password: string }) {
-    const result = await medusa.auth.authenticate({ email, password })
+  async login({ email, password }: { email: string; password: string }) {
+    const result = await medusa.auth.authenticate({ email, password });
     this.customer.value = result.customer;
-    this.state.value = 'authenticated';
+    this.state.value = "authenticated";
   }
-  async register({ email, password, first_name, last_name }: { email: string, password: string, first_name: string, last_name: string }) {
-    const createCustomerResult = await medusa.customers.create({ email, password, first_name, last_name })
+  async register({
+    email,
+    password,
+    first_name,
+    last_name,
+  }: {
+    email: string;
+    password: string;
+    first_name: string;
+    last_name: string;
+  }) {
+    const createCustomerResult = await medusa.customers.create({
+      email,
+      password,
+      first_name,
+      last_name,
+    });
     if (createCustomerResult.customer.id) {
       await this.login({ email, password });
     }
   }
 
   async logout() {
-    await medusa.auth.deleteSession()
+    await medusa.auth.deleteSession();
+  }
+
+  async requestPasswordReset({ email }: { email: string }) {
+    await medusa.customers.generatePasswordToken({ email });
+  }
+
+  async passwordReset({
+    email,
+    password,
+    token,
+  }: {
+    email: string;
+    password: string;
+    token: string;
+  }) {
+    await medusa.customers.resetPassword({ email, password, token });
   }
 }
 
