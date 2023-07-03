@@ -4,14 +4,14 @@ import Typography from "./Typography";
 import user from "@api/user";
 import Chip from "./Chip";
 
-const RightNav = ({ screen }: { screen?: string }) => {
+const RightNav = () => {
   const totalCartItems = cart.store.value?.items?.reduce(
     (acc, curVal) => acc + curVal.quantity,
     0
   );
 
   return (
-    <div className="">
+    <div>
       <Dropdown title="My Account">
         <Dropdown.Item noHoverEffects tabIndex={-1}>
           <Typography size="body2/normal">
