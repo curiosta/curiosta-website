@@ -85,6 +85,8 @@ const navLinks = [
     <CartDrawer client:only="preact" />
     <CheckoutDrawer client:only="preact" />
   </nav>
+
+  
   {/* Mobile menu, show/hide based on menu open state. */}
   <div class="lg:hidden" role="dialog" aria-modal="true">
     {/* Background backdrop, show/hide based on slide-over state. */}
@@ -140,9 +142,7 @@ const navLinks = [
           </div>
           <div class="py-4">
             <ShipmentRegions screen="mobile" client:load />
-            <RightNav screen="mobile" client:load />
             <CartDrawer client:only="preact" />
-            <!-- <CheckoutDrawer client:only="preact" /> -->
           </div>
         </div>
       </div>
