@@ -15,7 +15,7 @@ const CollectionGroup: FunctionComponent<TCollectionGroup> = ({
   return (
     <div className="collection-group">
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6  lg:max-w-7xl lg:px-8">
-        <div className="md:flex md:items-center md:justify-between mb-12 sm:mb-0">
+        <div className="md:flex md:items-center md:justify-between">
           <Typography tag="h2" size="h5/bold" className=" tracking-tight">
             {title}
           </Typography>
