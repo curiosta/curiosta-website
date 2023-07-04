@@ -10,9 +10,7 @@ type TProductCard = {
 };
 
 const ProductCard: FunctionComponent<TProductCard> = ({ product }) => {
-
   const currency = region.selectedCountry.value?.region.currency_code as CurrencyMap;
-
   const amount = product.prices?.[currency];
   return (
     <a href={`/products/${product.handle}`}>
