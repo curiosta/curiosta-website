@@ -24,7 +24,9 @@ const ProductVariants = ({ productVariants, productIndex }: Props) => {
       selectedVariant.inventory_quantity &&
       selectedVariant.inventory_quantity <= 10
     ) {
-      stockMessage.value = "Hurry up! Limited stock available";
+      stockMessage.value = `Only ${selectedVariant.inventory_quantity} item${
+        selectedVariant.inventory_quantity > 1 ? "s" : ""
+      } left in stock. Add to Cart before it's all gone!`;
     }
   }, [productIndex.value]);
 
@@ -37,7 +39,7 @@ const ProductVariants = ({ productVariants, productIndex }: Props) => {
       </div>
       <fieldset class="mt-2">
         <legend class="sr-only">Choose a Variant</legend>
-        <div class="grid grid-cols-3 gap-3 sm:grid-cols-6">
+        <div class="flex flex-wrap sm:w-fit gap-3 items-center whitespace-nowrap">
           {productVariants?.length
             ? productVariants.map((variant, index) => (
                 <label
