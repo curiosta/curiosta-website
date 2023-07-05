@@ -110,6 +110,7 @@ const AddressForm = ({
                 message: "Postal code is required!",
                 value: true,
               }}
+              minLength={5}
               autocomplete="postal-code"
             />
             <Input
@@ -118,7 +119,7 @@ const AddressForm = ({
               label="Phone Number"
               autocomplete="phone"
               required={{ message: "Phone number is required!", value: true }}
-              placeholder={"+91 1234567890"}
+              placeholder={"+1 603-247-8958"}
               validator={(value) =>
                 !/^\+\d{1,3}[-.\s]?\(?\d{1,3}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(
                   value
