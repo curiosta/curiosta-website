@@ -1,0 +1,40 @@
+import { test, expect } from '@playwright/test';
+
+test('Login_Page', async ({ page }) => {
+  test.setTimeout(200000)
+  await page.goto('https://curiosta.com/');
+  await page.getByRole('button', { name: 'My Account' }).click();
+  await page.getByRole('menuitem', { name: 'Login' }).click();
+  await page.getByRole('link', { name: 'Sign up here' }).click();
+  await page.getByPlaceholder('John').click();
+  await page.getByPlaceholder('John').fill('stephan');
+  await page.getByPlaceholder('Doe').click();
+  await page.getByPlaceholder('Doe').press('CapsLock');
+  await page.getByPlaceholder('Doe').fill('D');
+  await page.getByPlaceholder('Doe').press('CapsLock');
+  await page.getByPlaceholder('Doe').fill('Demo');
+  await page.getByPlaceholder('example@gmail.com').click();
+  await page.getByPlaceholder('example@gmail.com').press('CapsLock');
+  await page.getByPlaceholder('example@gmail.com').fill('D');
+  await page.getByPlaceholder('example@gmail.com').press('CapsLock');
+  await page.getByPlaceholder('example@gmail.com').fill('stephan.curiosta@gmail.com');
+  await page.getByPlaceholder('Enter password').click();
+  await page.getByPlaceholder('Enter password').fill('123456789');
+  await page.getByRole('button', { name: 'Sign Up' }).click();
+  await page.getByRole('button', { name: 'My Account' }).click();
+  await page.getByRole('menuitem', { name: 'Sign out' }).click();
+  await page.getByPlaceholder('example@gmail.com').click();
+  await page.getByPlaceholder('example@gmail.com').fill('stephan.curiosta@gmail.com');
+  await page.getByPlaceholder('Your Curiosta password').click();
+  await page.getByPlaceholder('Your Curiosta password').fill('123456789');
+  await page.getByRole('button', { name: 'Login' }).click();
+  await page.getByRole('button', { name: 'My Account' }).click();
+  await page.getByRole('menuitem', { name: 'Sign out' }).click();
+  await page.getByPlaceholder('example@gmail.com').click();
+  await page.getByPlaceholder('example@gmail.com').fill('stephan.curiosta@gmail.com');
+  await page.getByPlaceholder('Your Curiosta password').click();
+  await page.getByRole('link', { name: 'Forgot password?' }).click();
+  await page.getByPlaceholder('example@gmail.com').click();
+  await page.getByPlaceholder('example@gmail.com').fill('stephan.curiosta@gmail.com');
+  await page.getByRole('button', { name: 'Send' }).click();
+});
