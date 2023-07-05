@@ -18,7 +18,7 @@ const LoginForm = () => {
           (i) => (document.referrer.indexOf(i) < 0 ? false : true)
         ).length
       ) {
-        window.location.replace("/");
+        window.location.replace(`/?no-cache=${~~(Math.random() * 1000)}`);
       } else {
         history.back();
       }
