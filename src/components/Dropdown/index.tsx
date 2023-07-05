@@ -1,18 +1,43 @@
 import { FunctionComponent, cloneElement } from "preact";
 import DropdownItem from "./DropdownItem";
 import type { JSXInternal } from "preact/src/jsx";
+import { useSignal } from "@preact/signals";
+import DropdownDivider from "./DropdownDivider";
+import { useEffect, useRef } from "preact/hooks";
 
 type DropdownProps = {
-  children: JSXInternal.Element[];
+  children: (JSXInternal.Element | null)[];
+  title?: string;
 };
 
-const Dropdown: FunctionComponent<DropdownProps> & { Item: typeof DropdownItem } = ({
+type DropdownElements = {
+  Item: typeof DropdownItem,
+  Divider: typeof DropdownDivider
+}
+
+const Dropdown: FunctionComponent<DropdownProps> & DropdownElements = ({
   children,
+  title = 'Options'
 }) => {
-  const DropdownItemComponents = children.filter((child) => child.type === DropdownItem);
+  const isDropdownOpen = useSignal<boolean | undefined>(undefined);
+  const dropdownRef = useRef<HTMLDivElement>(null)
+  const DropdownElements = children.filter((child) => [DropdownDivider, DropdownItem].includes(child?.type as any));
+
+  useEffect(() => {
+    const clickAwayListener = (e: MouseEvent) => {
+      if (dropdownRef.current?.contains(e.target as any)) return;
+      isDropdownOpen.value = false
+    }
+
+    window.addEventListener('click', clickAwayListener)
+
+    return () => {
+      window.removeEventListener('click', clickAwayListener)
+    }
+  }, []);
 
   return (
-    <div class="relative inline-block text-left">
+    <div class="relative inline-block text-left" ref={dropdownRef}>
       <div>
         <button
           type="button"
@@ -20,8 +45,9 @@ const Dropdown: FunctionComponent<DropdownProps> & { Item: typeof DropdownItem }
           id="menu-button"
           aria-expanded="true"
           aria-haspopup="true"
+          onClick={() => isDropdownOpen.value = !isDropdownOpen.value}
         >
-          Options
+          {title}
           <svg
             class="-mr-1 h-5 w-5 text-gray-400"
             viewBox="0 0 20 20"
@@ -36,30 +62,21 @@ const Dropdown: FunctionComponent<DropdownProps> & { Item: typeof DropdownItem }
           </svg>
         </button>
       </div>
-
-      {/* Dropdown menu, show/hide based on menu state.
-        Entering: "transition ease-out duration-100"
-        From: "transform opacity-0 scale-95"
-        To: "transform opacity-100 scale-100"
-        Leaving: "transition ease-in duration-75"
-        From: "transform opacity-100 scale-100"
-        To: "transform opacity-0 scale-95" */}
       <div
-        class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+        class={`absolute ${isDropdownOpen.value ? 'animate-mini-expand' : 'animate-mini-shrink pointer-events-none'} opacity-0 scale-95 right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`}
         role="menu"
         aria-orientation="vertical"
         aria-labelledby="menu-button"
         tabIndex={-1}
       >
         <div class="py-1" role="none">
-          {/* Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" */}
-          {DropdownItemComponents.map((item, index) =>
+          {DropdownElements.map((item, index) =>
+            item &&
             cloneElement(item, {
-              // tabIndex: -1,
               key: `menu-item-${index}`,
               role: "menuitem",
             })
-          )}
+          ).filter(i => !!i)}
         </div>
       </div>
     </div>
@@ -67,5 +84,6 @@ const Dropdown: FunctionComponent<DropdownProps> & { Item: typeof DropdownItem }
 };
 
 Dropdown.Item = DropdownItem;
+Dropdown.Divider = DropdownDivider;
 
 export default Dropdown;
