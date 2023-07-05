@@ -6,22 +6,27 @@ import { useSignal } from "@preact/signals";
 import Typography from "./Typography";
 
 const LoginForm = () => {
-  const errorMessage = useSignal<string>('');
+  const errorMessage = useSignal<string>("");
   const handleLoginUser = async (data: any) => {
     if (errorMessage.value) {
-      errorMessage.value = ''
+      errorMessage.value = "";
     }
     try {
       await user.login(data);
-      if (['/signup', '/login', '/forgot-password', '/password-reset'].filter((i) => document.referrer.indexOf(i) < 0 ? false : true).length) {
-        window.location.href = '/';
+      if (
+        ["/signup", "/login", "/forgot-password", "/password-reset"].filter(
+          (i) => (document.referrer.indexOf(i) < 0 ? false : true)
+        ).length
+      ) {
+        window.location.replace("/");
       } else {
         history.back();
       }
     } catch (error) {
       const errorResponse = (error as any)?.toJSON?.();
       if (errorResponse) {
-        errorMessage.value = 'Failed to login, Please check email and password!.'
+        errorMessage.value =
+          "Failed to login, Please check email and password!.";
       }
     }
   };
@@ -51,15 +56,15 @@ const LoginForm = () => {
         type="password"
         label="Password"
         autocomplete="current-password"
-        required={{ value: true, message: 'Password is required!' }}
-        minLength={{ value: 6, message: 'Minimum 6 characters are required!' }}
+        required={{ value: true, message: "Password is required!" }}
+        minLength={{ value: 6, message: "Minimum 6 characters are required!" }}
         placeholder="Your Curiosta password"
       />
       <div class="flex items-center justify-end">
         {/* <Checkbox name="remember-me" label="Remember me" /> */}
         <div class="text-sm leading-6">
           <a
-            href="#"
+            href="/forgot-password"
             class="font-semibold text-app-primary-600 hover:text-app-primary-500"
           >
             Forgot password?
@@ -68,9 +73,9 @@ const LoginForm = () => {
       </div>
 
       <Button type="submit" variant={"primary"} className="mt-4">
-        Log In
+        Login
       </Button>
-      <Typography variant='error'>{errorMessage}</Typography>
+      <Typography variant="error">{errorMessage}</Typography>
     </FormControl>
   );
 };

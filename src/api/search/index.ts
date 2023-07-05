@@ -1,4 +1,5 @@
 import region from "@api/region";
+import { signal } from "@preact/signals";
 import type { Product } from "@store/productStore";
 import type { CurrencyMap } from "@utils/CurrencyMap";
 import { SearchParams, MeiliSearch, Index } from "meilisearch";
@@ -17,11 +18,15 @@ export type TGetProductResult = {
   products: Product[];
 }
 
+export const limitState = signal(12);
+export const countState = signal(0);
+export const offsetState = signal(0);
+export const pageState = signal(1);
+
 
 class Search {
   client: MeiliSearch;
   productIndex: Index<Product>;
-  limit: number = 12;
 
   constructor() {
     if (
@@ -53,10 +58,10 @@ class Search {
       searchOptions.filter = `categories IN [${Array.isArray(categories) ? categories.join(', ') : categories}]`;
     }
 
-    const offset = page <= 1 ? 0 : (page - 1) * this.limit;
+    const offset = page <= 1 ? 0 : (page - 1) * limitState.value;
 
     searchOptions.offset = offset;
-    searchOptions.limit = this.limit;
+    searchOptions.limit = limitState.value;
 
     const res = await this.productIndex.search(query, searchOptions);
 
@@ -70,6 +75,12 @@ class Search {
         thumbnail: hit.thumbnail,
       }
     });
+
+    countState.value = res.estimatedTotalHits;
+    offsetState.value = res.offset;
+    limitState.value = res.limit;
+    pageState.value = page;
+
     return {
       products: products || [],
       count: res.estimatedTotalHits,

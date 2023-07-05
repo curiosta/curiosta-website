@@ -1,52 +1,33 @@
-import type { TGetProductResult } from "@api/search";
+import { countState, limitState, offsetState, pageState, type TGetProductResult } from "@api/search";
 import Button from "@components/Button";
-import { useSignal, type Signal } from "@preact/signals";
+import type { Signal } from "@preact/signals";
 import type { Product } from "@store/productStore";
 import getProductsFromUrl from "@utils/getProductsFromUrl";
 import { cx } from "class-variance-authority";
 
 interface Props extends Omit<Partial<TGetProductResult>, 'products'> {
-  offset: number;
-  count: number;
-  limit: number;
   products: Signal<Product[]>;
 }
 
-const Pagination = ({ offset, count, limit, products, page }: Props) => {
-  const offsetState = useSignal(offset);
-  const countState = useSignal(count);
-  const limitState = useSignal(limit);
-  const pageState = useSignal(page || 1);
+const Pagination = ({ products }: Props) => {
+  const getAndUpdateProductsFromURL = async (url: URL) => {
+    window.history.replaceState(undefined, '', url.href)
+
+    // get products
+    const { result } = await getProductsFromUrl(url.href)
+    products.value = result.products;
+  }
 
   const handleNext = async () => {
     const url = new URL(window.location.href);
     url.searchParams.set('page', `${pageState.value + 1}`);
-    window.history.replaceState(undefined, '', url.href)
-
-    // get products
-    const { result, params } = await getProductsFromUrl(url.href)
-    products.value = result.products;
-
-    // update states
-    offsetState.value = result.offset;
-    countState.value = result.count;
-    limitState.value = result.limit;
-    pageState.value = params.page || 1
+    await getAndUpdateProductsFromURL(url)
   };
+
   const handlePrev = async () => {
     const url = new URL(window.location.href);
     url.searchParams.set('page', `${pageState.value - 1}`);
-    window.history.replaceState(undefined, '', url.href)
-
-    // get products
-    const { result, params } = await getProductsFromUrl(url.href)
-    products.value = result.products;
-
-    // update states
-    offsetState.value = result.offset;
-    countState.value = result.count;
-    limitState.value = result.limit;
-    pageState.value = params.page || 1
+    await getAndUpdateProductsFromURL(url)
   };
 
   const isEndResult = countState.value

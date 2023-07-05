@@ -10,12 +10,10 @@ type TProductCard = {
 };
 
 const ProductCard: FunctionComponent<TProductCard> = ({ product }) => {
-
-  const currency = region.selectedCountry.value?.region.currency_code as keyof CurrencyMap;
-
+  const currency = region.selectedCountry.value?.region.currency_code as CurrencyMap;
   const amount = product.prices?.[currency];
   return (
-    <a href={`/products/${product.id}`}>
+    <a href={`/products/${product.handle}`}>
       <div class="card">
         <div class="group relative">
           <div class="h-56 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:h-72 xl:h-80">
