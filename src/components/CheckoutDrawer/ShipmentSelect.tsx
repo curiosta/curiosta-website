@@ -1,4 +1,5 @@
 import cart from "@api/cart"
+import { checkoutOpen } from "@store/checkoutStore"
 import priceToCurrency from "@utils/priceToCurrency"
 import { cx } from "class-variance-authority"
 import { useEffect } from "preact/hooks"
@@ -15,8 +16,9 @@ const ShipmentSelect = () => {
   }
 
   useEffect(() => {
+    if (!checkoutOpen.value) return;
     listOfAvailableShipmentProviders();
-  }, [])
+  }, [checkoutOpen.value])
 
   const disabled = cart.loading.value?.startsWith('cart:shipping');
 

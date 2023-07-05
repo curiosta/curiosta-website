@@ -42,7 +42,7 @@ class Region {
       countryId = get('countryId') || undefined;
     }
 
-    if (user.state.value === 'unauthenticated' && !countryId && cart.store.value) {
+    if (!countryId && cart.store.value) {
       this.setCountry(this.countries.value?.[0].id)
     }
 
