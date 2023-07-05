@@ -9,26 +9,28 @@ import Input from "@components/Input";
 import type { ChangeEvent } from "preact/compat";
 
 const CartItem = ({ item }: { item: LineItem }) => {
-  const loadingRemove = useSignal<boolean>(false);
-  const errorMessage = useSignal<string|null>(null);
+  const errorMessage = useSignal<string | null>(null);
 
   const handleQty = async (e: ChangeEvent<HTMLInputElement>) => {
     const quantity = e.currentTarget.valueAsNumber;
     try {
       await cart.setItemQuantity(item.id, quantity);
-      errorMessage.value = null
+      errorMessage.value = null;
     } catch (error) {
       console.log(error);
-      if(error instanceof Error){
-        errorMessage.value = error.message
+      if (error instanceof Error) {
+        errorMessage.value = error.message;
       }
     }
   };
 
-  const removeProductFromCart = async () => await cart.removeItem(item.id);
-
   return (
-    <div className={cx("flex ", loadingRemove.value && "grayscale")}>
+    <div
+      className={cx(
+        "flex ",
+        cart.loading.value === "cart:line_items:remove" && "grayscale"
+      )}
+    >
       {item.thumbnail ? (
         <img
           src={item.thumbnail}
@@ -76,14 +78,21 @@ const CartItem = ({ item }: { item: LineItem }) => {
               value={item.quantity}
               onBlur={handleQty}
               className={`!w-12 !px-0 text-center`}
-              
             />
-            <Typography size="body2/semi-bold"  variant='error'
-             className={`${errorMessage.value?'block':'hidden'}`}>
+            <Typography
+              size="body2/semi-bold"
+              variant="error"
+              className={`${errorMessage.value ? "block" : "hidden"}`}
+            >
               {errorMessage.value}
             </Typography>
           </div>
-          <Button type="button" variant="icon" onClick={removeProductFromCart}>
+          <Button
+            type="button"
+            variant="icon"
+            onClick={() => cart.removeItem(item.id)}
+            disabled={cart.loading.value === "cart:line_items:remove"}
+          >
             <Typography variant="app-primary" size="small/medium">
               Remove
             </Typography>
