@@ -18,7 +18,7 @@ const LoginForm = () => {
           (i) => (document.referrer.indexOf(i) < 0 ? false : true)
         ).length
       ) {
-        window.location.href = "/";
+        window.location.replace("/");
       } else {
         history.back();
       }
