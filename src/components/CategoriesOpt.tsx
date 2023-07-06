@@ -6,6 +6,7 @@ import type { ProductCategory } from "@medusajs/medusa";
 import type { TProductsQueryParam } from "./Products";
 import type { Product } from "@store/productStore";
 import { useEffect } from "preact/hooks";
+import getProductsFromUrl from "@utils/getProductsFromUrl";
 
 interface Props {
   categories: ProductCategory[];
@@ -42,14 +43,21 @@ const CategoriesOpt = ({
     document.body.style.overflow = isCategoriesOpen.value ? "hidden" : "auto";
   }, [isCategoriesOpen.value]);
 
+  const handleClearAll = async () => {
+    selectedCategoriesIds.value = [];
+    const url = new URL(window.location.href);
+    url.searchParams.set("categories", "");
+    window.history.replaceState(undefined, "", url.href);
+    const { result } = await getProductsFromUrl(url.href);
+    products.value = result.products;
+  };
+
   return (
     <div>
       <aside>
         <Typography tag="h2" className="sr-only">
           Filters
         </Typography>
-
-        {/* <!-- Mobile filter dialog toggle, controls the 'mobileFilterDialogOpen' state. --> */}
 
         <div class={`hidden lg:block`}>
           <form class="space-y-4 divide-y divide-gray-200 mt-6">
@@ -58,8 +66,22 @@ const CategoriesOpt = ({
                 <Typography size="body1/semi-bold" className="block">
                   Category
                 </Typography>
-
-                <div class="space-y-2 pt-6">
+                <div
+                  class={`items-center justify-end ${
+                    selectedCategoriesIds.value.length ? "flex" : "hidden"
+                  }`}
+                >
+                  <Button type="button" variant="icon" onClick={handleClearAll}>
+                    <Typography variant="app-primary" size="small/medium">
+                      Clear all
+                    </Typography>
+                  </Button>
+                </div>
+                <div
+                  class={`space-y-2 ${
+                    selectedCategoriesIds.value.length ? "pt-0" : "pt-6"
+                  }`}
+                >
                   {topCategories?.map((category) => (
                     <Category
                       toggleSelectedIds={toggleSelectedIds}
@@ -118,7 +140,22 @@ const CategoriesOpt = ({
                   </svg>
                 </Button>
               </div>
-              <div class="space-y-2 pt-6 ">
+              <div
+                class={`items-center justify-end mt-1 ${
+                  selectedCategoriesIds.value.length ? "flex" : "hidden"
+                }`}
+              >
+                <Button type="button" variant="icon" onClick={handleClearAll}>
+                  <Typography variant="app-primary" size="small/medium">
+                    Clear all
+                  </Typography>
+                </Button>
+              </div>
+              <div
+                class={`space-y-2 ${
+                  selectedCategoriesIds.value.length ? "pt-0" : "pt-6"
+                }`}
+              >
                 {topCategories?.map((category) => (
                   <Category
                     params={params}
