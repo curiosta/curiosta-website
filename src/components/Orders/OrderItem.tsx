@@ -108,7 +108,7 @@ const OrderItem: FunctionComponent<TOrderItemProps> = ({ order }) => {
         Items
       </Typography>
       <ul role="list" class="divide-y divide-gray-200">
-        {order.items.map((item) => (
+        {order.items.slice(0, 3).map((item) => (
           <li class="p-4 sm:p-6">
             <div class="flex items-center sm:items-start">
               <div class="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-gray-200 sm:h-40 sm:w-40">
@@ -133,41 +133,34 @@ const OrderItem: FunctionComponent<TOrderItemProps> = ({ order }) => {
                 >
                   {item.description}
                 </Typography>
-                <Typography
-                  variant="secondary"
-                  className="hidden sm:mt-2 sm:block"
-                >
+                <Typography variant="secondary" className="mt-2">
                   Qty: {item.quantity}
-                </Typography>
-              </div>
-            </div>
-
-            <div class="mt-6 sm:flex sm:justify-between">
-              <div class="flex items-center">
-                <Typography
-                  size="body1/normal"
-                  variant="secondary"
-                  className="ml-2 "
-                >
-                  Status: {order.status}
-                </Typography>
-              </div>
-              <div class="flex items-center">
-                <Typography
-                  size="body1/normal"
-                  variant="secondary"
-                  className="ml-2 "
-                >
-                  Payment Status:{" "}
-                  {order.payment_status === "captured"
-                    ? "paid"
-                    : order.payment_status}
                 </Typography>
               </div>
             </div>
           </li>
         ))}
       </ul>
+      <div class={`p-4 ${order.items.length - 3 > 0 ? "block" : "hidden"}`}>
+        <Typography size="body2/normal" variant="secondary">{`+ ${
+          order.items.length - 3
+        } more item${order.items.length - 3 > 1 ? "s" : ""}`}</Typography>
+      </div>
+      <div class="p-6 sm:flex sm:justify-between border-t">
+        <div class="flex items-center">
+          <Typography size="body1/normal" variant="secondary" className="ml-2 ">
+            Status: {order.status}
+          </Typography>
+        </div>
+        <div class="flex items-center">
+          <Typography size="body1/normal" variant="secondary" className="ml-2 ">
+            Payment Status:{" "}
+            {order.payment_status === "captured"
+              ? "paid"
+              : order.payment_status}
+          </Typography>
+        </div>
+      </div>
     </div>
   );
 };
