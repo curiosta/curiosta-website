@@ -164,11 +164,7 @@ class CartStore {
       this.store.value.id,
       id
     );
-    if (response.cart.items.length) {
-      this.store.value = response.cart;
-    } else {
-      await this.resetCartId();
-    }
+    this.store.value = response.cart;
     this.loading.value = undefined;
   }
 
