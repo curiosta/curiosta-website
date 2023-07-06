@@ -13,9 +13,9 @@ const CartItem = ({ item }: { item: LineItem }) => {
 
   const handleQty = async (e: ChangeEvent<HTMLInputElement>) => {
     const quantity = e.currentTarget.valueAsNumber;
+    errorMessage.value = null;
     try {
       await cart.setItemQuantity(item.id, quantity);
-      errorMessage.value = null;
     } catch (error) {
       console.log(error);
       if (error instanceof Error) {
