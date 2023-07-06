@@ -1,7 +1,7 @@
 import user from "@api/user";
 import OrderItem from "./OrderItem";
 import Typography from "@components/Typography";
-import { useEffect } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import { useSignal } from "@preact/signals";
 import type { Order } from "@medusajs/medusa";
 import { ordersList } from "@api/user/ordersList";
@@ -11,7 +11,7 @@ const OrdersList = () => {
   const orders = useSignal<Order[]>([]);
   const isLoading = useSignal(false);
   const count = useSignal<null | number>(null);
-  const limit = useSignal<number>(0);
+  const limit = useSignal<number>(10);
   const offset = useSignal<number>(0);
 
   const getOrdersList = async () => {
@@ -40,7 +40,7 @@ const OrdersList = () => {
       </Typography>
       <div class="mx-auto max-w-7xl sm:px-2 lg:px-8">
         {userState === "authenticated" ? (
-          <div class="mx-auto max-w-2xl space-y-8 sm:px-4 lg:max-w-4xl lg:px-0">
+          <div class="mx-auto max-w-2xl space-y-8 px-0 lg:max-w-4xl">
             {!isLoading.value ? (
               count.value ? (
                 orders.value.map((order) => {
@@ -64,12 +64,16 @@ const OrdersList = () => {
                 </div>
               )
             ) : (
-              <Typography tag="h5" size="h5/semi-bold">
+              <Typography
+                size="h6/semi-bold"
+                variant="secondary"
+                className="animate-pulse"
+              >
                 Loading...
               </Typography>
             )}
           </div>
-        ) : (
+        ) : userState === "unauthenticated" ? (
           <div className="flex justify-center items-center my-20">
             <Typography
               size="body1/normal"
@@ -85,6 +89,14 @@ const OrdersList = () => {
               to view your orders
             </Typography>
           </div>
+        ) : (
+          <Typography
+            size="h6/semi-bold"
+            variant="secondary"
+            className="animate-pulse"
+          >
+            Loading...
+          </Typography>
         )}
       </div>
     </div>
