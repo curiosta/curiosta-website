@@ -1,5 +1,6 @@
 import Typography from "@components/Typography";
 import type { Order } from "@medusajs/medusa";
+import countriesMap from "@utils/countriesMap";
 import priceToCurrency from "@utils/priceToCurrency";
 import type { FunctionComponent } from "preact";
 
@@ -50,7 +51,15 @@ const OrdersInfo: FunctionComponent<TOrderProps> = ({ order }) => {
                       className="block"
                     >{`${order.shipping_address?.first_name} ${order.shipping_address?.last_name}`}</Typography>
                     <Typography size="body2/normal" className="block">
-                      {`${order.shipping_address?.address_1}, ${order.shipping_address?.city}, ${order.shipping_address?.postal_code}`}
+                      {`${order.shipping_address?.address_1}, ${order.shipping_address?.city} ${order.shipping_address?.postal_code}`}
+                    </Typography>
+                    <Typography size="body2/normal" className="block">
+                      {
+                        countriesMap[
+                          order.shipping_address
+                            ?.country_code as keyof typeof countriesMap
+                        ]
+                      }
                     </Typography>
                     <Typography size="body2/normal" className="block">
                       {`Phone: ${order.shipping_address?.phone} `}

@@ -6,6 +6,7 @@ import { getOrders } from "@api/user/getOrders";
 import OrdersInfo from "@components/Orders/OrdersInfo";
 import priceToCurrency from "@utils/priceToCurrency";
 import Typography from "@components/Typography";
+import countriesMap from "@utils/countriesMap";
 
 const orderId = Astro.params.id;
 const { order } = await getOrders(orderId || "");
@@ -84,7 +85,15 @@ const { order } = await getOrders(orderId || "");
                 </Typography>
                 <Typography size="body2/normal" className="block">
                   {
-                    `${order.shipping_address?.address_1}, ${order.shipping_address?.city}, ${order.shipping_address?.postal_code}`
+                    `${order.shipping_address?.address_1}, ${order.shipping_address?.city} ${order.shipping_address?.postal_code}`
+                  }
+                </Typography>
+                <Typography size="body2/normal" className="block">
+                  {
+                    countriesMap[
+                      order.shipping_address
+                        ?.country_code as keyof typeof countriesMap
+                    ]
                   }
                 </Typography>
                 <Typography size="body2/normal" className="block">
