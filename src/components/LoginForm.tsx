@@ -13,15 +13,16 @@ const LoginForm = () => {
     }
     try {
       await user.login(data);
-      if (
-        ["/signup", "/login", "/forgot-password", "/password-reset"].filter(
-          (i) => (document.referrer.indexOf(i) < 0 ? false : true)
-        ).length
-      ) {
-        window.location.replace(`/?no-cache=${~~(Math.random() * 1000)}`);
+
+      const url = new URL(document.referrer);
+
+      if (url.hostname === location.hostname) {
+        url.searchParams.set('no-cache', `${~~(Math.random() * 10000)}`)
+        window.location.replace(url)
       } else {
-        history.back();
+        window.location.replace(`/?no-cache=${~~(Math.random() * 1000)}`)
       }
+
     } catch (error) {
       const errorResponse = (error as any)?.toJSON?.();
       if (errorResponse) {
