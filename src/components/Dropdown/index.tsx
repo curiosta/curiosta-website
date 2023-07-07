@@ -73,6 +73,7 @@ const Dropdown: FunctionComponent<DropdownProps> & DropdownElements = ({
           {DropdownElements.map((item, index) =>
             item &&
             cloneElement(item, {
+              tabIndex: isDropdownOpen.value ? item.props.tabIndex : -1,
               key: `menu-item-${index}`,
               role: "menuitem",
             })
