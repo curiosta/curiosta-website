@@ -19,6 +19,8 @@ const LoginForm = () => {
       if (url.hostname === location.hostname) {
         url.searchParams.set('no-cache', `${~~(Math.random() * 10000)}`)
         window.location.replace(url)
+      } else {
+        window.location.replace(`/?no-cache=${~~(Math.random() * 1000)}`)
       }
 
     } catch (error) {
