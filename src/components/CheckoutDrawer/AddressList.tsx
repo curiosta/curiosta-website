@@ -7,9 +7,9 @@ import AddressForm from "./AddressForm";
 import { cx } from "class-variance-authority";
 import AddressCard from "./AddressCard";
 import cart from "@api/cart";
-import useLocalStorage from "@hooks/useLocalStorage";
 import "@utils/addressList.css";
 import { removeShippingAddress } from "@api/user/removeShippingAddress";
+import region from "@api/region";
 
 type TAddressListProps = {
   selectedAddressId: Signal<string | null>;
@@ -19,6 +19,8 @@ const AddressList: FunctionComponent<TAddressListProps> = ({ selectedAddressId }
   const currentCustomer = user.customer.value;
   const isNewAddress = useSignal<boolean>(true);
   const isLoading = useSignal<boolean>(false);
+
+  console.log(isNewAddress.value);
 
   const handleSelectAddress = async (e: ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.currentTarget;
@@ -32,6 +34,7 @@ const AddressList: FunctionComponent<TAddressListProps> = ({ selectedAddressId }
   const updateShippingAddress = async () => {
     try {
       if (!cart.store.value?.id || !selectedAddressId.value) return;
+
       await cart.updateCart({
         shipping_address: selectedAddressId.value,
         billing_address: selectedAddressId.value,
@@ -50,7 +53,7 @@ const AddressList: FunctionComponent<TAddressListProps> = ({ selectedAddressId }
   }, [selectedAddressId.value]);
 
   useEffect(() => {
-    if (currentCustomer?.billing_address_id && !selectedAddressId.value) {
+    if (currentCustomer?.billing_address_id && !selectedAddressId.value && currentCustomer.shipping_addresses.findIndex(i => i.id === currentCustomer.billing_address_id && i.country_code === region.selectedCountry.value?.iso_2)) {
       selectedAddressId.value = currentCustomer.billing_address_id;
       isNewAddress.value = false;
     }

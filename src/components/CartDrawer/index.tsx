@@ -25,7 +25,7 @@ const CartDrawer = () => {
     <div
       className={cx(
         `fixed w-full flex h-screen top-0 left-0 opacity-0 pointer-events-none -z-10 transition-all duration-100`,
-        cart.open.value && `z-50 opacity-100 pointer-events-auto`
+        cart.open.value && `z-40 opacity-100 pointer-events-auto`
       )}
     >
       {/* overlay */}

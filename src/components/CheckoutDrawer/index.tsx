@@ -7,7 +7,7 @@ import { checkoutOpen } from "@store/checkoutStore";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { cx } from "class-variance-authority";
-import { createPortal, useEffect, useMemo } from "preact/compat";
+import { createPortal, useEffect } from "preact/compat";
 import CheckoutElements from "./CheckoutElements";
 import Typography from "@components/Typography";
 
@@ -15,7 +15,7 @@ const stripe = await loadStripe(import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY ||
 
 const CheckoutDrawer = () => {
   const { addListener } = useKeyboard('Escape');
-  const selectedAddressId = useSignal<string | null>(null);
+  const selectedAddressId = useSignal<string | null | undefined>(undefined);
   const clientSecret = useSignal<string | undefined>(undefined);
   // remove app's default scroll if cart is open
   document.body.style.overflow = checkoutOpen.value ? "hidden" : "auto";
