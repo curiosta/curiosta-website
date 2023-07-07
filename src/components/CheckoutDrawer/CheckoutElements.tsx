@@ -66,9 +66,8 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({
           postal_code: selectedAddress.postal_code || "",
           state: selectedAddress.province || "",
         },
-        name: `${selectedAddress?.first_name || ""} ${
-          selectedAddress?.last_name || ""
-        }`.trim(),
+        name: `${selectedAddress?.first_name || ""} ${selectedAddress?.last_name || ""
+          }`.trim(),
       };
 
       const { error } = await stripeInstance.confirmPayment({
@@ -87,10 +86,11 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({
           shipping: userDetails,
         },
       });
-    } catch (error) {}
+    } catch (error) { }
     processingPayment.value = false;
   };
 
+  console.log('selected address:', selectedAddressId.value);
   return (
     <div className="flex flex-col px-4 h-full">
       <div class="h-full">
@@ -122,7 +122,7 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({
                     <Button
                       type="submit"
                       disabled={
-                        !!(cart.loading.value || processingPayment.value)
+                        !!(cart.loading.value || processingPayment.value || !selectedAddressId.value)
                       }
                     >
                       Confirm order
