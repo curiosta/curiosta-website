@@ -1825,10 +1825,10 @@ astro-eslint-parser@^0.14.0:
     espree "^9.0.0"
     semver "^7.3.8"
 
-astro-sst@^2.12.0:
-  version "2.16.3"
-  resolved "https://registry.npmjs.org/astro-sst/-/astro-sst-2.16.3.tgz"
-  integrity sha512-s5P9J9EWW/H5GAtivKq9W6FGLVYb1X3Gbq3sE8QRvUphWQglTq6oyQO5nLJT2/RpPRF3Z//XEj3LlP28qkNDqg==
+astro-sst@^2.19.1:
+  version "2.19.1"
+  resolved "https://registry.yarnpkg.com/astro-sst/-/astro-sst-2.19.1.tgz#fe2173be444644c37b34a2b8b3e46322d70df079"
+  integrity sha512-/t3YFB7CAiPseKMd3iAgjwLNMo+zDoCCOgZ6bcOetfaWp9N5ELfrdUjUn7Bsc08kQh51KUrubGoBS0p87Mhi3w==
   dependencies:
     "@astrojs/webapi" "^2.1.0"
 
