@@ -51,7 +51,7 @@ const OrdersInfo: FunctionComponent<TOrderProps> = ({ order }) => {
                       className="block"
                     >{`${order.shipping_address?.first_name} ${order.shipping_address?.last_name}`}</Typography>
                     <Typography size="body2/normal" className="block">
-                      {`${order.shipping_address?.address_1}, ${order.shipping_address?.city} ${order.shipping_address?.postal_code}`}
+                      {`${order.shipping_address?.address_1}, ${order.shipping_address?.city},${order.shipping_address?.province} ${order.shipping_address?.postal_code}`}
                     </Typography>
                     <Typography size="body2/normal" className="block">
                       {
