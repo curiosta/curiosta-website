@@ -1,0 +1,33 @@
+import { test, expect } from '@playwright/test';
+
+test('Open Making Page', async ({ page }) => {
+  await page.goto('https://curiosta.com/');
+  await page.goto('https://curiosta.com/open-making');
+  await page.getByRole('link', { name: 'Intro' }).click();
+  await page.goto('https://curiosta.com/open-making');
+  await page.goto('https://curiosta.com/open-making#');
+  await page.goto('https://curiosta.com/open-making');
+  await page.goto('https://curiosta.com/solution-engineers');
+  await page.goto('https://curiosta.com/open-making');
+  await page.getByRole('link', { name: 'Check Product' }).click();
+  await page.goto('https://curiosta.com/open-making');
+  await page.getByRole('link', { name: 'Discover Manufacturers near you' }).click();
+  await page.goto('https://curiosta.com/open-making');
+  await page.getByRole('link', { name: 'Enter the global build' }).click();
+  await page.getByRole('link', { name: 'Our Model' }).click();
+  await page.goto('https://curiosta.com/open-making');
+  await page.getByRole('link', { name: 'Manufacturers', exact: true }).click();
+  await page.goto('https://curiosta.com/open-making/manufacturers#');
+  await page.goto('https://curiosta.com/open-making/manufacturers');
+  await page.goto('https://curiosta.com/open-making/manufacturers#');
+  await page.goto('https://curiosta.com/open-making/manufacturers');
+  await page.goto('https://curiosta.com/open-making');
+  await page.getByRole('link', { name: 'Build', exact: true }).click();
+  await page.getByRole('link', { name: 'WowCarving' }).click();
+  await page.goto('https://curiosta.com/open-making/build');
+  await page.goto('https://curiosta.com/open-making');
+  await page.getByRole('link', { name: 'Collaboration' }).click();
+  await page.getByRole('link', { name: 'About Us' }).click();
+  await page.goto('https://curiosta.com/open-making');
+  await page.goto('https://curiosta.com/');
+});
