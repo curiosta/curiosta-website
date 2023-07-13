@@ -1,29 +1,26 @@
-import cart from "@api/cart";
 import Dropdown from "./Dropdown";
 import Typography from "./Typography";
 import user from "@api/user";
-import Chip from "./Chip";
 import Select from "./Select";
 import region from "@api/region";
+import cart from "@api/cart";
 
 const RightNav = () => {
-  const totalCartItems = cart.store.value?.items?.reduce(
-    (acc, curVal) => acc + curVal.quantity,
-    0
-  );
-
   return (
     <div>
       <Dropdown title="My Account">
         {/* profile */}
         <Dropdown.Item noHoverEffects tabIndex={-1}>
           <Typography size="body2/normal">
-            {user.state.value === "unauthenticated" ? "Browsing" : "Signed in"} as
+            {user.state.value === "unauthenticated" ? "Browsing" : "Signed in"}{" "}
+            as
           </Typography>
           <Typography size="body2/medium" className="my-0.5" ellipses={1}>
             {user.state.value === "loading" ? "Loading..." : null}
-            {user.state.value === "authenticated" ? user.customer.value?.email : null}
-            {user.state.value === "unauthenticated" ? 'Guest' : null}
+            {user.state.value === "authenticated"
+              ? user.customer.value?.email
+              : null}
+            {user.state.value === "unauthenticated" ? "Guest" : null}
           </Typography>
         </Dropdown.Item>
 
@@ -93,20 +90,22 @@ const RightNav = () => {
         {/* authentication */}
         {user.state.value !== 'loading' ? <Dropdown.Divider /> : null}
         {user.state.value === "authenticated" ? (
-          <Dropdown.Item onClick={async () => {
-            await user.logout()
-            location.href = '/login'
-          }}>
+          <Dropdown.Item
+            onClick={async () => {
+              await user.logout();
+              location.href = "/login";
+            }}
+          >
             Sign out
           </Dropdown.Item>
         ) : null}
         {user.state.value === "unauthenticated" ? (
-          <Dropdown.Item onClick={() => location.href = '/login'}>
+          <Dropdown.Item onClick={() => (location.href = "/login")}>
             Login
           </Dropdown.Item>
         ) : null}
         {user.state.value === "unauthenticated" ? (
-          <Dropdown.Item onClick={() => location.href = '/signup'}>
+          <Dropdown.Item onClick={() => (location.href = "/signup")}>
             Signup
           </Dropdown.Item>
         ) : null}
