@@ -49,7 +49,7 @@ const Select: FC<TSelectProps> = ({
     <>
       <Listbox
         disabled={disabled} onChange={async (selected) => {
-          const selectedOption = options.find(o => o.value === activeOption.value)
+          const selectedOption = options.find(o => o.value === selected)
           try {
             await onChange?.(selectedOption)
             activeOption.value = selected;

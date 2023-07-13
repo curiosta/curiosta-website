@@ -51,7 +51,6 @@ class Region {
       this.selectedCountry.value = country
       return;
     }
-
   }
 
   async setCountry(id: number) {
@@ -68,7 +67,6 @@ class Region {
     await cart.listShippingMethods()
     this.selectedCountry.value = country
   }
-
 }
 
 

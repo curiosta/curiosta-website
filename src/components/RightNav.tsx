@@ -55,24 +55,18 @@ const RightNav = () => {
           onChange={async (option) => {
             const selectedCountryId = option && region.countries.value.find(country => country.iso_2 === option?.value)?.id
             if (selectedCountryId) {
-              if (!cart.store.value) return;
-
+              if (!cart.store.value) throw new Error("Cart is not initialized!");
               const cartItemsLength = cart.store.value.items.length;
               if (cartItemsLength) {
                 const answer = confirm(
                   "Changing country will clear cart items, Do you still want to proceed?"
                 );
-
                 if (answer) {
-
                   await cart.resetCartId();
                   await region.setCountry(selectedCountryId)
-
                 } else {
                   throw new Error("User cancelled the prompt!")
                 }
-
-
               } else {
                 await region.setCountry(selectedCountryId)
               }
