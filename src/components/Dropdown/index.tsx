@@ -4,6 +4,7 @@ import type { JSXInternal } from "preact/src/jsx";
 import { useSignal } from "@preact/signals";
 import DropdownDivider from "./DropdownDivider";
 import { useEffect, useRef } from "preact/hooks";
+import Select from "@components/Select";
 
 type DropdownProps = {
   children: (JSXInternal.Element | null)[];
@@ -12,7 +13,7 @@ type DropdownProps = {
 
 type DropdownElements = {
   Item: typeof DropdownItem,
-  Divider: typeof DropdownDivider
+  Divider: typeof DropdownDivider,
 }
 
 const Dropdown: FunctionComponent<DropdownProps> & DropdownElements = ({
@@ -21,7 +22,7 @@ const Dropdown: FunctionComponent<DropdownProps> & DropdownElements = ({
 }) => {
   const isDropdownOpen = useSignal<boolean | undefined>(undefined);
   const dropdownRef = useRef<HTMLDivElement>(null)
-  const DropdownElements = children.filter((child) => [DropdownDivider, DropdownItem].includes(child?.type as any));
+  const DropdownElements = children.filter((child) => [DropdownDivider, DropdownItem, Select].includes(child?.type as any));
 
   useEffect(() => {
     const clickAwayListener = (e: MouseEvent) => {

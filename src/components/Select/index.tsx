@@ -3,7 +3,7 @@ import { useSignal } from '@preact/signals';
 // import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { cx } from 'class-variance-authority';
 import { ComponentChildren, Fragment } from 'preact';
-import type { FC, HTMLAttributes } from 'preact/compat';
+import { useEffect, type FC, type HTMLAttributes } from 'preact/compat';
 
 function classNames(...classes: string[]) {
   return classes.filter((c) => c).join(' ');
@@ -17,13 +17,16 @@ type TOption = {
   adornment?: ComponentChildren;
 };
 
-type TSelectProps = {
+export type TSelectProps = {
   label?: string;
   options: TOption[];
   defaultValue: string;
   selectProps?: HTMLAttributes<HTMLSelectElement>;
   className?: string;
   disabled?: boolean;
+  roundedAvatars?: boolean;
+  ListBoxValueComponent?: ({ open, disabled, selected }: { open: boolean, disabled?: boolean, selected?: TOption }) => ComponentChildren;
+  onChange?: (selectedOption: TOption | undefined) => void;
 };
 
 const Select: FC<TSelectProps> = ({
@@ -31,13 +34,29 @@ const Select: FC<TSelectProps> = ({
   options,
   className,
   disabled,
-  defaultValue
+  defaultValue,
+  ListBoxValueComponent,
+  roundedAvatars = true,
+  onChange,
 }) => {
   const activeOption = useSignal<string | undefined>(defaultValue);
+
+  useEffect(() => {
+    activeOption.value = defaultValue
+  }, [defaultValue])
+
   return (
     <>
       <Listbox
-        disabled={disabled} onChange={(selected) => activeOption.value = selected}>
+        disabled={disabled} onChange={async (selected) => {
+          const selectedOption = options.find(o => o.value === activeOption.value)
+          try {
+            await onChange?.(selectedOption)
+            activeOption.value = selected;
+          }
+          catch (error) {
+          }
+        }}>
         {({ open, disabled: itemDisabled }: { open: boolean, disabled: boolean }) => {
           const selectedOption = options.find(o => o.value === activeOption.value)
           return (
@@ -48,46 +67,54 @@ const Select: FC<TSelectProps> = ({
                 </Listbox.Label>
               ) : null}
               <div className={cx(`relative mt-1`, className)}>
-                <Listbox.Button
-                  className={cx(
-                    'relative w-full cursor-default rounded-md py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 sm:text-sm sm:leading-6',
-                    selectedOption?.avatar && 'ml-3',
-                    itemDisabled ? 'bg-gray-100' : undefined
-                  )}
-                  tabIndex={itemDisabled ? -1 : undefined}>
-                  <span className="flex items-center">
-                    {selectedOption ? (
-                      <>
-                        {selectedOption.avatar ? (
-                          <img
-                            src={selectedOption?.avatar}
-                            alt=""
-                            className="h-5 w-5 flex-shrink-0 rounded-full"
-                          />
-                        ) : null}
-                        {selectedOption?.adornment && !selectedOption.avatar ? (
-                          <div className="mr-1">{selectedOption.adornment}</div>
-                        ) : null}
-                        <span className="ml-0 font-normal block truncate">
-                          {selectedOption?.label}
-                        </span>
-                      </>
-                    ) : null}
-                  </span>
-                  <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5 text-gray-400">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
-                    </svg>
-                  </span>
-                </Listbox.Button>
+                {!ListBoxValueComponent ? (
+                  <Listbox.Button
+                    className={cx(
+                      'relative w-full cursor-default rounded-md py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 sm:text-sm sm:leading-6',
+                      selectedOption?.avatar && 'ml-3',
+                      itemDisabled ? 'bg-gray-100' : undefined
+                    )}
+                    tabIndex={itemDisabled ? -1 : undefined}>
+                    <span className="flex items-center">
+                      {selectedOption ? (
+                        <>
+                          {selectedOption.avatar ? (
+                            <img
+                              src={selectedOption?.avatar}
+                              alt=""
+                              className="h-5 w-5 flex-shrink-0 rounded-full"
+                            />
+                          ) : null}
+                          {selectedOption?.adornment && !selectedOption.avatar ? (
+                            <div className="mr-1">{selectedOption.adornment}</div>
+                          ) : null}
+                          <span className="ml-0 font-normal block truncate">
+                            {selectedOption?.label}
+                          </span>
+                        </>
+                      ) : null}
+                    </span>
+                    <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5 text-gray-400">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+                      </svg>
+                    </span>
+                  </Listbox.Button>
+                ) : (
+                  <>
+                    <Listbox.Button className="w-full">
+                      {ListBoxValueComponent({ open, disabled, selected: selectedOption }) as any}
+                    </Listbox.Button>
+                  </>
+                )}
 
                 <Transition
                   show={open}
-                  as={Fragment}
+                  as={Fragment as any}
                   leave="transition ease-in duration-100"
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0">
-                  <Listbox.Options className="absolute z-50 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                  {<Listbox.Options className="absolute z-50 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                     {options.map((option) => (
                       <Listbox.Option
                         key={option.id}
@@ -105,7 +132,7 @@ const Select: FC<TSelectProps> = ({
                                 <img
                                   src={option.avatar}
                                   alt=""
-                                  className="h-5 w-5 flex-shrink-0 rounded-full"
+                                  className={`h-5 w-5 flex-shrink-0 ${roundedAvatars && 'rounded-full'}`}
                                 />
                               ) : null}
                               <span
@@ -129,16 +156,16 @@ const Select: FC<TSelectProps> = ({
                               </span>
                             ) : null}
                           </>
-                        )}
+                        ) as any}
                       </Listbox.Option>
-                    ))}
-                  </Listbox.Options>
+                    ) as any)}
+                  </Listbox.Options> as any}
                 </Transition>
               </div>
             </div>
-          );
+          ) as any;
         }}
-      </Listbox>
+      </Listbox >
     </>
   );
 };

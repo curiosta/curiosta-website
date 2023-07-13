@@ -2,7 +2,6 @@
 import Button from "@components/Button";
 import RightNav from "@components/RightNav";
 import CartDrawer from "@components/CartDrawer";
-import ShipmentRegions from "./ShipmentRegions";
 import CheckoutDrawer from "./CheckoutDrawer";
 
 const navLinks = [
@@ -60,8 +59,6 @@ const navLinks = [
       }
     </div>
 
-    <!-- other options -->
-    <ShipmentRegions client:load />
     <!-- Right Nav -->
     <CartDrawer client:only="preact" />
     <CheckoutDrawer client:only="preact" />
@@ -148,10 +145,6 @@ const navLinks = [
                 </a>
               ))
             }
-          </div>
-          <div class="py-4">
-            <ShipmentRegions screen="mobile" client:load />
-            <!-- <CartDrawer client:only="preact" /> -->
           </div>
         </div>
       </div>

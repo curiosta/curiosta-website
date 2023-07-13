@@ -3,6 +3,8 @@ import Dropdown from "./Dropdown";
 import Typography from "./Typography";
 import user from "@api/user";
 import Chip from "./Chip";
+import Select from "./Select";
+import region from "@api/region";
 
 const RightNav = () => {
   const totalCartItems = cart.store.value?.items?.reduce(
@@ -13,6 +15,7 @@ const RightNav = () => {
   return (
     <div>
       <Dropdown title="My Account">
+        {/* profile */}
         <Dropdown.Item noHoverEffects tabIndex={-1}>
           <Typography size="body2/normal">
             {user.state.value === "unauthenticated" ? "Browsing" : "Signed in"} as
@@ -23,19 +26,71 @@ const RightNav = () => {
             {user.state.value === "unauthenticated" ? 'Guest' : null}
           </Typography>
         </Dropdown.Item>
+
         <Dropdown.Divider />
-        <Dropdown.Item onClick={() => cart.open.value = true}>
-          <div className="flex justify-between items-center">
-            <Typography>Cart</Typography>
-            <Chip variant='primary2'>
-              {cart.loading.value === 'cart:get' ? 'Loading...' : totalCartItems}
-            </Chip>
-          </div>
-        </Dropdown.Item>
+        {/* region selector */}
+
+        <Select
+          roundedAvatars={false}
+          defaultValue={region.selectedCountry.value?.iso_2 || ''}
+          className="pt-0"
+          options={region.countries.value?.map(
+            (item, index) => ({
+              id: `region-selector-${index}`,
+              label: item.display_name,
+              value: item.iso_2, avatar: `/countries/${item.iso_2}.svg`
+            })
+          )}
+          ListBoxValueComponent={({ selected }) => (
+            <Dropdown.Item className="flex items-center gap-2">
+              {selected ? (
+                <>
+                  <img src={`/countries/${selected.value}.svg`} alt={`Flag of ${selected.label}`} />
+                  <Typography size="body2/normal">{selected.label}</Typography>
+                </>
+              ) : (
+                <>
+                  Select a location.
+                </>
+              )}
+            </Dropdown.Item>
+          )}
+          onChange={async (option) => {
+            const selectedCountryId = option && region.countries.value.find(country => country.iso_2 === option?.value)?.id
+            if (selectedCountryId) {
+              if (!cart.store.value) return;
+
+              const cartItemsLength = cart.store.value.items.length;
+              if (cartItemsLength) {
+                const answer = confirm(
+                  "Changing country will clear cart items, Do you still want to proceed?"
+                );
+
+                if (answer) {
+
+                  await cart.resetCartId();
+                  await region.setCountry(selectedCountryId)
+
+                } else {
+                  throw new Error("User cancelled the prompt!")
+                }
+
+
+              } else {
+                await region.setCountry(selectedCountryId)
+              }
+            }
+          }}
+        />
+
+        <Dropdown.Divider />
+        {/* orders */}
+
         <Dropdown.Item onClick={() => location.href = '/orders'}>
           Orders
         </Dropdown.Item>
 
+        {/* authentication */}
         {user.state.value !== 'loading' ? <Dropdown.Divider /> : null}
         {user.state.value === "authenticated" ? (
           <Dropdown.Item onClick={async () => {
