@@ -5,12 +5,10 @@ import type { ChangeEvent } from "preact/compat";
 import Radio from "@components/Radio";
 import { cx } from "class-variance-authority";
 import countriesMap from "@utils/countriesMap";
-import Button from "../Button";
-import region from "@api/region";
 
 interface Props {
   address: Address;
-  selectedAddressId: Signal<string | null>;
+  selectedAddressId: Signal<string | null | undefined>;
   isLoading: Signal<boolean>;
   handleSelectAddress: (e: ChangeEvent<HTMLInputElement>) => void;
   deleteAddress: (id: string) => Promise<void>
@@ -21,13 +19,18 @@ const AddressCard = ({
   selectedAddressId,
   handleSelectAddress,
   isLoading,
-  deleteAddress
 }: Props) => {
   const disabled = isLoading.value;
 
-  // current address is of different region from currently selected,
-  // medusa does not supports that so removing address that are not of same region
-  if (address && region.selectedCountry.value && address.country_code !== region.selectedCountry.value.iso_2) return null;
+  const addressInfo = [
+    address.address_1,
+    address.address_2,
+    address.city,
+    address.province,
+    address && countriesMap[address.country_code as keyof typeof countriesMap],
+    address.postal_code
+  ]
+
   return (
     <label
       class={cx(`relative flex w-52 h-full min-h-[10rem] cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none focus:ring-primary-600 focus:ring-2`,
@@ -55,17 +58,8 @@ const AddressCard = ({
             variant="secondary"
             className={cx(`mt-1 flex items-center`, disabled && `!text-gray-400`)}
           >
-            {`${address?.address_1}, ${address.city}, ${address.postal_code} `}
+            {addressInfo.filter(i => i).join(', ')}
           </Typography>
-          {address?.country_code ? (
-            <Typography
-              size="body2/normal"
-              variant="secondary"
-              className={cx("mt-1 flex items-center", disabled && `!text-gray-400`)}
-            >
-              country code: {countriesMap[address?.country_code as keyof typeof countriesMap]}
-            </Typography>
-          ) : null}
           <Typography
             size="body2/normal"
             variant="secondary"

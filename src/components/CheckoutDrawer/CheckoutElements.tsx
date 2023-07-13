@@ -25,10 +25,14 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({
   const elements = useElements();
   const currentCustomer = user.customer.value;
   const processingPayment = useSignal<boolean>(false);
-
+  const errorState = useSignal<string | undefined>(undefined);
   const handlePayment = async () => {
+    if (errorState.value) errorState.value = undefined;
     processingPayment.value = true;
+
+
     const stripeInstance = await stripe;
+
 
     if (
       !stripeInstance ||
@@ -66,9 +70,8 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({
           postal_code: selectedAddress.postal_code || "",
           state: selectedAddress.province || "",
         },
-        name: `${selectedAddress?.first_name || ""} ${
-          selectedAddress?.last_name || ""
-        }`.trim(),
+        name: `${selectedAddress?.first_name || ""} ${selectedAddress?.last_name || ""
+          }`.trim(),
       };
 
       const { error } = await stripeInstance.confirmPayment({
@@ -87,9 +90,23 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({
           shipping: userDetails,
         },
       });
-    } catch (error) {}
+      if (error) throw error;
+    } catch (error: any) {
+      errorState.value = error?.message || 'Unknown error occurred!';
+    }
     processingPayment.value = false;
   };
+
+  const disableCheckoutButton = () => {
+    let hasAnyError = false;
+    if (!selectedAddressId.value) hasAnyError = true;
+    if (!cart.store.value?.items.length) hasAnyError = true;
+    if (!cart.store.value?.payment_session) hasAnyError = true;
+    if (!clientSecret.value) hasAnyError = true;
+    if (!cart.store.value?.shipping_address_id || !cart.store.value.billing_address_id) hasAnyError = true;
+    if (cart.loading.value) hasAnyError = true; // if there is any query running in cart.
+    return hasAnyError;
+  }
 
   return (
     <div className="flex flex-col px-4 h-full">
@@ -121,12 +138,11 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({
                   <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
                     <Button
                       type="submit"
-                      disabled={
-                        !!(cart.loading.value || processingPayment.value)
-                      }
+                      disabled={disableCheckoutButton()}
                     >
                       Confirm order
                     </Button>
+                    {errorState.value ? <Typography variant="error" className='text-center mt-1'>{errorState}</Typography> : null}
                   </div>
                 </div>
               </div>

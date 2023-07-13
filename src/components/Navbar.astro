@@ -2,8 +2,8 @@
 import Button from "@components/Button";
 import RightNav from "@components/RightNav";
 import CartDrawer from "@components/CartDrawer";
-import ShipmentRegions from "./ShipmentRegions";
 import CheckoutDrawer from "./CheckoutDrawer";
+import NavCartItem from "@components/NavCartItem";
 
 const navLinks = [
   {
@@ -34,7 +34,7 @@ const navLinks = [
     class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
     aria-label="Global"
   >
-  <!-- logo -->
+    <!-- logo -->
     <div class="flex">
       <a href="/" class="-m-1.5 p-1.5">
         <img
@@ -60,14 +60,15 @@ const navLinks = [
       }
     </div>
 
-    <!-- other options -->
-    <ShipmentRegions client:load />
     <!-- Right Nav -->
     <CartDrawer client:only="preact" />
     <CheckoutDrawer client:only="preact" />
-    <div class="flex gap-4">
+    <div class="flex gap-8 items-center">
+      <div class="hidden lg:block">
+        <NavCartItem client:load />
+      </div>
       <RightNav client:load />
-      
+
       <!-- hamburger -->
       <div class="flex lg:hidden">
         <Button
@@ -95,7 +96,6 @@ const navLinks = [
     </div>
   </nav>
 
-  
   {/* Mobile menu, show/hide based on menu open state. */}
   <div class="lg:hidden" role="dialog" aria-modal="true">
     {/* Background backdrop, show/hide based on slide-over state. */}
@@ -149,9 +149,8 @@ const navLinks = [
               ))
             }
           </div>
-          <div class="py-4">
-            <ShipmentRegions screen="mobile" client:load />
-            <!-- <CartDrawer client:only="preact" /> -->
+          <div class="lg:hidden block py-2">
+            <NavCartItem client:load />
           </div>
         </div>
       </div>

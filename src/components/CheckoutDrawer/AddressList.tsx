@@ -1,15 +1,16 @@
 import user from "@api/user";
 import Button from "@components/Button";
 import Typography from "@components/Typography";
-import { Signal, useSignal } from "@preact/signals";
+import { Signal, useComputed, useSignal } from "@preact/signals";
 import { ChangeEvent, FunctionComponent, useEffect } from "preact/compat";
 import AddressForm from "./AddressForm";
 import { cx } from "class-variance-authority";
 import AddressCard from "./AddressCard";
 import cart from "@api/cart";
-import useLocalStorage from "@hooks/useLocalStorage";
 import "@utils/addressList.css";
 import { removeShippingAddress } from "@api/user/removeShippingAddress";
+import region from "@api/region";
+import type { Address } from "@medusajs/medusa";
 
 type TAddressListProps = {
   selectedAddressId: Signal<string | null>;
@@ -19,6 +20,9 @@ const AddressList: FunctionComponent<TAddressListProps> = ({ selectedAddressId }
   const currentCustomer = user.customer.value;
   const isNewAddress = useSignal<boolean>(true);
   const isLoading = useSignal<boolean>(false);
+  const listOfSupportedAddresses = useComputed(() => {
+    return currentCustomer?.shipping_addresses.filter((address) => address.country_code && address.country_code === region.selectedCountry.value?.iso_2)
+  });
 
   const handleSelectAddress = async (e: ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.currentTarget;
@@ -32,6 +36,7 @@ const AddressList: FunctionComponent<TAddressListProps> = ({ selectedAddressId }
   const updateShippingAddress = async () => {
     try {
       if (!cart.store.value?.id || !selectedAddressId.value) return;
+
       await cart.updateCart({
         shipping_address: selectedAddressId.value,
         billing_address: selectedAddressId.value,
@@ -50,7 +55,7 @@ const AddressList: FunctionComponent<TAddressListProps> = ({ selectedAddressId }
   }, [selectedAddressId.value]);
 
   useEffect(() => {
-    if (currentCustomer?.billing_address_id && !selectedAddressId.value) {
+    if (currentCustomer?.billing_address_id && !selectedAddressId.value && listOfSupportedAddresses.value?.find(address => address.id === currentCustomer.billing_address_id)) {
       selectedAddressId.value = currentCustomer.billing_address_id;
       isNewAddress.value = false;
     }
@@ -116,7 +121,7 @@ const AddressList: FunctionComponent<TAddressListProps> = ({ selectedAddressId }
               </svg>
             </Button>
 
-            {currentCustomer?.shipping_addresses?.map((address) => (
+            {listOfSupportedAddresses.value?.map((address) => (
               <AddressCard
                 address={address}
                 isLoading={isLoading}

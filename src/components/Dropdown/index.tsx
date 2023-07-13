@@ -4,6 +4,7 @@ import type { JSXInternal } from "preact/src/jsx";
 import { useSignal } from "@preact/signals";
 import DropdownDivider from "./DropdownDivider";
 import { useEffect, useRef } from "preact/hooks";
+import Select from "@components/Select";
 
 type DropdownProps = {
   children: (JSXInternal.Element | null)[];
@@ -12,7 +13,7 @@ type DropdownProps = {
 
 type DropdownElements = {
   Item: typeof DropdownItem,
-  Divider: typeof DropdownDivider
+  Divider: typeof DropdownDivider,
 }
 
 const Dropdown: FunctionComponent<DropdownProps> & DropdownElements = ({
@@ -21,11 +22,11 @@ const Dropdown: FunctionComponent<DropdownProps> & DropdownElements = ({
 }) => {
   const isDropdownOpen = useSignal<boolean | undefined>(undefined);
   const dropdownRef = useRef<HTMLDivElement>(null)
-  const DropdownElements = children.filter((child) => [DropdownDivider, DropdownItem].includes(child?.type as any));
+  const DropdownElements = children.filter((child) => [DropdownDivider, DropdownItem, Select].includes(child?.type as any));
 
   useEffect(() => {
     const clickAwayListener = (e: MouseEvent) => {
-      if (dropdownRef.current?.contains(e.target as any)) return;
+      if (dropdownRef.current?.contains(e.target as any) || isDropdownOpen.value === undefined) return;
       isDropdownOpen.value = false
     }
 
@@ -63,7 +64,7 @@ const Dropdown: FunctionComponent<DropdownProps> & DropdownElements = ({
         </button>
       </div>
       <div
-        class={`absolute ${isDropdownOpen.value !== undefined && (isDropdownOpen.value ? 'animate-mini-expand' : 'animate-mini-shrink pointer-events-none')} opacity-0 scale-95 right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`}
+        class={`absolute ${isDropdownOpen.value !== undefined && (isDropdownOpen.value ? 'animate-mini-expand' : 'animate-mini-shrink')} ${!isDropdownOpen.value && 'pointer-events-none'} opacity-0 scale-95 right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`}
         role="menu"
         aria-orientation="vertical"
         aria-labelledby="menu-button"
@@ -73,6 +74,7 @@ const Dropdown: FunctionComponent<DropdownProps> & DropdownElements = ({
           {DropdownElements.map((item, index) =>
             item &&
             cloneElement(item, {
+              tabIndex: isDropdownOpen.value ? item.props.tabIndex : -1,
               key: `menu-item-${index}`,
               role: "menuitem",
             })
