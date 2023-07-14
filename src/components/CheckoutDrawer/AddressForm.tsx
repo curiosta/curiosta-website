@@ -101,6 +101,13 @@ const AddressForm = ({
               autocomplete="address-level2"
               required={{ message: "City is required!", value: true }}
             />
+            <Input
+              type="text"
+              name="province"
+              label="State"
+              autocomplete="address-level1"
+              required={{ message: "State is required!", value: true }}
+            />
 
             <Input
               type="text"
