@@ -1,5 +1,6 @@
 import cart from "@api/cart";
-import Typography from "./Typography";
+import Typography from "@components/Typography";
+import Button from "@components/Button";
 
 const NavCartItem = () => {
   const totalCartItems = cart.store.value?.items?.reduce(
@@ -8,8 +9,9 @@ const NavCartItem = () => {
   );
 
   return (
-    <div
-      class="flex items-center  cursor-pointer"
+    <Button
+      type="button"
+      variant="icon"
       onClick={() => (cart.open.value = true)}
     >
       <svg
@@ -28,7 +30,7 @@ const NavCartItem = () => {
       <Typography size="body2/medium" className="mx-2">
         {cart.loading.value === "cart:get" ? "" : totalCartItems}
       </Typography>
-    </div>
+    </Button>
   );
 };
 
