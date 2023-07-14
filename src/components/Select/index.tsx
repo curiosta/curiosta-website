@@ -25,6 +25,7 @@ export type TSelectProps = {
   className?: string;
   disabled?: boolean;
   roundedAvatars?: boolean;
+  minimalStyle?: boolean;
   ListBoxValueComponent?: ({ open, disabled, selected }: { open: boolean, disabled?: boolean, selected?: TOption }) => ComponentChildren;
   onChange?: (selectedOption: TOption | undefined) => void;
 };
@@ -37,6 +38,7 @@ const Select: FC<TSelectProps> = ({
   defaultValue,
   ListBoxValueComponent,
   roundedAvatars = true,
+  minimalStyle,
   onChange,
 }) => {
   const activeOption = useSignal<string | undefined>(defaultValue);
@@ -75,36 +77,38 @@ const Select: FC<TSelectProps> = ({
                       itemDisabled ? 'bg-gray-100' : undefined
                     )}
                     tabIndex={itemDisabled ? -1 : undefined}>
-                    <span className="flex items-center">
-                      {selectedOption ? (
-                        <>
-                          {selectedOption.avatar ? (
-                            <img
-                              src={selectedOption?.avatar}
-                              alt=""
-                              className="h-5 w-5 flex-shrink-0 rounded-full"
-                            />
+                    {(
+                      <>
+                        <span className="flex items-center">
+                          {selectedOption ? (
+                            <>
+                              {selectedOption.avatar ? (
+                                <img
+                                  src={selectedOption?.avatar}
+                                  alt=""
+                                  className="h-5 w-5 flex-shrink-0 rounded-full"
+                                />
+                              ) : null}
+                              {selectedOption?.adornment && !selectedOption.avatar ? (
+                                <div className="mr-1">{selectedOption.adornment}</div>
+                              ) : null}
+                              <span className="ml-0 font-normal block truncate">
+                                {selectedOption?.label}
+                              </span>
+                            </>
                           ) : null}
-                          {selectedOption?.adornment && !selectedOption.avatar ? (
-                            <div className="mr-1">{selectedOption.adornment}</div>
-                          ) : null}
-                          <span className="ml-0 font-normal block truncate">
-                            {selectedOption?.label}
-                          </span>
-                        </>
-                      ) : null}
-                    </span>
-                    <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5 text-gray-400">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
-                      </svg>
-                    </span>
+                        </span>
+                        <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5 text-gray-400">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+                          </svg>
+                        </span>
+                      </>
+                    ) as any}
                   </Listbox.Button>
                 ) : (
                   <>
-                    <Listbox.Button className="w-full">
-                      {ListBoxValueComponent({ open, disabled, selected: selectedOption }) as any}
-                    </Listbox.Button>
+                    {ListBoxValueComponent({ open, disabled, selected: selectedOption }) as any}
                   </>
                 )}
 
@@ -121,7 +125,8 @@ const Select: FC<TSelectProps> = ({
                         className={({ active }) =>
                           classNames(
                             active ? 'bg-primary-600 text-white' : 'text-gray-900',
-                            'relative cursor-default select-none py-2 pl-3 pr-9'
+                            'relative cursor-default select-none py-2',
+                            minimalStyle ? 'px-2' : 'pl-3 pr-9'
                           )
                         }
                         value={option.value}>
@@ -144,7 +149,7 @@ const Select: FC<TSelectProps> = ({
                               </span>
                             </div>
 
-                            {selected ? (
+                            {selected && !minimalStyle ? (
                               <span
                                 className={classNames(
                                   active ? 'text-white' : 'text-primary-600',
@@ -165,7 +170,7 @@ const Select: FC<TSelectProps> = ({
             </div>
           ) as any;
         }}
-      </Listbox >
+      </Listbox>
     </>
   );
 };

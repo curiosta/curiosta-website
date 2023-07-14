@@ -4,6 +4,7 @@ import user from "@api/user";
 import Select from "./Select";
 import region from "@api/region";
 import cart from "@api/cart";
+import { Listbox } from "@headlessui/react";
 
 const RightNav = () => {
   return (
@@ -39,18 +40,20 @@ const RightNav = () => {
             })
           )}
           ListBoxValueComponent={({ selected }) => (
-            <Dropdown.Item className="flex items-center gap-2">
-              {selected ? (
-                <>
-                  <img src={`/countries/${selected.value}.svg`} alt={`Flag of ${selected.label}`} />
-                  <Typography size="body2/normal">{selected.label}</Typography>
-                </>
-              ) : (
-                <>
-                  Select a location.
-                </>
-              )}
-            </Dropdown.Item>
+            <Listbox.Button className="w-full">
+              <Dropdown.Item className="flex items-center gap-2">
+                {selected ? (
+                  <>
+                    <img src={`/countries/${selected.value}.svg`} alt={`Flag of ${selected.label}`} />
+                    <Typography size="body2/normal">{selected.label}</Typography>
+                  </>
+                ) : (
+                  <>
+                    Select a location.
+                  </>
+                )}
+              </Dropdown.Item>
+            </Listbox.Button>
           )}
           onChange={async (option) => {
             const selectedCountryId = option && region.countries.value.find(country => country.iso_2 === option?.value)?.id

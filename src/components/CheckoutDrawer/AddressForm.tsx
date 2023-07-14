@@ -8,6 +8,7 @@ import cart from "@api/cart";
 import { Signal, useSignal } from "@preact/signals";
 import { useRef } from "preact/hooks";
 import region from "@api/region";
+import PhoneInput from "@components/PhoneInput";
 
 const AddressForm = ({
   selectedAddressId,
@@ -93,7 +94,7 @@ const AddressForm = ({
             autocomplete="street-address"
             required={{ message: "Address is required!", value: true }}
           />
-          <div class=" grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-3">
+          <div class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-4">
             <Input
               type="text"
               name="city"
@@ -113,21 +114,7 @@ const AddressForm = ({
               minLength={5}
               autocomplete="postal-code"
             />
-            <Input
-              name="phone"
-              type="tel"
-              label="Phone Number"
-              autocomplete="phone"
-              required={{ message: "Phone number is required!", value: true }}
-              placeholder={"+1 603-247-8958"}
-              validator={(value) =>
-                !/^\+\d{1,3}[-.\s]?\(?\d{1,3}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(
-                  value
-                )
-                  ? "Invalid phone number!"
-                  : true
-              }
-            />
+            <PhoneInput />
           </div>
 
           <div class="mt-5 border-t border-gray-200 pt-6">

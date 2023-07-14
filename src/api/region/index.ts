@@ -4,12 +4,18 @@ import user from "@api/user";
 import useLocalStorage from "@hooks/useLocalStorage";
 import type { Country } from "@medusajs/medusa";
 import { effect, signal } from "@preact/signals"
+import countryPrefixes from "country-prefixes";
+
+type TCountryExtras = {
+  prefix?: string;
+  minPhoneLength?: number;
+}
 
 
 class Region {
-  countries = signal<Country[]>([]);
+  countries = signal<(Country & TCountryExtras)[]>([]);
 
-  selectedCountry = signal<Country | undefined>(undefined);
+  selectedCountry = signal<Country & TCountryExtras | undefined>(undefined);
 
   constructor() {
     // run initialize when user.state.value changes from loading to authenticated/unauthenticated
@@ -24,13 +30,16 @@ class Region {
     const result = await medusa.regions.list();
     const { regions } = result;
 
-    const countries = regions.map((region) => region.countries).flat(1).sort((a, z) => a.display_name > z.display_name ? 1 : -1).map((country) => {
+    const countries = regions.map((region) => region.countries).flat(1).sort((a, z) => a.display_name > z.display_name ? 1 : -1).map((country: (Country & TCountryExtras)) => {
       const countryRegion = regions.find((r) => r.id == country.region_id);
       if (countryRegion) {
         country.region = countryRegion
+        country.prefix = countryPrefixes[country.iso_2][0]
+        country.minPhoneLength = countryPrefixes[country.iso_2][1]
       }
       return country
-    })
+    });
+
 
     this.countries.value = countries;
 
