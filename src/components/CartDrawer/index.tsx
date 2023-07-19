@@ -11,7 +11,7 @@ import { checkoutOpen } from "@store/checkoutStore";
 import useKeyboard from "@hooks/useKeyboard";
 
 const CartDrawer = () => {
-  const { addListener } = useKeyboard('Escape')
+  const { addListener } = useKeyboard("Escape");
   // remove app's default scroll if cart is open
   document.body.style.overflow = cart.open.value ? "hidden" : "auto";
 
@@ -19,13 +19,13 @@ const CartDrawer = () => {
     if (!checkoutOpen.value) {
       cart.open.value = false;
     }
-  })
+  });
 
   return createPortal(
     <div
       className={cx(
         `fixed w-full flex h-screen top-0 left-0 opacity-0 pointer-events-none -z-10 transition-all duration-100`,
-        cart.open.value && `z-40 opacity-100 pointer-events-auto`
+        cart.open.value && `z-50 opacity-100 pointer-events-auto`
       )}
     >
       {/* overlay */}
@@ -90,12 +90,12 @@ const CartDrawer = () => {
                 <Button
                   type="button"
                   variant="primary"
-                  disabled={user.state.value === 'loading'}
+                  disabled={user.state.value === "loading"}
                   onClick={() => {
-                    if (user.state.value === 'authenticated') {
+                    if (user.state.value === "authenticated") {
                       checkoutOpen.value = true;
                     } else {
-                      window.location.href = '/login'
+                      window.location.href = "/login";
                     }
                   }}
                 >
