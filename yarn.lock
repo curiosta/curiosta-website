@@ -1154,17 +1154,17 @@
     picocolors "^1.0.0"
     tslib "^2.5.0"
 
-"@preact/signals-core@^1.2.3":
-  version "1.3.0"
-  resolved "https://registry.npmjs.org/@preact/signals-core/-/signals-core-1.3.0.tgz"
-  integrity sha512-M+M3ZOtd1dtV/uasyk4SZu1vbfEJ4NeENv0F7F12nijZYedB5wSgbtZcuACyssnTznhF4ctUyrR0dZHuHfyWKA==
+"@preact/signals-core@^1.3.1":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@preact/signals-core/-/signals-core-1.3.1.tgz#7554563a6f3fc3a91d58ca103597ebe280f48e3b"
+  integrity sha512-DL+3kDssZ3UOMz9HufwSYE/gK0+TnT1jzegfF5rstgyPrnyfjz4BHAoxmzQA6Mkp4UlKe8qjsgl3v5a/obzNig==
 
-"@preact/signals@^1.1.0", "@preact/signals@^1.1.3":
-  version "1.1.3"
-  resolved "https://registry.npmjs.org/@preact/signals/-/signals-1.1.3.tgz"
-  integrity sha512-N09DuAVvc90bBZVRwD+aFhtGyHAmJLhS3IFoawO/bYJRcil4k83nBOchpCEoS0s5+BXBpahgp0Mjf+IOqP57Og==
+"@preact/signals@^1.1.0", "@preact/signals@^1.1.5":
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/@preact/signals/-/signals-1.1.5.tgz#3bd847dfd6609691fe07a38e30245361d9a7ceea"
+  integrity sha512-OWr9TjuNh9ol/B5rNbLANEA940MvbYDMGcSAjPaKzAHBPhnTpuFCWhBB8vSm9lfy1BxKx6DKJLSs3Cz24otdkw==
   dependencies:
-    "@preact/signals-core" "^1.2.3"
+    "@preact/signals-core" "^1.3.1"
 
 "@proload/core@^0.3.3":
   version "0.3.3"
