@@ -43,7 +43,6 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({
       await cart.completeCart(cart.store.value.id);
 
       await cart.resetCartId();
-      // window.location.href = `${window.location.origin}/orders/confirm?cart=${cart.store.value.id}`;
     } else {
       const stripeInstance = stripe;
 

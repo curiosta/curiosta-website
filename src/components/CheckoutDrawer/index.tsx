@@ -28,9 +28,7 @@ const CheckoutDrawer = () => {
 
   useSignalEffect(() => {
     const regionName = region.selectedCountry.value?.name;
-    console.log(regionName);
     if (!stripe && regionName && regionName !== "INDIA") {
-      console.log("loaded stripe");
       loadStripe(import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY || "").then(
         (res) => (stripe = res)
       );

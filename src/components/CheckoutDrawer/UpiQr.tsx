@@ -1,4 +1,5 @@
 import cart from "@api/cart";
+import Button from "@components/Button";
 import Typography from "@components/Typography";
 import { useSignalEffect } from "@preact/signals";
 import priceToCurrency from "@utils/priceToCurrency";
@@ -23,21 +24,22 @@ const UpiQr = () => {
       <Typography size="h5/semi-bold" className="text-gray-800 sm:text-3xl">
         Scan and Pay with UPI
       </Typography>
-      <canvas
-        class="border-gray-800 border-4 my-4"
-        ref={canvasRef}
-        width="500"
-        height="500"
-      />
+      <canvas class="border-gray-800 border-4 my-4" ref={canvasRef} />
 
       <Typography size="h6/normal">
         Your total order is of{" "}
         {totalAmount ? priceToCurrency(totalAmount) : "N/A"}
       </Typography>
 
-      <Typography size="body1/normal" variant="primary">
+      <Typography size="body1/normal" variant="primary" className="text-center">
         You'll receive a cofirmation email within 48 hours of the payment.
       </Typography>
+      <Button
+        link={`/orders/${cart.orderStore.value?.data.id}`}
+        className="!w-fit my-4"
+      >
+        Check your order
+      </Button>
     </div>
   );
 };
