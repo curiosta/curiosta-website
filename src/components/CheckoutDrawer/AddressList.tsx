@@ -9,8 +9,6 @@ import AddressCard from "./AddressCard";
 import cart from "@api/cart";
 import "@utils/addressList.css";
 import { removeShippingAddress } from "@api/user/removeShippingAddress";
-import region from "@api/region";
-import type { Address } from "@medusajs/medusa";
 
 type TAddressListProps = {
   selectedAddressId: Signal<string | null>;
@@ -20,15 +18,8 @@ const AddressList: FunctionComponent<TAddressListProps> = ({
   selectedAddressId,
 }) => {
   const currentCustomer = user.customer.value;
-  const isNewAddress = useSignal<boolean>(true);
+  const isNewAddress = useSignal<boolean>(!selectedAddressId.value ?? true);
   const isLoading = useSignal<boolean>(false);
-  const listOfSupportedAddresses = useComputed(() => {
-    return currentCustomer?.shipping_addresses.filter(
-      (address) =>
-        address.country_code &&
-        address.country_code === region.selectedCountry.value?.iso_2
-    );
-  });
 
   const handleSelectAddress = async (e: ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.currentTarget;
@@ -60,14 +51,9 @@ const AddressList: FunctionComponent<TAddressListProps> = ({
   }, [selectedAddressId.value]);
 
   useEffect(() => {
-    if (
-      currentCustomer?.billing_address_id &&
-      !selectedAddressId.value &&
-      listOfSupportedAddresses.value?.find(
-        (address) => address.id === currentCustomer.billing_address_id
-      )
-    ) {
+    if (currentCustomer?.billing_address_id && !selectedAddressId.value) {
       selectedAddressId.value = currentCustomer.billing_address_id;
+      console.log("set new to false");
       isNewAddress.value = false;
     }
   }, [currentCustomer?.billing_address_id]);
@@ -137,7 +123,7 @@ const AddressList: FunctionComponent<TAddressListProps> = ({
               </svg>
             </Button>
 
-            {listOfSupportedAddresses.value?.map((address) => (
+            {currentCustomer?.shipping_addresses.map((address) => (
               <AddressCard
                 address={address}
                 isLoading={isLoading}

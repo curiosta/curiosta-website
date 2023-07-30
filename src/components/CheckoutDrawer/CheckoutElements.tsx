@@ -3,7 +3,7 @@ import AddressList from "@components/CheckoutDrawer/AddressList";
 import Button from "@components/Button";
 import OrderSummary from "@components/OrderSummary";
 import PaymentHandler from "@components/PaymentHandler";
-import { Signal, useSignal } from "@preact/signals";
+import { Signal, useSignal, useSignalEffect } from "@preact/signals";
 import cart from "@api/cart";
 import { PaymentElement, useElements } from "@stripe/react-stripe-js";
 import type { Stripe } from "@stripe/stripe-js";
@@ -11,6 +11,9 @@ import type { FunctionComponent } from "preact";
 import ShipmentSelect from "./ShipmentSelect";
 import Typography from "@components/Typography";
 import priceToCurrency from "@utils/priceToCurrency";
+import { useRef } from "preact/hooks";
+import { generateUPIQr } from "@utils/upiQrGenerator";
+import UpiQr from "./UpiQr";
 
 type TCheckoutElementsProps = {
   selectedAddressId: Signal<string | null>;
@@ -37,10 +40,12 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({
 
     if (cart.store.value?.region.name === "IN") {
       manualPayment.value = true;
-      // cart.completeCart(cart.store.value.id);
+      await cart.completeCart(cart.store.value.id);
+
+      await cart.resetCartId();
       // window.location.href = `${window.location.origin}/orders/confirm?cart=${cart.store.value.id}`;
     } else {
-      const stripeInstance = await stripe;
+      const stripeInstance = stripe;
 
       if (
         !stripeInstance ||
@@ -197,42 +202,7 @@ const CheckoutElements: FunctionComponent<TCheckoutElementsProps> = ({
             </div>
           )
         ) : (
-          <div
-            className={`flex
-             flex-col justify-center items-center h-full w-full`}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-32 h-32"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z"
-              />
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75zM13.5 13.5h.75v.75h-.75v-.75zM13.5 19.5h.75v.75h-.75v-.75zM19.5 13.5h.75v.75h-.75v-.75zM19.5 19.5h.75v.75h-.75v-.75zM16.5 16.5h.75v.75h-.75v-.75z"
-              />
-            </svg>
-
-            <Typography size="h6/semi-bold">
-              {cart.store.value?.total
-                ? priceToCurrency(cart.store.value.total)
-                : "N/A"}
-            </Typography>
-            <Typography
-              size="h5/semi-bold"
-              className="text-gray-400 sm:text-3xl"
-            >
-              Scan and Pay
-            </Typography>
-          </div>
+          <UpiQr />
         )}
       </div>
     </div>

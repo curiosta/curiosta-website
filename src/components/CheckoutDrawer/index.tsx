@@ -1,7 +1,7 @@
 import medusa from "@api/medusa";
 import Button from "@components/Button";
 import useKeyboard from "@hooks/useKeyboard";
-import { useSignal } from "@preact/signals";
+import { useSignal, useSignalEffect } from "@preact/signals";
 import cart from "@api/cart";
 import { checkoutOpen } from "@store/checkoutStore";
 import { Elements } from "@stripe/react-stripe-js";
@@ -13,9 +13,7 @@ import Typography from "@components/Typography";
 import region from "@api/region";
 import { loadStripe } from "@stripe/stripe-js";
 
-const stripe = await loadStripe(
-  import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
-);
+let stripe: Stripe | null = null;
 
 const CheckoutDrawer = () => {
   const { addListener } = useKeyboard("Escape");
@@ -28,6 +26,16 @@ const CheckoutDrawer = () => {
     checkoutOpen.value = false;
   });
 
+  useSignalEffect(() => {
+    const regionName = region.selectedCountry.value?.name;
+    console.log(regionName);
+    if (!stripe && regionName && regionName !== "INDIA") {
+      console.log("loaded stripe");
+      loadStripe(import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY || "").then(
+        (res) => (stripe = res)
+      );
+    }
+  });
   useEffect(() => {
     if (!cart.store.value || !checkoutOpen.value) return;
     try {
