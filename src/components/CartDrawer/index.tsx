@@ -93,6 +93,7 @@ const CartDrawer = () => {
                   disabled={user.state.value === "loading"}
                   onClick={() => {
                     if (user.state.value === "authenticated") {
+                      cart.open.value = false;
                       checkoutOpen.value = true;
                     } else {
                       window.location.href = "/login";

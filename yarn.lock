@@ -5749,6 +5749,11 @@ natural-orderby@^2.0.1:
   resolved "https://registry.npmjs.org/natural-orderby/-/natural-orderby-2.0.3.tgz"
   integrity sha512-p7KTHxU0CUrcOXe62Zfrb5Z13nLvPhSWR/so3kFulUQU0sgUll2Z0LwpsLN351eOOD+hRGu/F1g+6xDfPeD++Q==
 
+nayuki-qr-code-generator@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/nayuki-qr-code-generator/-/nayuki-qr-code-generator-1.8.0.tgz#dbeebd7b3d2b53119c51a596ad43199ef6798916"
+  integrity sha512-wnpXdJ+zJ+8QzzGJTEnESaRYfNIUHSgX4ykvYuaomqqUbhJdun3v0sK/39BQjw3on/vf7ujPKIg2V07WejjmLw==
+
 negotiator@0.6.3:
   version "0.6.3"
   resolved "https://registry.npmjs.org/negotiator/-/negotiator-0.6.3.tgz"
