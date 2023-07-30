@@ -2,6 +2,7 @@ import medusa from "@api/medusa";
 import user from "@api/user";
 import useLocalStorage from "@hooks/useLocalStorage";
 import type {
+  StoreCompleteCartRes,
   Cart,
   StorePostCartReq,
   StorePostCartsCartReq,
@@ -20,14 +21,15 @@ type TCartCreatePayload = Omit<StorePostCartReq, "metadata"> & {
 
 type TLoadableOptionsList = {
   cart:
-  | "get"
-  | "create"
-  | "update"
-  | "reset"
-  | {
-    line_items: "get" | "add" | "remove" | "update" | { quantity: "" };
-    shipping: "all" | "set";
-  };
+    | "get"
+    | "create"
+    | "update"
+    | "reset"
+    | "complete"
+    | {
+        line_items: "get" | "add" | "remove" | "update" | { quantity: "" };
+        shipping: "all" | "set";
+      };
 };
 
 type TLoadableOptions = FlattenOptionsList<TLoadableOptionsList>;
@@ -35,6 +37,8 @@ type TLoadableOptions = FlattenOptionsList<TLoadableOptionsList>;
 class CartStore {
   // actual cart data
   store = signal<TCart | null>(null);
+  // order data
+  orderStore = signal<StoreCompleteCartRes | null>(null);
 
   loading = signal<TLoadableOptions | undefined>(undefined);
 
@@ -60,7 +64,7 @@ class CartStore {
     this.loading.value = "cart:get";
     let cartId: string | undefined;
     const { get } = useLocalStorage();
-    const localStorageCartId = get('cartId') || undefined;
+    const localStorageCartId = get("cartId") || undefined;
 
     if (user.state.value === "authenticated") {
       // if user is authenticated, get cart id from server
@@ -80,10 +84,9 @@ class CartStore {
 
       this.store.value = cart;
 
-      if (localStorageCartId && user.state.value === 'authenticated') {
-        this.mergeCartItems(localStorageCartId)
+      if (localStorageCartId && user.state.value === "authenticated") {
+        this.mergeCartItems(localStorageCartId);
       }
-
     }
     this.loading.value = undefined;
   }
@@ -107,11 +110,14 @@ class CartStore {
       const { set } = useLocalStorage();
       set("cartId", result.cart.id);
     }
-    await this.listShippingMethods()
+    await this.listShippingMethods();
     this.loading.value = undefined;
   }
   async updateCart(payload: TCartUpdatePayload) {
-    if (!this.store.value) throw new Error('Cart was not initialize before using cart.updateCart function.');
+    if (!this.store.value)
+      throw new Error(
+        "Cart was not initialize before using cart.updateCart function."
+      );
     this.loading.value = "cart:update";
 
     const updateResult = await medusa.carts.update(
@@ -139,15 +145,20 @@ class CartStore {
 
   async mergeCartItems(fromCartId: string) {
     const fromCart = await this.getCart(fromCartId);
-    fromCart.items.map((item) => item.variant_id && this.addItem(item.variant_id, item.quantity))
-    const { remove } = useLocalStorage()
-    remove('cartId')
+    fromCart.items.map(
+      (item) => item.variant_id && this.addItem(item.variant_id, item.quantity)
+    );
+    const { remove } = useLocalStorage();
+    remove("cartId");
   }
 
   // line items
 
   async addItem(id: string, quantity = 1) {
-    if (!this.store.value) throw new Error('Cart was not initialize before using cart.addItem function.');
+    if (!this.store.value)
+      throw new Error(
+        "Cart was not initialize before using cart.addItem function."
+      );
     this.loading.value = "cart:line_items:add";
     const response = await medusa.carts.lineItems.create(this.store.value.id, {
       quantity,
@@ -158,7 +169,10 @@ class CartStore {
   }
 
   async removeItem(id: string) {
-    if (!this.store.value) throw new Error('Cart was not initialize before using cart.removeItem function.');
+    if (!this.store.value)
+      throw new Error(
+        "Cart was not initialize before using cart.removeItem function."
+      );
     this.loading.value = "cart:line_items:remove";
     const response = await medusa.carts.lineItems.delete(
       this.store.value.id,
@@ -169,7 +183,10 @@ class CartStore {
   }
 
   async setItemQuantity(id: string, quantity: number) {
-    if (!this.store.value) throw new Error('Cart was not initialize before using cart.setItemQuantity function.');
+    if (!this.store.value)
+      throw new Error(
+        "Cart was not initialize before using cart.setItemQuantity function."
+      );
     this.loading.value = "cart:line_items:update";
     const item = this.store.value.items.find((item) => item.id === id);
     if (quantity < 1) {
@@ -193,7 +210,7 @@ class CartStore {
     );
     this.store.value = response.cart;
     this.loading.value = undefined;
-    await this.listShippingMethods()
+    await this.listShippingMethods();
   }
 
   // shipping methods
@@ -219,6 +236,15 @@ class CartStore {
     this.shipping.selectedOption.value = id;
     this.loading.value = undefined;
     this.store.value = result.cart;
+  }
+
+  // complete cart
+  async completeCart(id: string) {
+    if (!this.store.value?.id) return null;
+    this.loading.value = "cart:complete";
+    const result = await medusa.carts.complete(id);
+    this.orderStore.value = result;
+    this.loading.value = undefined;
   }
 }
 
