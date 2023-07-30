@@ -36,5 +36,5 @@ export const generateUPIQr = (
 ) => {
   const UPI_Link = `upi://pay?pa=${UPI_ID}&pn=${Payee_Name}&am=${amount}&tid=${orderId}&tn=curiosta-order`;
   const qr0 = QRC.encodeText(UPI_Link, errCorLvl);
-  drawCanvas(qr0, 10, 2, "#ffffff", "#000000", canvas);
+  drawCanvas(qr0, 5, 2, "#ffffff", "#000000", canvas);
 };

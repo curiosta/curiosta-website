@@ -53,12 +53,9 @@ const AddressList: FunctionComponent<TAddressListProps> = ({
   useEffect(() => {
     if (currentCustomer?.billing_address_id && !selectedAddressId.value) {
       selectedAddressId.value = currentCustomer.billing_address_id;
-      console.log("set new to false");
       isNewAddress.value = false;
     }
   }, [currentCustomer?.billing_address_id]);
-
-  // console.log("isNewAddress", isNewAddress.value);
 
   // address mutations
   const deleteAddress = async (id: string) => {

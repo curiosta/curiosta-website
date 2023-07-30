@@ -5,6 +5,7 @@ import type { ChangeEvent } from "preact/compat";
 import Radio from "@components/Radio";
 import { cx } from "class-variance-authority";
 import countriesMap from "@utils/countriesMap";
+import region from "@api/region";
 
 interface Props {
   address: Address;
@@ -20,7 +21,9 @@ const AddressCard = ({
   handleSelectAddress,
   isLoading,
 }: Props) => {
-  const disabled = isLoading.value;
+  const disabled =
+    isLoading.value ||
+    region.selectedCountry.value?.iso_2 !== address.country_code;
 
   const addressInfo = [
     address.address_1,
