@@ -24,7 +24,7 @@ const AddressForm = ({
       isLoading.value = true;
       const payloadAddress = { ...data };
 
-      if (region.selectedCountry.value?.iso_2) {
+      if (region.selectedCountry.value && region.selectedCountry.value?.iso_2) {
         payloadAddress.country_code = region.selectedCountry.value?.iso_2;
       } else {
         throw new Error("Country not selected, Try reloading page!.");

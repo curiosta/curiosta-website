@@ -1,7 +1,7 @@
 import user from "@api/user";
 import Button from "@components/Button";
 import Typography from "@components/Typography";
-import { Signal, useComputed, useSignal } from "@preact/signals";
+import { Signal, useSignal, useSignalEffect } from "@preact/signals";
 import { ChangeEvent, FunctionComponent, useEffect } from "preact/compat";
 import AddressForm from "./AddressForm";
 import { cx } from "class-variance-authority";
@@ -9,6 +9,7 @@ import AddressCard from "./AddressCard";
 import cart from "@api/cart";
 import "@utils/addressList.css";
 import { removeShippingAddress } from "@api/user/removeShippingAddress";
+import region from "@api/region";
 
 type TAddressListProps = {
   selectedAddressId: Signal<string | null>;
@@ -20,6 +21,18 @@ const AddressList: FunctionComponent<TAddressListProps> = ({
   const currentCustomer = user.customer.value;
   const isNewAddress = useSignal<boolean>(!selectedAddressId.value ?? true);
   const isLoading = useSignal<boolean>(false);
+
+  const listOfSupportedAddresses = currentCustomer?.shipping_addresses.filter(
+    (address) =>
+      address.country_code &&
+      address.country_code === region.selectedCountry.value?.iso_2
+  );
+
+  const listOfUnSupportedAddresses = currentCustomer?.shipping_addresses.filter(
+    (address) =>
+      address.country_code &&
+      address.country_code !== region.selectedCountry.value?.iso_2
+  );
 
   const handleSelectAddress = async (e: ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.currentTarget;
@@ -56,6 +69,20 @@ const AddressList: FunctionComponent<TAddressListProps> = ({
       isNewAddress.value = false;
     }
   }, [currentCustomer?.billing_address_id]);
+
+  useSignalEffect(() => {
+    if (!listOfSupportedAddresses?.length) {
+      selectedAddressId.value = null;
+      isNewAddress.value = true;
+    } else {
+      const selected = currentCustomer?.shipping_addresses.find(
+        (address) =>
+          address.country_code == region?.selectedCountry.value?.iso_2
+      )?.id;
+      selectedAddressId.value = selected ?? null;
+      isNewAddress.value = false;
+    }
+  });
 
   // address mutations
   const deleteAddress = async (id: string) => {
@@ -120,7 +147,16 @@ const AddressList: FunctionComponent<TAddressListProps> = ({
               </svg>
             </Button>
 
-            {currentCustomer?.shipping_addresses.map((address) => (
+            {listOfSupportedAddresses?.map((address) => (
+              <AddressCard
+                address={address}
+                isLoading={isLoading}
+                selectedAddressId={selectedAddressId}
+                handleSelectAddress={handleSelectAddress}
+                deleteAddress={deleteAddress}
+              />
+            ))}
+            {listOfUnSupportedAddresses?.map((address) => (
               <AddressCard
                 address={address}
                 isLoading={isLoading}
