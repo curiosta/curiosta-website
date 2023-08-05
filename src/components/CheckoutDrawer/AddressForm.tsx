@@ -25,7 +25,7 @@ const AddressForm = ({
       isLoading.value = true;
       const payloadAddress = { ...data };
 
-      if (region.selectedCountry.value?.iso_2) {
+      if (region.selectedCountry.value && region.selectedCountry.value?.iso_2) {
         payloadAddress.country_code = region.selectedCountry.value?.iso_2;
       } else {
         throw new Error("Country not selected, Try reloading page!.");
@@ -101,6 +101,13 @@ const AddressForm = ({
               label="City"
               autocomplete="address-level2"
               required={{ message: "City is required!", value: true }}
+            />
+            <Input
+              type="text"
+              name="province"
+              label="State"
+              autocomplete="address-level1"
+              required={{ message: "State is required!", value: true }}
             />
 
             <Input

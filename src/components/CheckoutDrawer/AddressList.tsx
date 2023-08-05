@@ -1,7 +1,7 @@
 import user from "@api/user";
 import Button from "@components/Button";
 import Typography from "@components/Typography";
-import { Signal, useComputed, useSignal } from "@preact/signals";
+import { Signal, useSignal, useSignalEffect } from "@preact/signals";
 import { ChangeEvent, FunctionComponent, useEffect } from "preact/compat";
 import AddressForm from "./AddressForm";
 import { cx } from "class-variance-authority";
@@ -10,19 +10,29 @@ import cart from "@api/cart";
 import "@utils/addressList.css";
 import { removeShippingAddress } from "@api/user/removeShippingAddress";
 import region from "@api/region";
-import type { Address } from "@medusajs/medusa";
 
 type TAddressListProps = {
   selectedAddressId: Signal<string | null>;
-}
+};
 
-const AddressList: FunctionComponent<TAddressListProps> = ({ selectedAddressId }) => {
+const AddressList: FunctionComponent<TAddressListProps> = ({
+  selectedAddressId,
+}) => {
   const currentCustomer = user.customer.value;
-  const isNewAddress = useSignal<boolean>(true);
+  const isNewAddress = useSignal<boolean>(!selectedAddressId.value ?? true);
   const isLoading = useSignal<boolean>(false);
-  const listOfSupportedAddresses = useComputed(() => {
-    return currentCustomer?.shipping_addresses.filter((address) => address.country_code && address.country_code === region.selectedCountry.value?.iso_2)
-  });
+
+  const listOfSupportedAddresses = currentCustomer?.shipping_addresses.filter(
+    (address) =>
+      address.country_code &&
+      address.country_code === region.selectedCountry.value?.iso_2
+  );
+
+  const listOfUnSupportedAddresses = currentCustomer?.shipping_addresses.filter(
+    (address) =>
+      address.country_code &&
+      address.country_code !== region.selectedCountry.value?.iso_2
+  );
 
   const handleSelectAddress = async (e: ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.currentTarget;
@@ -41,10 +51,9 @@ const AddressList: FunctionComponent<TAddressListProps> = ({ selectedAddressId }
         shipping_address: selectedAddressId.value,
         billing_address: selectedAddressId.value,
       });
-      await user.updateUser({ billing_address: selectedAddressId.value })
+      await user.updateUser({ billing_address: selectedAddressId.value });
       isLoading.value = true;
     } catch (error) {
-
     } finally {
       isLoading.value = false;
     }
@@ -55,22 +64,35 @@ const AddressList: FunctionComponent<TAddressListProps> = ({ selectedAddressId }
   }, [selectedAddressId.value]);
 
   useEffect(() => {
-    if (currentCustomer?.billing_address_id && !selectedAddressId.value && listOfSupportedAddresses.value?.find(address => address.id === currentCustomer.billing_address_id)) {
+    if (currentCustomer?.billing_address_id && !selectedAddressId.value) {
       selectedAddressId.value = currentCustomer.billing_address_id;
       isNewAddress.value = false;
     }
-  }, [currentCustomer]);
+  }, [currentCustomer?.billing_address_id]);
+
+  useSignalEffect(() => {
+    if (!listOfSupportedAddresses?.length) {
+      selectedAddressId.value = null;
+      isNewAddress.value = true;
+    } else {
+      const selected = currentCustomer?.shipping_addresses.find(
+        (address) =>
+          address.country_code == region?.selectedCountry.value?.iso_2
+      )?.id;
+      selectedAddressId.value = selected ?? null;
+      isNewAddress.value = false;
+    }
+  });
 
   // address mutations
-
   const deleteAddress = async (id: string) => {
-    if (confirm('Are you sure you want to delete this address?')) {
+    if (confirm("Are you sure you want to delete this address?")) {
       await removeShippingAddress(id);
       if (currentCustomer?.billing_address_id === id) {
-        await user.updateUser({ billing_address: undefined })
+        await user.updateUser({ billing_address: undefined });
       }
     }
-  }
+  };
 
   return (
     <div>
@@ -84,7 +106,10 @@ const AddressList: FunctionComponent<TAddressListProps> = ({ selectedAddressId }
         Shipping Address
       </Typography>
       <div>
-        <Typography size="body1/semi-bold" className="leading-6 hidden md:block mt-2">
+        <Typography
+          size="body1/semi-bold"
+          className="leading-6 hidden md:block mt-2"
+        >
           Select Shipping Address
         </Typography>
         <div class="address-container md:overflow-x-auto flex justify-center md:justify-normal p-2">
@@ -97,10 +122,11 @@ const AddressList: FunctionComponent<TAddressListProps> = ({ selectedAddressId }
                 isNewAddress.value = true;
                 selectedAddressId.value = null;
               }}
-              className={`flex justify-center w-52 min-h-[10rem] items-center bg-white shadow-sm rounded-lg border ${isNewAddress.value
-                ? " border-primary-600 ring-2 ring-primary-600"
-                : ""
-                }`}
+              className={`flex justify-center w-52 min-h-[10rem] items-center bg-white shadow-sm rounded-lg border ${
+                isNewAddress.value
+                  ? " border-primary-600 ring-2 ring-primary-600"
+                  : ""
+              }`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -121,7 +147,7 @@ const AddressList: FunctionComponent<TAddressListProps> = ({ selectedAddressId }
               </svg>
             </Button>
 
-            {listOfSupportedAddresses.value?.map((address) => (
+            {listOfSupportedAddresses?.map((address) => (
               <AddressCard
                 address={address}
                 isLoading={isLoading}
@@ -130,19 +156,32 @@ const AddressList: FunctionComponent<TAddressListProps> = ({ selectedAddressId }
                 deleteAddress={deleteAddress}
               />
             ))}
-          </div >
-        </div >
-      </div >
+            {listOfUnSupportedAddresses?.map((address) => (
+              <AddressCard
+                address={address}
+                isLoading={isLoading}
+                selectedAddressId={selectedAddressId}
+                handleSelectAddress={handleSelectAddress}
+                deleteAddress={deleteAddress}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
 
       <div
-        class={`${isNewAddress.value || selectedAddressId.value === null
-          ? "block"
-          : "hidden"
-          }`}
+        class={`${
+          isNewAddress.value || selectedAddressId.value === null
+            ? "block"
+            : "hidden"
+        }`}
       >
-        <AddressForm selectedAddressId={selectedAddressId} isNewAddress={isNewAddress} />
+        <AddressForm
+          selectedAddressId={selectedAddressId}
+          isNewAddress={isNewAddress}
+        />
       </div>
-    </div >
+    </div>
   );
 };
 

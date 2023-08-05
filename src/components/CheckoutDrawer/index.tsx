@@ -1,45 +1,72 @@
 import medusa from "@api/medusa";
 import Button from "@components/Button";
 import useKeyboard from "@hooks/useKeyboard";
-import { useSignal } from "@preact/signals";
+import { useSignal, useSignalEffect } from "@preact/signals";
 import cart from "@api/cart";
 import { checkoutOpen } from "@store/checkoutStore";
 import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+import type { Stripe } from "@stripe/stripe-js";
 import { cx } from "class-variance-authority";
 import { createPortal, useEffect } from "preact/compat";
 import CheckoutElements from "./CheckoutElements";
 import Typography from "@components/Typography";
+import region from "@api/region";
+import { loadStripe } from "@stripe/stripe-js";
 
-const stripe = await loadStripe(import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
+let stripe: Stripe | null = null;
 
 const CheckoutDrawer = () => {
-  const { addListener } = useKeyboard('Escape');
-  const selectedAddressId = useSignal<string | null | undefined>(undefined);
+  const { addListener } = useKeyboard("Escape");
+  const selectedAddressId = useSignal<string | null>(null);
   const clientSecret = useSignal<string | undefined>(undefined);
   // remove app's default scroll if cart is open
   document.body.style.overflow = checkoutOpen.value ? "hidden" : "auto";
 
   addListener(() => {
     checkoutOpen.value = false;
-  })
+  });
 
+  useSignalEffect(() => {
+    const regionName = region.selectedCountry.value?.name;
+    if (!stripe && regionName && regionName !== "INDIA") {
+      loadStripe(import.meta.env.PUBLIC_STRIPE_PUBLISHABLE_KEY || "").then(
+        (res) => (stripe = res)
+      );
+    }
+  });
   useEffect(() => {
     if (!cart.store.value || !checkoutOpen.value) return;
     try {
-      cart.listShippingMethods()
-    } catch (error) {
+      cart.listShippingMethods();
+    } catch (error) {}
+    medusa.carts
+      .createPaymentSessions(cart.store.value.id)
+      .then(({ cart: sessionCart }) => {
+        const isStripeAvailable = sessionCart.payment_sessions?.some(
+          (s) => s.provider_id === "stripe"
+        );
+        if (!isStripeAvailable)
+          throw new Error(
+            "Stripe is not supported in this region, Please contact administrator & ask to addListener stripe in backend!."
+          );
+        if (!cart.store.value) return;
 
-    }
-    medusa.carts.createPaymentSessions(cart.store.value.id).then(({ cart: sessionCart }) => {
-      const isStripeAvailable = sessionCart.payment_sessions?.some((s) => s.provider_id === 'stripe');
-      if (!isStripeAvailable) throw new Error('Stripe is not supported in this region, Please contact administrator & ask to addListener stripe in backend!.');
-      if (!cart.store.value) return;
-      medusa.carts.setPaymentSession(cart.store.value.id, { provider_id: 'stripe' }).then(({ cart: paymentSessionCart }) => {
-        const _clientSecret = paymentSessionCart.payment_session?.data.client_secret as string
-        if (_clientSecret) { clientSecret.value = _clientSecret }
-      })
-    });
+        if (cart.store.value.region.name === "IN") {
+          medusa.carts.updatePaymentSession(cart.store.value.id, "manual", {
+            data: {},
+          });
+        } else {
+          medusa.carts
+            .setPaymentSession(cart.store.value.id, { provider_id: "stripe" })
+            .then(({ cart: paymentSessionCart }) => {
+              const _clientSecret = paymentSessionCart.payment_session?.data
+                .client_secret as string;
+              if (_clientSecret) {
+                clientSecret.value = _clientSecret;
+              }
+            });
+        }
+      });
   }, [checkoutOpen.value]);
 
   return createPortal(
@@ -59,7 +86,13 @@ const CheckoutDrawer = () => {
         <div className="p-4 pt-6 relative h-full flex flex-col">
           <div className="flex justify-end items-center">
             {/* close  */}
-            <Typography size="body2/normal" variant='secondary' className='select-none'>Press 'esc' to close</Typography>
+            <Typography
+              size="body2/normal"
+              variant="secondary"
+              className="select-none"
+            >
+              Press 'esc' to close
+            </Typography>
             <Button variant="icon" onClick={() => (checkoutOpen.value = false)}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -76,15 +109,29 @@ const CheckoutDrawer = () => {
               </svg>
             </Button>
           </div>
-          {clientSecret.value ? (
+          {clientSecret.value ||
+          (cart.store.value?.region.name === "IN" &&
+            cart.loading.value !== "cart:shipping:all") ? (
             <>
-              <Elements stripe={stripe} options={{ clientSecret: clientSecret.value }}>
-                <CheckoutElements clientSecret={clientSecret} selectedAddressId={selectedAddressId} stripe={stripe} />
+              <Elements
+                stripe={stripe}
+                options={{ clientSecret: clientSecret.value }}
+              >
+                <CheckoutElements
+                  clientSecret={clientSecret}
+                  selectedAddressId={selectedAddressId}
+                  stripe={stripe}
+                />
               </Elements>
             </>
           ) : (
-            <div className='flex justify-center items-center h-full'>
-              <Typography size='h4/normal' className='animate-pulse duration-75'>Please wait...</Typography>
+            <div className="flex justify-center items-center h-full">
+              <Typography
+                size="h4/normal"
+                className="animate-pulse duration-75"
+              >
+                Please wait...
+              </Typography>
             </div>
           )}
         </div>
