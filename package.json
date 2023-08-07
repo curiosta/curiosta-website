@@ -51,6 +51,7 @@
     }
   },
   "devDependencies": {
+    "@astrojs/partytown": "^1.2.3",
     "@headlessui/react": "^1.7.15",
     "@medusajs/medusa": "^1.12.0",
     "@tailwindcss/forms": "^0.5.3",

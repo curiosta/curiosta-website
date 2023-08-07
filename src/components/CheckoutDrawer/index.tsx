@@ -53,7 +53,7 @@ const CheckoutDrawer = () => {
 
         if (cart.store.value.region.name === "IN") {
           medusa.carts.updatePaymentSession(cart.store.value.id, "manual", {
-            data: {},
+            data: { method: "UPI" },
           });
         } else {
           medusa.carts
