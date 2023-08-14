@@ -44,3 +44,18 @@ Description is longer than 160 characters in ${Astro.url.pathname}
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={new URL(image, Astro.site)} />
+
+<!-- Google tag (gtag.js) -->
+<script
+  type="text/partytown"
+  async
+  src="https://www.googletagmanager.com/gtag/js?id=G-1ZSJXCXN8X"></script>
+<script type="text/partytown">
+window.dataLayer = window.dataLayer || [];
+function gtag() {
+  dataLayer.push(arguments);
+  }
+  gtag("js", new Date());
+
+  gtag("config", "G-1ZSJXCXN8X");
+</script>
