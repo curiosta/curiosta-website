@@ -1,35 +1,33 @@
-import region from "@api/region";
-import Input from "@components/Input";
-import Select from "@components/Select";
-import Typography from "@components/Typography";
-import { Listbox } from "@headlessui/react";
-import countryPrefixes from "country-prefixes";
+import { Controller, FieldValues, RegisterOptions, useFormContext } from "react-hook-form";
+import PhoneInputCore, { TPhoneInputCore } from "./core";
+import { useEffect } from "preact/hooks";
+import { useSignal } from "@preact/signals";
 
-const PhoneInput = () => {
+const PhoneInput = ({ value, ...props }: TPhoneInputCore) => {
+  const controller = useFormContext()
+  const rules = useSignal<Omit<RegisterOptions<FieldValues, "phone">, "disabled" | "setValueAs" | "valueAsNumber" | "valueAsDate"> | undefined>(undefined);
+
+  useEffect(() => {
+    if (value !== undefined && value !== null && controller && props.name) {
+      controller.setValue(props.name, value, { shouldValidate: true });
+    }
+  }, [value]);
+
+  if (!controller) {
+    return <PhoneInputCore value={value} {...props} />
+  }
+
   return (
-    <div className="flex col-span-2">
-      <Select roundedAvatars={false} minimalStyle defaultValue={region.selectedCountry.value?.iso_2 || ''} options={region.countries.value.map((c, i) => ({ id: c.iso_2, label: c.prefix || 'N/A', value: c.iso_2 || 'N/A', avatar: `/countries/${c.iso_2}.svg` }))} ListBoxValueComponent={({ selected }) => {
-        return (
-          <div className="flex">
-            <Input label="Phone" type="tel" required rules={{
-              minLength: {
-                value: countryPrefixes[selected?.id || ''][1] || 0,
-                message: `Atleast ${countryPrefixes[selected?.id || ''][1]} digits are required!`
-              },
-            }} leftAdornment={
-              <Listbox.Button className="flex pr-3 items-center">
-                {(
-                  <>
-                    <img src={selected?.avatar} className="w-6 mr-2" />
-                    <Typography size="body2/normal">{(countryPrefixes[selected?.value || '']?.[0] || '')}</Typography>
-                  </>
-                ) as any}
-              </Listbox.Button>
-            } />
-          </div>
-        )
-      }} />
-    </div>
+    <Controller
+      name="phone"
+      rules={rules.value}
+      render={({ field, fieldState }) => {
+        return <PhoneInputCore {...fieldState} onChange={(value) => {
+          field.onChange(value)
+        }} /> as any
+      }
+      }
+    />
   )
 }
 

@@ -29,7 +29,7 @@ export type BaseInputProps = Omit<
   name?: string;
 };
 
-type InputCoreProps = BaseInputProps &
+export type InputCoreProps = BaseInputProps &
   Omit<RegisterOptions, "validate" | "maxLength" | "minLength"> & {
     error?: FieldError;
   };
@@ -42,6 +42,7 @@ const InputCore: FunctionComponent<InputCoreProps> = forwardRef<HTMLInputElement
   className,
   disabled,
   placeholder,
+  required,
   error,
   ...props
 }, ref) => {
@@ -65,12 +66,12 @@ const InputCore: FunctionComponent<InputCoreProps> = forwardRef<HTMLInputElement
           className="text-sm font-medium leading-6 text-gray-900 flex gap-1 mb-1"
         >
           {label}
-          {rules?.required ? <Typography variant="error">*</Typography> : ""}
+          {(rules?.required || required) ? <Typography variant="error">*</Typography> : ""}
         </label>
       ) : null}
-      <div className="flex rounded-md">
+      <div className={cx(`flex rounded-md`, (leftAdornment || rightAdornment) && error ? 'ring-2 ring-danger-600' : '')}>
         {leftAdornment ? (
-          <span className="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 px-3 text-gray-500 sm:text-sm">
+          <span className={cx(`inline-flex items-center rounded-l-md border border-r-0 border-gray-300 px-3 text-gray-500 sm:text-sm`)}>
             {leftAdornment}
           </span>
         ) : null}
@@ -79,10 +80,10 @@ const InputCore: FunctionComponent<InputCoreProps> = forwardRef<HTMLInputElement
           disabled={disabled}
           ref={inputRef}
           className={twMerge(cx(
-            `block w-full rounded-md border-0 p-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600  sm:text-sm sm:leading-6 focus-visible:outline-none`,
+            `block w-full rounded-md border-0 p-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400  sm:text-sm sm:leading-6 focus-visible:outline-none`,
             leftAdornment ? "rounded-l-none" : "rounded-l-md",
             rightAdornment ? "rounded-r-none" : "rounded-r-md",
-            error && "!ring-danger-600 focus:!ring-danger-600 ring-2",
+            !error ? 'focus:ring-2 focus:ring-inset focus:ring-primary-600' : '',
             className
           ))}
           placeholder={placeholder || label || ""}
@@ -93,9 +94,7 @@ const InputCore: FunctionComponent<InputCoreProps> = forwardRef<HTMLInputElement
         />
         {rightAdornment || null}
       </div>
-      <Typography variant='error'>
-        {error ? error.message : ""}
-      </Typography>
+      {error ? <Typography variant='error'> {error.message} </Typography> : null}
     </div>
   );
 });
