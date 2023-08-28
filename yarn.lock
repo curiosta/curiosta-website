@@ -1838,12 +1838,13 @@ astro-eslint-parser@^0.14.0:
     espree "^9.0.0"
     semver "^7.3.8"
 
-astro-sst@^2.12.0:
-  version "2.16.3"
-  resolved "https://registry.npmjs.org/astro-sst/-/astro-sst-2.16.3.tgz"
-  integrity sha512-s5P9J9EWW/H5GAtivKq9W6FGLVYb1X3Gbq3sE8QRvUphWQglTq6oyQO5nLJT2/RpPRF3Z//XEj3LlP28qkNDqg==
+astro-sst@^2.24.17:
+  version "2.24.17"
+  resolved "https://registry.yarnpkg.com/astro-sst/-/astro-sst-2.24.17.tgz#cceb4413f5835da6b17b269510a9c612aaeee9eb"
+  integrity sha512-3MjiGO9VfV20HWHURQpzbBso17GhIysyhAjKcu1Kxfq1tAETFnwPNhw1BjwYTizB8FGy2YQhDZfKBKXSVslg/Q==
   dependencies:
     "@astrojs/webapi" "^2.1.0"
+    set-cookie-parser "^2.6.0"
 
 astro@^2.6.2:
   version "2.7.0"
@@ -7114,6 +7115,11 @@ set-blocking@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/set-blocking/-/set-blocking-2.0.0.tgz"
   integrity sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==
+
+set-cookie-parser@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/set-cookie-parser/-/set-cookie-parser-2.6.0.tgz#131921e50f62ff1a66a461d7d62d7b21d5d15a51"
+  integrity sha512-RVnVQxTXuerk653XfuliOxBP81Sf0+qfQE73LIYKcyMYHG94AuH0kgrQpRDuTZnSmjpysHmzxJXKNfa6PjFhyQ==
 
 setprototypeof@1.2.0:
   version "1.2.0"
