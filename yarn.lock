@@ -285,12 +285,19 @@
     undici "^5.22.0"
     which-pm-runs "^1.1.0"
 
-"@astrojs/webapi@^2.0.1", "@astrojs/webapi@^2.1.0", "@astrojs/webapi@^2.2.0":
+"@astrojs/webapi@^2.0.1", "@astrojs/webapi@^2.2.0":
   version "2.2.0"
   resolved "https://registry.npmjs.org/@astrojs/webapi/-/webapi-2.2.0.tgz"
   integrity sha512-mHAOApWyjqSe5AQMOUD9rsZJqbMQqe3Wosb1a40JV6Okvyxj1G6GTlthwYadWCymq/lbgwh0PLiY8Fr4eFxtuQ==
   dependencies:
     undici "^5.22.0"
+
+"@astrojs/webapi@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@astrojs/webapi/-/webapi-3.0.0.tgz#2eb4321fe8a0834cfe313013a2a828e4fb1d128e"
+  integrity sha512-+/Wruju2Ho99z0jI8zxMFGBkKKG97RzR/srSaColejUDrczkAjR3HjULKTVfDdIpvtvFZLyl7OMBmHKQazfeZg==
+  dependencies:
+    undici "^5.22.1"
 
 "@aws-cdk/asset-awscli-v1@^2.2.177":
   version "2.2.198"
@@ -763,6 +770,11 @@
   version "8.43.0"
   resolved "https://registry.npmjs.org/@eslint/js/-/js-8.43.0.tgz"
   integrity sha512-s2UHCoiXfxMvmfzqoN+vrQ84ahUSYde9qNO1MdxmoEhyHWsfmwOpFlwYV+ePJEVc7gFnATGUi376WowX1N7tFg==
+
+"@fastify/busboy@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@fastify/busboy/-/busboy-2.0.0.tgz#f22824caff3ae506b18207bad4126dbc6ccdb6b8"
+  integrity sha512-JUFJad5lv7jxj926GPgymrWQxxjPYuJNiNjNMzqT+HiuP6Vl3dk5xzG+8sTX96np0ZAluvaMzPsjhHZ5rNuNQQ==
 
 "@headlessui/react@^1.7.15":
   version "1.7.15"
@@ -1838,12 +1850,13 @@ astro-eslint-parser@^0.14.0:
     espree "^9.0.0"
     semver "^7.3.8"
 
-astro-sst@^2.12.0:
-  version "2.16.3"
-  resolved "https://registry.npmjs.org/astro-sst/-/astro-sst-2.16.3.tgz"
-  integrity sha512-s5P9J9EWW/H5GAtivKq9W6FGLVYb1X3Gbq3sE8QRvUphWQglTq6oyQO5nLJT2/RpPRF3Z//XEj3LlP28qkNDqg==
+astro-sst@^2.28.1:
+  version "2.28.1"
+  resolved "https://registry.yarnpkg.com/astro-sst/-/astro-sst-2.28.1.tgz#bb2e15360acff268a060b9249c623ced0ccf83c8"
+  integrity sha512-K56ufitndFX2La5K4YCgLU5mJ00jq+BMYQYJouXhjoxjoWnZYNU8C6dVE+5Befp5jce+DwSTBW9SR1/yIPXjWA==
   dependencies:
-    "@astrojs/webapi" "^2.1.0"
+    "@astrojs/webapi" "^3.0.0"
+    set-cookie-parser "^2.6.0"
 
 astro@^2.6.2:
   version "2.7.0"
@@ -7115,6 +7128,11 @@ set-blocking@^2.0.0:
   resolved "https://registry.npmjs.org/set-blocking/-/set-blocking-2.0.0.tgz"
   integrity sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==
 
+set-cookie-parser@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/set-cookie-parser/-/set-cookie-parser-2.6.0.tgz#131921e50f62ff1a66a461d7d62d7b21d5d15a51"
+  integrity sha512-RVnVQxTXuerk653XfuliOxBP81Sf0+qfQE73LIYKcyMYHG94AuH0kgrQpRDuTZnSmjpysHmzxJXKNfa6PjFhyQ==
+
 setprototypeof@1.2.0:
   version "1.2.0"
   resolved "https://registry.npmjs.org/setprototypeof/-/setprototypeof-1.2.0.tgz"
@@ -7709,6 +7727,13 @@ undici@^5.22.0:
   integrity sha512-Ji2IJhFXZY0x/0tVBXeQwgPlLWw13GVzpsWPQ3rV50IFMMof2I55PZZxtm4P6iNq+L5znYN9nSTAq0ZyE6lSJw==
   dependencies:
     busboy "^1.6.0"
+
+undici@^5.22.1:
+  version "5.25.4"
+  resolved "https://registry.yarnpkg.com/undici/-/undici-5.25.4.tgz#7d8ef81d94f84cd384986271e5e5599b6dff4296"
+  integrity sha512-450yJxT29qKMf3aoudzFpIciqpx6Pji3hEWaXqXmanbXF58LTAGCKxcJjxMXWu3iG+Mudgo3ZUfDB6YDFd/dAw==
+  dependencies:
+    "@fastify/busboy" "^2.0.0"
 
 unherit@^3.0.0:
   version "3.0.1"
