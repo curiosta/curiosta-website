@@ -8,6 +8,6 @@ import { business, fullAddress } from '../config/site';
   <dt class="font-semibold text-slate-900">GSTIN</dt><dd class="font-mono">{business.gstin}</dd>
   <dt class="font-semibold text-slate-900">Address</dt><dd><address class="not-italic">{fullAddress.join(', ')}</address></dd>
   <dt class="font-semibold text-slate-900">Email</dt><dd><a class="text-brand-700 underline" href={`mailto:${business.email}`}>{business.email}</a></dd>
-  <dt class="font-semibold text-slate-900">Phone</dt><dd><a class="text-brand-700 underline" href={business.phoneHref}>{business.phoneDisplay}</a></dd>
+  <dt class="font-semibold text-slate-900">Phone</dt><dd><a class="text-brand-700 underline" href={business.phoneHref}>{business.phoneDisplay}</a> (call or <a class="text-brand-700 underline" href={business.whatsappHref} target="_blank" rel="noopener">WhatsApp</a>)</dd>
   <dt class="font-semibold text-slate-900">Hours</dt><dd>{business.hours}</dd>
 </dl>

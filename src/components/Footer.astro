@@ -10,7 +10,7 @@ const year = 2026;
       <p class="mt-2">GSTIN: <span class="font-mono">{business.gstin}</span> ({business.gstState})</p>
       <address class="mt-2 not-italic">{fullAddress.map((l) => <span class="block">{l}</span>)}</address>
       <p class="mt-2">
-        <a class="text-brand-700 hover:underline" href={`mailto:${business.email}`}>{business.email}</a>{' · '}<a class="text-brand-700 hover:underline" href={business.phoneHref}>{business.phoneDisplay}</a>
+        <a class="text-brand-700 hover:underline" href={`mailto:${business.email}`}>{business.email}</a>{' · '}<a class="text-brand-700 hover:underline" href={business.phoneHref}>{business.phoneDisplay}</a>{' · '}<a class="text-brand-700 hover:underline" href={business.whatsappHref} target="_blank" rel="noopener">WhatsApp</a>
       </p>
     </div>
     <nav aria-label="Site">

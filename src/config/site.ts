@@ -27,8 +27,9 @@ export const business = {
     country: 'India',
   },
   email: 'info@curiosta.com', // EDITABLE
-  phoneDisplay: '+91-9438643108', // EDITABLE
-  phoneHref: 'tel:+919438643108',
+  phoneDisplay: '+91-9933744862', // EDITABLE
+  phoneHref: 'tel:+919933744862',
+  whatsappHref: 'https://wa.me/919933744862', // WhatsApp Business
   hours: 'Monday to Friday, 10:00 to 18:00 IST (excluding public holidays)', // EDITABLE
   quoteResponse: '3 working days', // EDITABLE: promised turnaround for a formal quotation
   quotationValidityDays: 30, // EDITABLE
@@ -37,7 +38,7 @@ export const business = {
     name: 'Manoj Kumar Sahukar', // EDITABLE
     designation: 'Grievance Officer',
     email: 'info@curiosta.com', // EDITABLE
-    phoneDisplay: '+91-9438643108',
+    phoneDisplay: '+91-9933744862',
     confirmed: false, // PENDING: Manoj to confirm he is the named grievance officer
   },
   jurisdiction: 'Gurugram, Haryana', // EDITABLE
