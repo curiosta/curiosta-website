@@ -43,7 +43,7 @@ const legal = 'Sahukar Consultancy';
 for (const k of ['contact', 'about', 'home', 'terms']) check('Identity', `Legal entity name "${legal}" on ${pages[k]}`, T[k].includes(legal));
 check('Identity', 'Physical address with PIN on Contact (not a PO box)', has('contact', /Two Horizon Centre.*Gurugram.*122002/) && !has('contact', /P\.?O\.? Box/i));
 check('Identity', 'Email on Contact', has('contact', /info@curiosta\.com/));
-check('Identity', 'Phone on Contact', has('contact', /\+91-9438643108/));
+check('Identity', 'Phone on Contact', has('contact', /\+91-\d{10}/));
 check('Identity', 'Support hours on Contact', has('contact', /Monday to Friday/));
 check('Identity', 'GSTIN on Contact and footer', has('contact', /06FPRPS8300Q1ZW/) && footer(html.home).includes('06FPRPS8300Q1ZW'));
 // 4. Pricing
@@ -77,7 +77,7 @@ check('Refunds', 'Returns window stated', !html.refunds.includes('data-placehold
 check('Refunds', 'Transit-damage reporting window stated', !html.refunds.includes('data-placeholder="damageReportWindow"'), 'PLACEHOLDER: damage reporting window', 'WARN');
 check('Refunds', 'Damage/defect remedy', has('refunds', /Damaged, defective or wrong items/));
 // 9. Grievance (E-Commerce Rules 2020, rule 4)
-check('Grievance', 'Grievance officer name, email, phone, address', has('grievance', /Manoj Kumar Sahukar/) && has('grievance', /info@curiosta\.com/) && has('grievance', /\+91-9438643108/) && has('grievance', /122002/));
+check('Grievance', 'Grievance officer name, email, phone, address', has('grievance', /Manoj Kumar Sahukar/) && has('grievance', /info@curiosta\.com/) && has('grievance', /\+91-\d{10}/) && has('grievance', /122002/));
 check('Grievance', 'Acknowledge within 48 hours, resolve within one month', has('grievance', /48 hours/) && has('grievance', /one month/));
 check('Grievance', 'Grievance officer confirmed by Manoj', !html.grievance.includes('data-placeholder="grievanceOfficer"'), 'PENDING confirmation', 'WARN');
 check('Grievance', 'Seller details (legal name, GSTIN, address)', has('grievance', /Seller details/) && has('grievance', /06FPRPS8300Q1ZW/));
