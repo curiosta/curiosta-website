@@ -1,0 +1,262 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >-
+  curiosta-web (DRAFT, M1): static curiosta.com on a NEW private S3 bucket + NEW CloudFront
+  distribution (OAC). Independent of the old SST stack prod-curiosta-website-deployment-API
+  (ap-south-1), which stays untouched as rollback. Store/admin behaviours are added later
+  (M3+) by setting StoreOriginDomain. Deploy region: ap-southeast-1 (CloudFront is global;
+  the ACM certificate must be in us-east-1 and is passed in as CertificateArn).
+
+Parameters:
+  DomainName:
+    Type: String
+    Default: curiosta.com
+  WwwDomainName:
+    Type: String
+    Default: www.curiosta.com
+  CertificateArn:
+    Type: String
+    Default: ''
+    Description: ACM cert in us-east-1 covering curiosta.com and www.curiosta.com. Empty = no aliases (test on *.cloudfront.net).
+  AttachAliases:
+    Type: String
+    AllowedValues: ['false', 'true']
+    Default: 'false'
+    Description: Phase 1 deploy with 'false'; set 'true' only at cut-over after the aliases are removed from the old distributions.
+  PriceClass:
+    Type: String
+    AllowedValues: [PriceClass_100, PriceClass_200, PriceClass_All]
+    Default: PriceClass_200
+    Description: PriceClass_200 includes edge locations in India.
+  StoreOriginDomain:
+    Type: String
+    Default: ''
+    Description: (M3+) Lambda Function URL host of the store-backend, e.g. abc.lambda-url.ap-southeast-1.on.aws. Empty in M1.
+  OriginVerifyValue:
+    Type: String
+    Default: ''
+    NoEcho: true
+    Description: (M3+) Shared secret sent as X-Origin-Verify to the store origin. Supply at deploy time; never commit.
+
+Conditions:
+  UseAliases: !And
+    - !Equals [!Ref AttachAliases, 'true']
+    - !Not [!Equals [!Ref CertificateArn, '']]
+  HasStore: !Not [!Equals [!Ref StoreOriginDomain, '']]
+
+Resources:
+  SiteBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub 'curiosta-web-site-${AWS::AccountId}'
+      OwnershipControls:
+        Rules: [{ ObjectOwnership: BucketOwnerEnforced }]
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault: { SSEAlgorithm: AES256 }
+      VersioningConfiguration: { Status: Enabled }
+      LifecycleConfiguration:
+        Rules:
+          - Id: expire-old-versions
+            Status: Enabled
+            NoncurrentVersionExpiration: { NoncurrentDays: 30 }
+            AbortIncompleteMultipartUpload: { DaysAfterInitiation: 7 }
+      Tags:
+        - { Key: project, Value: curiosta-web }
+
+  SiteOac:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub '${AWS::StackName}-site-oac'
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  SiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref SiteBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowCloudFrontRead
+            Effect: Allow
+            Principal: { Service: cloudfront.amazonaws.com }
+            Action: s3:GetObject
+            Resource: !Sub '${SiteBucket.Arn}/*'
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${Distribution}'
+          - Sid: AllowCloudFrontList   # missing keys return 404 (not 403)
+            Effect: Allow
+            Principal: { Service: cloudfront.amazonaws.com }
+            Action: s3:ListBucket
+            Resource: !GetAtt SiteBucket.Arn
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${Distribution}'
+          - Sid: DenyInsecureTransport
+            Effect: Deny
+            Principal: '*'
+            Action: 's3:*'
+            Resource: [!GetAtt SiteBucket.Arn, !Sub '${SiteBucket.Arn}/*']
+            Condition:
+              Bool: { 'aws:SecureTransport': 'false' }
+
+  ViewerRequestFunction:
+    Type: AWS::CloudFront::Function
+    Properties:
+      Name: !Sub '${AWS::StackName}-viewer-request'
+      AutoPublish: true
+      FunctionConfig:
+        Comment: www->apex 301, add trailing slash, directory index rewrite
+        Runtime: cloudfront-js-2.0
+      FunctionCode: |
+        function handler(event) {
+          var req = event.request;
+          var host = (req.headers.host && req.headers.host.value) || '';
+          var uri = req.uri;
+          if (host === 'www.curiosta.com') {
+            var qs = [];
+            for (var k in req.querystring) {
+              var q = req.querystring[k];
+              if (q.multiValue) { for (var i = 0; i < q.multiValue.length; i++) qs.push(k + '=' + q.multiValue[i].value); }
+              else qs.push(k + (q.value !== '' ? '=' + q.value : ''));
+            }
+            return { statusCode: 301, statusDescription: 'Moved Permanently', headers: { location: { value: 'https://curiosta.com' + uri + (qs.length ? '?' + qs.join('&') : '') }, 'cache-control': { value: 'max-age=3600' } } };
+          }
+          if (uri.endsWith('/')) { req.uri = uri + 'index.html'; return req; }
+          var last = uri.substring(uri.lastIndexOf('/') + 1);
+          if (last.indexOf('.') === -1) {
+            return { statusCode: 301, statusDescription: 'Moved Permanently', headers: { location: { value: uri + '/' } } };
+          }
+          return req;
+        }
+
+  SecurityHeaders:
+    Type: AWS::CloudFront::ResponseHeadersPolicy
+    Properties:
+      ResponseHeadersPolicyConfig:
+        Name: !Sub '${AWS::StackName}-security-headers'
+        SecurityHeadersConfig:
+          StrictTransportSecurity:
+            AccessControlMaxAgeSec: 31536000
+            IncludeSubdomains: false   # other *.curiosta.com hosts are out of scope
+            Preload: false
+            Override: true
+          ContentTypeOptions: { Override: true }
+          FrameOptions: { FrameOption: DENY, Override: true }
+          ReferrerPolicy: { ReferrerPolicy: strict-origin-when-cross-origin, Override: true }
+          ContentSecurityPolicy:
+            Override: true
+            # M3+ (Razorpay Checkout): add https://checkout.razorpay.com to script-src and
+            # https://api.razorpay.com https://checkout.razorpay.com to frame-src/connect-src.
+            ContentSecurityPolicy: >-
+              default-src 'self'; script-src 'self' https://challenges.cloudflare.com;
+              style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self';
+              connect-src 'self'; frame-src https://challenges.cloudflare.com;
+              form-action 'self' mailto:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'
+        CustomHeadersConfig:
+          Items:
+            - { Header: Permissions-Policy, Value: 'camera=(), microphone=(), geolocation=(), payment=(self "https://api.razorpay.com")', Override: true }
+
+  Distribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Comment: curiosta.com static site (curiosta-web stack)
+        Enabled: true
+        HttpVersion: http2and3
+        IPV6Enabled: true
+        PriceClass: !Ref PriceClass
+        DefaultRootObject: index.html
+        Aliases: !If [UseAliases, [!Ref DomainName, !Ref WwwDomainName], !Ref 'AWS::NoValue']
+        ViewerCertificate: !If
+          - UseAliases
+          - AcmCertificateArn: !Ref CertificateArn
+            SslSupportMethod: sni-only
+            MinimumProtocolVersion: TLSv1.2_2021
+          - CloudFrontDefaultCertificate: true
+        Origins:
+          - Id: site
+            DomainName: !GetAtt SiteBucket.RegionalDomainName
+            OriginAccessControlId: !GetAtt SiteOac.Id
+            S3OriginConfig: { OriginAccessIdentity: '' }
+          - !If
+            - HasStore
+            - Id: store
+              DomainName: !Ref StoreOriginDomain
+              CustomOriginConfig: { OriginProtocolPolicy: https-only, OriginSSLProtocols: [TLSv1.2] }
+              OriginCustomHeaders:
+                - { HeaderName: X-Origin-Verify, HeaderValue: !Ref OriginVerifyValue }
+            - !Ref 'AWS::NoValue'
+        DefaultCacheBehavior:
+          TargetOriginId: site
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD]
+          CachedMethods: [GET, HEAD]
+          Compress: true
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6          # Managed-CachingOptimized (honours object Cache-Control)
+          ResponseHeadersPolicyId: !Ref SecurityHeaders
+          FunctionAssociations:
+            - EventType: viewer-request
+              FunctionARN: !GetAtt ViewerRequestFunction.FunctionMetadata.FunctionARN
+        CacheBehaviors: !If
+          - HasStore
+          - - PathPattern: /store/*
+              TargetOriginId: store
+              ViewerProtocolPolicy: https-only
+              AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
+              CachedMethods: [GET, HEAD]
+              Compress: true
+              CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad      # Managed-CachingDisabled
+              OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac # Managed-AllViewerExceptHostHeader
+            - PathPattern: /admin/*
+              TargetOriginId: store
+              ViewerProtocolPolicy: https-only
+              AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
+              CachedMethods: [GET, HEAD]
+              Compress: true
+              CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad      # Managed-CachingDisabled
+              OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac # Managed-AllViewerExceptHostHeader
+            - PathPattern: /hooks/*
+              TargetOriginId: store
+              ViewerProtocolPolicy: https-only
+              AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
+              CachedMethods: [GET, HEAD]
+              Compress: true
+              CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad      # Managed-CachingDisabled
+              OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac # Managed-AllViewerExceptHostHeader
+            - PathPattern: /health
+              TargetOriginId: store
+              ViewerProtocolPolicy: https-only
+              AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
+              CachedMethods: [GET, HEAD]
+              Compress: true
+              CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad      # Managed-CachingDisabled
+              OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac # Managed-AllViewerExceptHostHeader
+            # /app/* (admin UI build) and /media/* (media bucket) are added in M3 with the store stack outputs.
+          - !Ref 'AWS::NoValue'
+        CustomErrorResponses:
+          - { ErrorCode: 404, ResponseCode: 404, ResponsePagePath: /404.html, ErrorCachingMinTTL: 60 }
+          - { ErrorCode: 403, ResponseCode: 404, ResponsePagePath: /404.html, ErrorCachingMinTTL: 60 }
+      Tags:
+        - { Key: project, Value: curiosta-web }
+
+Outputs:
+  SiteBucketName:
+    Value: !Ref SiteBucket
+  DistributionId:
+    Value: !Ref Distribution
+  DistributionDomainName:
+    Description: Target for the Route 53 alias A/AAAA records (hosted zone Z2FDTNDATAQYW2)
+    Value: !GetAtt Distribution.DomainName
+  DistributionArn:
+    Value: !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${Distribution}'

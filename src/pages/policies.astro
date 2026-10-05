@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { policyLinks } from '../config/site';
+---
+<Base title="Policies" description="Curiosta policies: terms, privacy, shipping, cancellation and refunds, grievance redressal.">
+  <PageHeader eyebrow="Policies" title="Policies" />
+  <ul class="mx-auto max-w-6xl space-y-2 px-4 py-10">
+    {policyLinks.map((l) => <li><a class="text-lg font-medium text-brand-700 hover:underline" href={l.href}>{l.label}</a></li>)}
+  </ul>
+</Base>

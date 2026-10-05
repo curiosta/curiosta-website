@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+const steps = [
+  ['Requirement', 'You share the measurement goal, environment, quantity and timeline. We sign an NDA if you need one.'],
+  ['Specification & quotation', 'We return a written specification, a fixed-scope quotation with GST, and the delivery schedule.'],
+  ['Design', 'Schematic and PCB design with design-for-manufacture review, firmware architecture and enclosure CAD.'],
+  ['Prototype & test', 'First units are built and tested against the specification. You review and approve before batch production.'],
+  ['Small-batch manufacture', 'PCB fabrication and assembly through vetted Indian partners, followed by in-house integration and testing.'],
+  ['Firmware, cloud & documentation', 'Firmware, optional data pipeline and dashboard, user manual and a test report for every unit.'],
+];
+---
+<Base title="Custom design & manufacture" description="Custom electronics and instrument design and small-batch manufacture: specification, PCB, firmware, enclosure, prototype and tested production units.">
+  <PageHeader eyebrow="Services" title="Custom design & manufacture" lead="When an off-the-shelf instrument does not fit your experiment, we design and build one that does, from specification to a tested batch." />
+  <div class="mx-auto max-w-6xl px-4 py-10">
+    <ol class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {steps.map(([t, b], i) => (
+        <li class="rounded-lg border border-slate-200 p-5">
+          <span class="text-sm font-semibold text-brand-700">Step {i + 1}</span>
+          <h2 class="mt-1 text-lg font-semibold text-slate-900">{t}</h2>
+          <p class="mt-2 text-sm text-slate-600">{b}</p>
+        </li>
+      ))}
+    </ol>
+    <div class="prose prose-slate mt-10 max-w-none prose-a:text-brand-700">
+      <h2>What we typically build</h2>
+      <ul>
+        <li>Environmental sensing nodes (particulates, gases, temperature, humidity) with Wi-Fi or 4G</li>
+        <li>Multi-channel data loggers and data-acquisition front ends</li>
+        <li>Test rigs, instrument control and lab automation</li>
+        <li>Wearable and portable measurement devices for field studies</li>
+      </ul>
+      <h2>Commercial terms</h2>
+      <ul>
+        <li>Every project starts with a written quotation that states scope, deliverables, milestones, payment schedule and GST.</li>
+        <li>Custom and made-to-order work cannot be cancelled for a full refund once design work has started. See <a href="/cancellation-and-refunds/">Cancellation &amp; Refunds</a>.</li>
+        <li>Ownership of designs and confidentiality are agreed in the quotation or a separate agreement before work starts.</li>
+      </ul>
+      <p><a href="/contact/?product=Custom%20design%20%26%20manufacture#rfq">Start a custom project →</a></p>
+    </div>
+  </div>
+</Base>

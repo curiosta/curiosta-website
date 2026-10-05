@@ -1,0 +1,27 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@plugin "@tailwindcss/forms";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --color-brand-50: #eef2ff;
+  --color-brand-100: #e0e7ff;
+  --color-brand-200: #c7d2fe;
+  --color-brand-500: #6366f1;
+  --color-brand-600: #4f46e5;
+  --color-brand-700: #4338ca;
+  --color-brand-800: #3730a3;
+  --color-brand-900: #312e81;
+}
+
+/* Visible marker for values that must be confirmed before Razorpay review / go-live.
+   scripts/check-placeholders.mjs counts [data-placeholder] in dist/. */
+.placeholder {
+  @apply rounded bg-amber-100 px-1 py-0.5 font-semibold text-amber-900 ring-1 ring-amber-400;
+}
+.pending-tag {
+  @apply ml-1 rounded bg-amber-100 px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-amber-900 ring-1 ring-amber-400;
+}
+.sample-badge {
+  @apply inline-flex items-center rounded-full bg-rose-100 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide text-rose-800 ring-1 ring-rose-300;
+}

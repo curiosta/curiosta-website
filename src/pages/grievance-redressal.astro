@@ -1,0 +1,30 @@
+---
+import Legal from '../layouts/Legal.astro';
+import GrievancePending from '../components/GrievancePending.astro';
+import { business, fullAddress } from '../config/site';
+---
+<Legal title="Grievance Redressal" description={`Grievance officer and complaint process for ${business.legalName} (${business.brand}).`}>
+  <p>We take complaints seriously. In line with the Consumer Protection (E-Commerce) Rules, 2020 and the Information Technology Act, 2000 and rules made under it, you can contact our Grievance Officer about orders, payments, deliveries, refunds, privacy or website content.</p>
+
+  <h2 id="grievance-officer">Grievance Officer</h2>
+  <div class="not-prose rounded-lg border border-slate-200 bg-slate-50 p-5 text-sm">
+    <p class="text-base font-semibold text-slate-900">{business.grievance.name} <GrievancePending /></p>
+    <p>{business.grievance.designation}, {business.legalName}</p>
+    <p class="mt-2">{fullAddress.join(', ')}</p>
+    <p class="mt-2">Email: <a class="text-brand-700 underline" href={`mailto:${business.grievance.email}`}>{business.grievance.email}</a></p>
+    <p>Phone: <a class="text-brand-700 underline" href={business.phoneHref}>{business.grievance.phoneDisplay}</a> ({business.hours})</p>
+  </div>
+
+  <h2>How to raise a grievance</h2>
+  <ol>
+    <li>Email the Grievance Officer with your name, contact details, order or invoice number (if any), and a description of the issue with any supporting documents.</li>
+    <li>We will <strong>acknowledge your complaint within 48 hours</strong> and give you a reference number.</li>
+    <li>We will try to <strong>resolve it within one month</strong> of receipt and tell you the outcome in writing.</li>
+  </ol>
+
+  <h2>Seller details</h2>
+  <p>{business.legalName} ({business.constitution.toLowerCase()}, proprietor {business.proprietor}), brand {business.brandMark}, GSTIN {business.gstin}, {fullAddress.join(', ')}. Email {business.email}, phone {business.phoneDisplay}.</p>
+
+  <h2>If you are not satisfied</h2>
+  <p>You may contact the National Consumer Helpline (dial 1915 or visit consumerhelpline.gov.in) or approach the appropriate Consumer Commission under the Consumer Protection Act, 2019.</p>
+</Legal>

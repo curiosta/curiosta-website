@@ -1,0 +1,9 @@
+---
+interface Props { compact?: boolean }
+---
+{Astro.props.compact
+  ? <span class="sample-badge" data-sample="true">Sample</span>
+  : <div class="rounded-md border border-rose-300 bg-rose-50 p-4 text-sm text-rose-900" data-sample="true" role="note">
+      <p class="font-semibold"><span class="sample-badge mr-2">Sample listing</span>Placeholder entry, not yet for sale.</p>
+      <p class="mt-1">The specifications and price shown are illustrative and will be replaced with the confirmed product details. Please <a class="underline" href="/contact/#rfq">request a quotation</a> for current availability and pricing.</p>
+    </div>}

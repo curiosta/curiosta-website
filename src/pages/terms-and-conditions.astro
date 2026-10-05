@@ -1,0 +1,55 @@
+---
+import Legal from '../layouts/Legal.astro';
+import Placeholder from '../components/Placeholder.astro';
+import { business, fullAddress } from '../config/site';
+---
+<Legal title="Terms & Conditions" description={`Terms and conditions for purchases from ${business.legalName} (${business.brand}).`}>
+  <p>These Terms &amp; Conditions ("Terms") govern your use of curiosta.com and any purchase of products or services from <strong>{business.legalName}</strong>, a {business.constitution.toLowerCase()} of {business.proprietor}, GSTIN {business.gstin}, with its place of business at {fullAddress.join(', ')} ("{business.brand}", "we", "us"). By using this website, requesting a quotation or placing an order you agree to these Terms.</p>
+
+  <h2>1. Products, specifications and samples</h2>
+  <p>We describe products as accurately as we can. Configured and custom items are supplied to the specification agreed in our written quotation, which prevails over website descriptions. Listings marked <strong>SAMPLE</strong> are illustrative placeholders and are not offers for sale.</p>
+
+  <h2>2. Prices and taxes</h2>
+  <ul>
+    <li>All prices are in Indian Rupees (INR) and include GST unless stated otherwise. GST is charged as CGST + SGST for delivery within {business.gstState} and IGST elsewhere in India.</li>
+    <li>Shipping charges: <Placeholder k="shippingRates" />. Any shipping charge is shown before you pay.</li>
+    <li>Quotations are valid for {business.quotationValidityDays} days unless stated otherwise. We may correct obvious pricing errors before accepting an order.</li>
+  </ul>
+
+  <h2>3. Orders and acceptance</h2>
+  <p>An order is accepted when we confirm it in writing (email, signed quotation, order acknowledgement) or dispatch the goods. For purchase orders and GeM orders, the terms of our quotation and these Terms apply unless the PO terms are expressly agreed by us in writing.</p>
+
+  <h2>4. Payment</h2>
+  <ul>
+    <li>Payment is made by bank transfer against a proforma or tax invoice, under a PO or GeM order on the agreed terms, or online through our payment partner Razorpay when online checkout is available.</li>
+    <li>Online payments are processed by Razorpay Software Private Limited. We do not see or store your full card, UPI PIN or netbanking credentials.</li>
+    <li>Custom projects may require an advance and milestone payments as set out in the quotation.</li>
+  </ul>
+
+  <h2>5. Delivery</h2>
+  <p>Delivery is governed by our <a href="/shipping-policy/">Shipping Policy</a>. Risk passes to you on delivery to the address you provide. Delivery dates are estimates; we will inform you promptly of any delay.</p>
+
+  <h2>6. Cancellation, returns and refunds</h2>
+  <p>See our <a href="/cancellation-and-refunds/">Cancellation &amp; Refunds</a> policy.</p>
+
+  <h2>7. Warranty</h2>
+  <p>Warranty period and coverage are stated in the quotation or product documentation. Warranty does not cover damage from misuse, unauthorised modification, improper installation, exposure outside rated conditions, or normal wear of consumables. Bought-out components carry the original manufacturer's warranty only.</p>
+
+  <h2>8. Custom work and intellectual property</h2>
+  <p>Ownership of designs, firmware and documentation created for a custom project, and any confidentiality obligations, are as agreed in the quotation or a separate written agreement. Unless agreed otherwise, we retain our pre-existing designs, libraries and know-how. The {business.brand} name and logo are our trade marks and may not be used without permission.</p>
+
+  <h2>9. Limitation of liability</h2>
+  <p>To the extent permitted by law, our total liability for any order is limited to the amount paid for that order, and we are not liable for indirect or consequential loss, including loss of data, research time or profit. Nothing in these Terms limits rights you have under the Consumer Protection Act, 2019 that cannot be excluded.</p>
+
+  <h2>10. Use of the website</h2>
+  <p>You may not misuse this website, attempt unauthorised access, or submit unlawful or misleading information. Personal data is handled under our <a href="/privacy-policy/">Privacy Policy</a>.</p>
+
+  <h2>11. Force majeure</h2>
+  <p>We are not responsible for delays or failures caused by events beyond our reasonable control, including natural events, epidemics, government action, supplier or courier disruption.</p>
+
+  <h2>12. Governing law and disputes</h2>
+  <p>These Terms are governed by the laws of India. Please first raise any complaint with our <a href="/grievance-redressal/">Grievance Officer</a>. Subject to that process and to your statutory rights, the courts at {business.jurisdiction} have jurisdiction.</p>
+
+  <h2>13. Changes and contact</h2>
+  <p>We may update these Terms; the version in force when you place an order applies to that order. Questions: <a href={`mailto:${business.email}`}>{business.email}</a>, {business.phoneDisplay}.</p>
+</Legal>

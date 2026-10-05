@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Placeholder from '../components/Placeholder.astro';
+import { business } from '../config/site';
+---
+<Base title="How to buy" description="How to buy from Curiosta: request a quotation, raise a purchase order or GeM order, pay, and receive a GST tax invoice.">
+  <PageHeader eyebrow="Purchasing" title="How to buy" lead="Built for university, institute and company purchase processes: quotation, purchase order, GeM and a GST tax invoice." />
+  <div class="mx-auto max-w-4xl px-4 py-10">
+    <div class="prose prose-slate max-w-none prose-a:text-brand-700">
+      <h2 id="quotation">1. Request a quotation</h2>
+      <p>Use the <a href="/contact/#rfq">RFQ form</a> or email <a href={`mailto:${business.email}`}>{business.email}</a> with your specification or BOM, quantity, delivery location and needed-by date. We aim to send a formal quotation within {business.quoteResponse}.</p>
+      <p>The quotation (PDF) shows the price per item, GST rate and HSN code, total in INR, validity ({business.quotationValidityDays} days unless stated), delivery period, warranty and payment terms, issued by {business.legalName} (GSTIN {business.gstin}).</p>
+
+      <h2 id="po">2. Place the order</h2>
+      <ul>
+        <li><strong>Purchase order (PO) or work order:</strong> address it to {business.legalName}, {business.address.line1}, {business.address.line2}, {business.address.city}, {business.address.state} {business.address.pin}, quoting our quotation number and GSTIN.</li>
+        <li><strong>Direct purchase:</strong> many institutes can buy low-value items directly against a single quotation under their purchase rules. Please confirm the limit with your purchase section.</li>
+        <li><strong>Advance payment:</strong> we issue a proforma invoice on request.</li>
+      </ul>
+
+      <h2 id="gem">3. Buying through GeM</h2>
+      <p>If your institution must procure through the Government e-Marketplace (GeM), say so in your RFQ. We will tell you whether the item is available on GeM or how a custom bid can be supported. We only describe an item as available on GeM once it is listed there.</p>
+
+      <h2 id="payment">4. Payment</h2>
+      <ul>
+        <li>Bank transfer (NEFT/RTGS/IMPS) against the proforma or tax invoice. Our bank details are given only on the quotation and invoice. Always confirm them by phone before paying a new account.</li>
+        <li>Online payment by UPI, debit/credit card and netbanking through Razorpay: coming soon to this website.</li>
+      </ul>
+
+      <h2 id="dispatch">5. Dispatch and delivery</h2>
+      <p>Dispatch time: <Placeholder k="dispatchTime" />. Instruments are tested before dispatch, and configured or custom items ship on the date given in the quotation. Shipping charges: <Placeholder k="shippingRates" />. Full details are in the <a href="/shipping-policy/">Shipping Policy</a>.</p>
+
+      <h2 id="invoice">6. GST tax invoice and documents</h2>
+      <p>Every order ships with a GST tax invoice showing our GSTIN, your GSTIN (if provided, so you can claim input tax credit), HSN codes and CGST + SGST (delivery within {business.gstState}) or IGST (elsewhere in India). An e-way bill accompanies consignments where the law requires one.</p>
+      <p>On request we can also provide our GST registration certificate, PAN, a warranty certificate, a test report and installation or user documentation.</p>
+
+      <h2 id="after-sales">7. After-sales</h2>
+      <p>Warranty terms are stated on the quotation and product documentation. For cancellations, returns and refunds see <a href="/cancellation-and-refunds/">Cancellation &amp; Refunds</a>. For complaints see <a href="/grievance-redressal/">Grievance Redressal</a>.</p>
+    </div>
+  </div>
+</Base>

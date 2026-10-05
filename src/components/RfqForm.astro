@@ -1,0 +1,110 @@
+---
+/**
+ * RFQ form.
+ * - PUBLIC_RFQ_ENDPOINT set  -> POST JSON to it (RFQ Lambda, functions/rfq). On any failure,
+ *   fall back to mailto with the same fields.
+ * - PUBLIC_RFQ_ENDPOINT empty (M1 default) -> open mailto:info@curiosta.com pre-filled.
+ * - No JavaScript -> the form's native action is the mailto: URL (and a plain link is shown).
+ */
+import { business } from '../config/site';
+const endpoint = import.meta.env.PUBLIC_RFQ_ENDPOINT ?? '';
+const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
+const mailto = `mailto:${business.email}?subject=${encodeURIComponent('RFQ via curiosta.com')}`;
+const input = 'mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-brand-500 focus:ring-brand-500';
+---
+<form id="rfq-form" class="space-y-4" method="post" action={mailto} enctype="text/plain" data-endpoint={endpoint} data-email={business.email} novalidate>
+  <div class="grid gap-4 sm:grid-cols-2">
+    <label class="block text-sm font-medium">Name *<input class={input} name="name" required maxlength="120" autocomplete="name" /></label>
+    <label class="block text-sm font-medium">Organisation / institute<input class={input} name="organisation" maxlength="160" autocomplete="organization" /></label>
+    <label class="block text-sm font-medium">Email *<input class={input} type="email" name="email" required maxlength="200" autocomplete="email" /></label>
+    <label class="block text-sm font-medium">Phone<input class={input} type="tel" name="phone" maxlength="30" autocomplete="tel" /></label>
+    <label class="block text-sm font-medium">Product or service<input class={input} name="product" maxlength="200" placeholder="e.g. PM2.5 monitor, custom PCB, BOM sourcing" /></label>
+    <label class="block text-sm font-medium">Quantity<input class={input} name="quantity" maxlength="40" /></label>
+    <label class="block text-sm font-medium">Needed by<input class={input} type="date" name="neededBy" /></label>
+    <label class="block text-sm font-medium">Purchase route
+      <select class={input} name="route">
+        <option value="">Not sure yet</option>
+        <option>Direct purchase / online payment</option>
+        <option>Purchase order (PO)</option>
+        <option>GeM</option>
+      </select>
+    </label>
+  </div>
+  <label class="block text-sm font-medium">Requirements, specifications or BOM *<textarea class={input} name="message" rows="6" required maxlength="5000"></textarea></label>
+  <div class="hidden" aria-hidden="true"><label>Leave this field empty<input name="website" tabindex="-1" autocomplete="off" /></label></div>
+  {turnstileKey && <div class="cf-turnstile" data-sitekey={turnstileKey}></div>}
+  <label class="flex items-start gap-2 text-sm"><input type="checkbox" name="consent" required class="mt-1 rounded border-slate-300 text-brand-700" /> <span>I agree that {business.legalName} may use these details to respond to my enquiry, as described in the <a class="text-brand-700 underline" href="/privacy-policy/">Privacy Policy</a>. *</span></label>
+  <div class="flex flex-wrap items-center gap-3">
+    <button type="submit" class="rounded-md bg-brand-700 px-5 py-2.5 font-semibold text-white hover:bg-brand-800 disabled:opacity-60">Send request</button>
+    <span class="text-xs text-slate-500">{endpoint ? 'Sent securely to our team.' : 'Opens your email app with the details filled in.'}</span>
+  </div>
+  <div id="rfq-status" role="status" aria-live="polite" class="hidden rounded-md p-3 text-sm"></div>
+  <noscript><p class="text-sm">JavaScript is off: email your requirements to <a class="underline" href={mailto}>{business.email}</a>.</p></noscript>
+</form>
+{turnstileKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+<script>
+  const form = document.getElementById('rfq-form') as HTMLFormElement | null;
+  const status = document.getElementById('rfq-status') as HTMLDivElement | null;
+  if (form && status) {
+    const endpoint = form.dataset.endpoint || '';
+    const to = form.dataset.email || 'info@curiosta.com';
+    const params = new URLSearchParams(location.search);
+    const product = params.get('product');
+    if (product) (form.elements.namedItem('product') as HTMLInputElement).value = product.slice(0, 200);
+
+    const show = (kind: 'ok' | 'err' | 'info', html: string) => {
+      status.className = 'rounded-md p-3 text-sm ' + (kind === 'ok' ? 'bg-green-50 text-green-900 ring-1 ring-green-300' : kind === 'err' ? 'bg-amber-50 text-amber-900 ring-1 ring-amber-300' : 'bg-slate-50 text-slate-800 ring-1 ring-slate-300');
+      status.innerHTML = html;
+    };
+    const fields = () => {
+      const fd = new FormData(form);
+      const o: Record<string, string> = {};
+      for (const [k, v] of fd.entries()) o[k] = String(v).trim();
+      return o;
+    };
+    const mailtoFor = (o: Record<string, string>) => {
+      const lines = [
+        `Name: ${o.name || ''}`, `Organisation: ${o.organisation || ''}`, `Email: ${o.email || ''}`, `Phone: ${o.phone || ''}`,
+        `Product/service: ${o.product || ''}`, `Quantity: ${o.quantity || ''}`, `Needed by: ${o.neededBy || ''}`, `Purchase route: ${o.route || 'Not sure yet'}`,
+        '', 'Requirements:', o.message || '',
+      ];
+      let body = lines.join('\n');
+      if (body.length > 1600) body = body.slice(0, 1600) + '\n[truncated: please paste the rest or attach your BOM]';
+      const subject = `RFQ: ${o.product || 'enquiry'} (${o.organisation || o.name || 'curiosta.com'})`;
+      return `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    };
+    const fallback = (o: Record<string, string>, reason: string) => {
+      const href = mailtoFor(o);
+      show('err', `${reason} Your email app should open with your request filled in. If it does not, <a class="underline font-semibold" id="rfq-mailto" href="${href.replace(/"/g, '&quot;')}">click here to email ${to}</a>.`);
+      window.location.href = href;
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      const o = fields();
+      if (o.website) { show('ok', 'Thank you.'); return; } // honeypot
+      if (!endpoint) { fallback(o, 'Thanks!'); return; }
+      const btn = form.querySelector('button[type=submit]') as HTMLButtonElement;
+      btn.disabled = true;
+      try {
+        const ctl = new AbortController();
+        const t = setTimeout(() => ctl.abort(), 10000);
+        const turnstile = (form.querySelector('[name="cf-turnstile-response"]') as HTMLInputElement | null)?.value;
+        const res = await fetch(endpoint, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...o, turnstile, page: location.pathname }), signal: ctl.signal });
+        clearTimeout(t);
+        if (res.ok) {
+          const j = await res.json().catch(() => ({}));
+          show('ok', `Thank you. We have received your request${j.reference ? ` (reference <strong>${String(j.reference).replace(/[^A-Z0-9-]/gi, '')}</strong>)` : ''} and will reply by email.`);
+          form.reset();
+        } else {
+          fallback(o, 'We could not submit the form online.');
+        }
+      } catch {
+        fallback(o, 'We could not reach our server.');
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  }
+</script>

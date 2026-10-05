@@ -1,57 +1,58 @@
 ---
-import { listProducts } from "@api/product/listProducts";
-import Footer from "@components/Footer.astro";
-import HeroSection from "@section/HeroSection.astro";
-import Navbar from "@components/Navbar.astro";
-import Layout from "@layouts/Layout.astro";
-import ShortIntroSection from "@section/ShortIntroSection.astro";
-import { pageTitleDesc } from "content";
-import CollectionGroup from "@components/CollectionGroup";
-import { collectionList } from "@api/product/collectionList";
-import ProductContainer from "@components/ProductContainer";
-import Typography from "@components/Typography";
-
-const { collections } = await collectionList();
-const collectionId = collections.find((collection) =>
-  collection.handle?.includes("feature")
-)?.id;
-const res = await listProducts({
-  collection_id: [collectionId || ""],
-  limit: 3,
-});
-const product = res?.products;
+import Base from '../layouts/Base.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { getCollection } from 'astro:content';
+import { business } from '../config/site';
+const featured = (await getCollection('products')).filter((p) => p.data.featured).sort((a, b) => a.data.order - b.data.order).slice(0, 3);
+const pillars = [
+  { title: 'Research instruments', href: '/products/', body: 'Air-quality monitors, data loggers, weather stations, battery cyclers and lab-automation rigs, configured for your study.' },
+  { title: 'Custom design & manufacture', href: '/custom-design-manufacturing/', body: 'From specification to PCB, firmware, enclosure and a tested small batch, built with vetted Indian manufacturing partners.' },
+  { title: 'Components desk', href: '/components/', body: 'Send a BOM and get one consolidated quotation and one GST invoice for sensors, modules, boards and enclosures.' },
+];
+const steps = ['Request a quotation', 'Receive a formal GST quotation', 'Pay online or raise a PO / GeM order', 'Delivery with a GST tax invoice'];
 ---
+<Base title={business.brand}>
+  <section class="bg-gradient-to-b from-brand-50 to-white">
+    <div class="mx-auto max-w-6xl px-4 py-16 md:py-24">
+      <p class="text-sm font-semibold uppercase tracking-wide text-brand-700">{business.brandMark} · {business.address.city}, India</p>
+      <h1 class="mt-2 max-w-3xl text-4xl font-bold tracking-tight text-slate-900 md:text-5xl">Research instruments, built to your spec, for Indian labs.</h1>
+      <p class="mt-4 max-w-2xl text-lg text-slate-600">We design, build and supply sensing and data-acquisition hardware for universities, research institutes and R&amp;D teams, with the quotation, PO, GeM and GST paperwork your purchase section needs.</p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="/products/" class="rounded-md bg-brand-700 px-5 py-3 font-semibold text-white hover:bg-brand-800">Browse products</a>
+        <a href="/contact/#rfq" class="rounded-md border border-brand-700 px-5 py-3 font-semibold text-brand-700 hover:bg-brand-50">Request a quote</a>
+      </div>
+    </div>
+  </section>
 
-<Layout
-  title={pageTitleDesc.home.title}
-  description={pageTitleDesc.home.description}
->
-  <Navbar />
-  <HeroSection />
+  <section class="mx-auto max-w-6xl px-4 py-12">
+    <div class="grid gap-6 md:grid-cols-3">
+      {pillars.map((p) => (
+        <a href={p.href} class="group rounded-lg border border-slate-200 p-6 hover:border-brand-300 hover:shadow-md">
+          <h2 class="text-xl font-semibold text-slate-900 group-hover:text-brand-700">{p.title}</h2>
+          <p class="mt-2 text-slate-600">{p.body}</p>
+          <span class="mt-4 inline-block text-sm font-semibold text-brand-700">Learn more →</span>
+        </a>
+      ))}
+    </div>
+  </section>
 
-  <!-- Featured section -->
-  <ShortIntroSection />
+  <section class="mx-auto max-w-6xl px-4 py-8">
+    <div class="flex items-end justify-between gap-4">
+      <h2 class="text-2xl font-bold text-slate-900">Featured products</h2>
+      <a href="/products/" class="text-sm font-semibold text-brand-700 hover:underline">All products →</a>
+    </div>
+    <div class="mt-6 grid gap-6 md:grid-cols-3">
+      {featured.map((p) => <ProductCard id={p.id} data={p.data} />)}
+    </div>
+  </section>
 
-  <!-- Feature Products -->
-  {
-    collectionId ? (
-      <CollectionGroup
-        title={product[0]?.collection?.title}
-        link={`/collection/${product[0]?.collection?.handle}`}
-        linkText="View all products"
-      >
-        <ProductContainer products={product} client:load />
-      </CollectionGroup>
-    ) : (
-      <Typography
-        size="body1/semi-bold"
-        variant="secondary"
-        className="text-center py-10"
-      >
-        Featured products not found
-      </Typography>
-    )
-  }
-
-  <Footer />
-</Layout>
+  <section class="mx-auto max-w-6xl px-4 py-12">
+    <div class="rounded-xl bg-slate-900 p-8 text-white">
+      <h2 class="text-2xl font-bold">How to buy</h2>
+      <ol class="mt-6 grid gap-4 md:grid-cols-4">
+        {steps.map((s, i) => <li class="rounded-lg bg-white/10 p-4"><span class="text-sm text-brand-200">Step {i + 1}</span><p class="mt-1 font-semibold">{s}</p></li>)}
+      </ol>
+      <a href="/how-to-buy/" class="mt-6 inline-block font-semibold text-brand-200 hover:underline">Quotation, PO, GeM and GST invoice explained →</a>
+    </div>
+  </section>
+</Base>

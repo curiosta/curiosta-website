@@ -1,0 +1,11 @@
+const assert = require('node:assert/strict');
+const { handler } = require('./viewer-request.cjs');
+const ev = (host, uri, querystring = {}) => ({ request: { uri, headers: { host: { value: host } }, querystring } });
+let r = handler(ev('www.curiosta.com', '/products/', { a: { value: '1' } }));
+assert.equal(r.statusCode, 301); assert.equal(r.headers.location.value, 'https://curiosta.com/products/?a=1');
+r = handler(ev('curiosta.com', '/products')); assert.equal(r.statusCode, 301); assert.equal(r.headers.location.value, '/products/');
+r = handler(ev('curiosta.com', '/products/')); assert.equal(r.uri, '/products/index.html');
+r = handler(ev('curiosta.com', '/')); assert.equal(r.uri, '/index.html');
+r = handler(ev('curiosta.com', '/_astro/x.js')); assert.equal(r.uri, '/_astro/x.js');
+r = handler(ev('d123.cloudfront.net', '/about/')); assert.equal(r.uri, '/about/index.html');
+console.log('viewer-request: 6 assertions passed');

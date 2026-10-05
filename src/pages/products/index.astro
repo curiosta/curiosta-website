@@ -1,24 +1,36 @@
 ---
-import { categoriesList } from "@api/product/categoriesList";
-import Footer from "@components/Footer.astro";
-import Navbar from "@components/Navbar.astro";
-import Products from "@components/Products";
-import Layout from "@layouts/Layout.astro";
-import getProductsFromUrl from '@utils/getProductsFromUrl'
-
-const categoryRes = await categoriesList();
-const categories = categoryRes?.product_categories;
-
-const {params, result} = await getProductsFromUrl(Astro.url.searchParams);
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { getCollection } from 'astro:content';
+const all = (await getCollection('products')).sort((a, b) => a.data.order - b.data.order);
+const groups = [
+  { key: 'instruments', title: 'Instruments' },
+  { key: 'kits', title: 'Kits' },
+  { key: 'custom', title: 'Custom builds' },
+  { key: 'components', title: 'Components desk' },
+];
+const anySample = all.some((p) => p.data.sample);
 ---
-
-<Layout
-  title="Products"
-  description="Curiosta - A global platform for local making"
->
-  <Navbar />
-  <main class="bg-white">
-    <Products categories={categories} productResult={result} client:load queryParams={params} />
-  </main>
-  <Footer />
-</Layout>
+<Base title="Products" description="Curiosta catalogue: air-quality monitors, data loggers, weather stations, battery cyclers, lab automation and components. Prices in INR including GST, or price on request.">
+  <PageHeader eyebrow="Catalogue" title="Products" lead="Prices are in Indian Rupees and include GST. Many instruments are configured to your specification, so they are listed as price on request." />
+  <div class="mx-auto max-w-6xl px-4 py-10">
+    {anySample && (
+      <div class="mb-8 rounded-md border border-rose-300 bg-rose-50 p-4 text-sm text-rose-900" data-sample="true" role="note">
+        <p class="font-semibold"><span class="sample-badge mr-2">Sample catalogue</span>Entries marked SAMPLE are placeholders and are not yet for sale.</p>
+        <p class="mt-1">The confirmed product list, specifications and prices will replace them. For anything you need today, <a class="underline" href="/contact/#rfq">request a quotation</a>.</p>
+      </div>
+    )}
+    {groups.map((g) => {
+      const items = all.filter((p) => p.data.category === g.key);
+      return items.length > 0 && (
+        <section class="mb-10" id={g.key}>
+          <h2 class="text-xl font-bold text-slate-900">{g.title}</h2>
+          <div class="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {items.map((p) => <ProductCard id={p.id} data={p.data} />)}
+          </div>
+        </section>
+      );
+    })}
+  </div>
+</Base>

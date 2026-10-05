@@ -1,0 +1,8 @@
+---
+import { formatInr } from '../config/site';
+interface Props { price: { mode: 'fixed'; inrInclGst: number; gstRatePct: number } | { mode: 'on-request' }; size?: 'sm' | 'lg' }
+const { price, size = 'sm' } = Astro.props;
+---
+{price.mode === 'fixed'
+  ? <p class:list={[size === 'lg' ? 'text-2xl' : 'text-base', 'font-semibold text-slate-900']}>{formatInr(price.inrInclGst)} <span class="text-sm font-normal text-slate-600">incl. {price.gstRatePct}% GST</span></p>
+  : <p class:list={[size === 'lg' ? 'text-2xl' : 'text-base', 'font-semibold text-slate-900']}>Price on request</p>}

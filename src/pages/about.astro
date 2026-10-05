@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import BusinessDetails from '../components/BusinessDetails.astro';
+import { business } from '../config/site';
+---
+<Base title="About" description={`About ${business.brand}: a brand of ${business.legalName}, building research instruments and custom electronics for Indian labs.`}>
+  <PageHeader eyebrow="Company" title={`About ${business.brand}`} lead="Quality over volume: instruments that are designed, tested and documented properly, in quantities that suit research." />
+  <div class="mx-auto grid max-w-6xl gap-10 px-4 py-10 lg:grid-cols-2">
+    <div class="prose prose-slate max-w-none prose-a:text-brand-700">
+      <p>{business.brandMark} is a brand of <strong>{business.legalName}</strong>, a {business.constitution.toLowerCase()} owned and run by <strong>{business.proprietor}</strong>, registered for GST in {business.gstState}.</p>
+      <p>We build sensing and data-acquisition hardware for universities, research institutes and R&amp;D teams in India: air-quality monitors, data loggers and custom instruments. We also source components for labs that want one supplier and one invoice.</p>
+      <p>We work with a contract-manufacturing model. We do the specification, electronics and firmware design, integration, testing and documentation, and vetted Indian partners carry out PCB fabrication and assembly. Each unit is tested before it ships.</p>
+      <p>Interested in working with us? <a href="/contact/#rfq">Tell us what you need</a>.</p>
+    </div>
+    <div class="rounded-lg border border-slate-200 p-6">
+      <h2 class="mb-4 text-lg font-semibold text-slate-900">Business details</h2>
+      <BusinessDetails />
+    </div>
+  </div>
+</Base>

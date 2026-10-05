@@ -1,0 +1,13 @@
+---
+import { business, fullAddress } from '../config/site';
+---
+<dl class="grid gap-x-6 gap-y-2 text-sm sm:grid-cols-[max-content_1fr]">
+  <dt class="font-semibold text-slate-900">Legal name</dt><dd>{business.legalName} ({business.constitution.toLowerCase()})</dd>
+  <dt class="font-semibold text-slate-900">Proprietor</dt><dd>{business.proprietor}</dd>
+  <dt class="font-semibold text-slate-900">Brand</dt><dd>{business.brandMark}</dd>
+  <dt class="font-semibold text-slate-900">GSTIN</dt><dd class="font-mono">{business.gstin}</dd>
+  <dt class="font-semibold text-slate-900">Address</dt><dd><address class="not-italic">{fullAddress.join(', ')}</address></dd>
+  <dt class="font-semibold text-slate-900">Email</dt><dd><a class="text-brand-700 underline" href={`mailto:${business.email}`}>{business.email}</a></dd>
+  <dt class="font-semibold text-slate-900">Phone</dt><dd><a class="text-brand-700 underline" href={business.phoneHref}>{business.phoneDisplay}</a></dd>
+  <dt class="font-semibold text-slate-900">Hours</dt><dd>{business.hours}</dd>
+</dl>

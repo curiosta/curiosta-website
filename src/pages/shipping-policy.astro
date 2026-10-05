@@ -1,0 +1,37 @@
+---
+import Legal from '../layouts/Legal.astro';
+import Placeholder from '../components/Placeholder.astro';
+import { business } from '../config/site';
+---
+<Legal title="Shipping Policy" description={`Shipping and delivery policy of ${business.legalName} (${business.brand}).`}>
+  <h2>1. Where we ship</h2>
+  <p>We ship within India only. For deliveries outside India, please contact us first; international orders are handled case by case with a separate quotation.</p>
+
+  <h2>2. Dispatch time</h2>
+  <ul>
+    <li><strong>In-stock items:</strong> <Placeholder k="dispatchTime" />.</li>
+    <li><strong>Configured, made-to-order and custom items:</strong> dispatched by the date stated in our quotation or order acknowledgement.</li>
+    <li>Orders are processed on working days (Monday to Friday, excluding public holidays).</li>
+  </ul>
+
+  <h2>3. Delivery time</h2>
+  <p><Placeholder k="deliveryTime" />. Delivery times depend on the destination PIN code and the courier, and remote locations may take longer.</p>
+
+  <h2>4. Shipping charges</h2>
+  <p><Placeholder k="shippingRates" />. Any shipping charge is shown on the quotation or at checkout before you pay, and is included in the GST tax invoice.</p>
+
+  <h2>5. Couriers, tracking and documents</h2>
+  <p>We ship through reputed courier and logistics partners. When your order is dispatched we email you the courier name and tracking number. Consignments travel with a GST tax invoice and an e-way bill where required.</p>
+
+  <h2>6. Delivery, inspection and transit damage</h2>
+  <ul>
+    <li>Please check the package at delivery. If the outer packaging is visibly damaged, note it on the courier's delivery record or refuse the delivery.</li>
+    <li>Report transit damage or missing items within <Placeholder k="damageReportWindow" />, with photos of the package and contents, to <a href={`mailto:${business.email}`}>{business.email}</a>. We will arrange a repair, replacement or refund as set out in our <a href="/cancellation-and-refunds/">Cancellation &amp; Refunds</a> policy.</li>
+  </ul>
+
+  <h2>7. Delays and failed delivery</h2>
+  <p>If dispatch is delayed beyond the stated time, we will tell you and you may cancel the order for a full refund. If a delivery fails because the address was incorrect or nobody was available after repeated attempts, re-shipping charges may apply.</p>
+
+  <h2>8. Contact</h2>
+  <p>Shipping questions: <a href={`mailto:${business.email}`}>{business.email}</a> · {business.phoneDisplay}.</p>
+</Legal>

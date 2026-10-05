@@ -1,0 +1,34 @@
+---
+import Legal from '../layouts/Legal.astro';
+import Placeholder from '../components/Placeholder.astro';
+import { business } from '../config/site';
+---
+<Legal title="Cancellation & Refunds" description={`Cancellation, return and refund policy of ${business.legalName} (${business.brand}).`}>
+  <h2>1. Cancelling an order</h2>
+  <ul>
+    <li><strong>Standard (in-stock) items:</strong> you can cancel free of charge at any time before dispatch by emailing <a href={`mailto:${business.email}`}>{business.email}</a> with your order number. You receive a full refund.</li>
+    <li><strong>Configured, made-to-order and custom items:</strong> can be cancelled free of charge until we confirm that design, procurement or production has started. After that, we refund the amount paid less the cost of work done and materials committed, as shown in an itemised statement. Milestone payments for completed custom design work are not refundable.</li>
+    <li>We may cancel an order (for example, if an item is unavailable or a price was shown in error) and will refund any amount you paid in full.</li>
+  </ul>
+
+  <h2>2. Returns</h2>
+  <ul>
+    <li><strong>Returns window:</strong> <Placeholder k="returnsWindow" />.</li>
+    <li>Standard items may be returned within the returns window if unused, complete and in original packaging. Please email us first for a return authorisation. Unauthorised returns cannot be accepted.</li>
+    <li><strong>Not returnable</strong> (unless defective or damaged in transit): custom, configured and made-to-order items; components and parts cut, programmed or soldered at your request; consumables; and items marked non-returnable on the quotation.</li>
+  </ul>
+
+  <h2>3. Damaged, defective or wrong items</h2>
+  <p>Report transit damage, a missing item or a wrong item within <Placeholder k="damageReportWindow" />, with photos. Report a manufacturing defect within the warranty period. After verification we will, at our option and at no cost to you, repair or replace the item, or refund it in full, including any shipping charge you paid.</p>
+
+  <h2>4. Refunds</h2>
+  <ul>
+    <li>Once a cancellation or return is approved, we initiate the refund within <strong>{business.refundProcessingDays} business days</strong>.</li>
+    <li>Refunds go back to the original payment method. Online payments (UPI, card, netbanking via Razorpay) are refunded to the same source; banks usually credit them within 5–7 business days after we initiate the refund. Bank-transfer and PO payments are refunded by bank transfer to the paying organisation's account.</li>
+    <li>For returns of change-of-mind items, the original shipping charge is not refundable and you pay the return shipping, unless the item was defective, damaged or wrong.</li>
+    <li>We issue a GST credit note for every refund against a tax invoice.</li>
+  </ul>
+
+  <h2>5. How to request</h2>
+  <p>Email <a href={`mailto:${business.email}`}>{business.email}</a> or call {business.phoneDisplay} with your order or invoice number, the item, the reason and photos where relevant. If you are unhappy with the outcome, contact our <a href="/grievance-redressal/">Grievance Officer</a>.</p>
+</Legal>

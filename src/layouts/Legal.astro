@@ -1,0 +1,24 @@
+---
+import Base from './Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { business, policyLinks } from '../config/site';
+interface Props { title: string; description: string }
+const { title, description } = Astro.props;
+const path = Astro.url.pathname;
+---
+<Base title={title} description={description}>
+  <PageHeader title={title} eyebrow="Policies">
+    <p class="mt-2 text-sm text-slate-600">Effective {business.policiesEffective}. Applies to purchases from {business.legalName} under the brand {business.brandMark} via curiosta.com, quotations, purchase orders and GeM.</p>
+  </PageHeader>
+  <div class="mx-auto grid max-w-6xl gap-10 px-4 py-10 lg:grid-cols-[1fr_16rem]">
+    <article class="prose prose-slate max-w-none prose-a:text-brand-700">
+      <slot />
+    </article>
+    <nav aria-label="Policies" class="text-sm lg:sticky lg:top-20 lg:self-start">
+      <p class="font-semibold text-slate-900">Policies</p>
+      <ul class="mt-2 space-y-1">
+        {policyLinks.map((l) => <li><a href={l.href} class:list={['block rounded px-2 py-1 hover:bg-slate-100', path === l.href && 'bg-brand-50 font-semibold text-brand-800']}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+  </div>
+</Base>

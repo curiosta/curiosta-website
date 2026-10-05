@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+---
+<Base title="Components desk" description="Curiosta components desk: send your BOM and get one consolidated quotation and one GST invoice for sensors, modules, development boards, connectors and enclosures.">
+  <PageHeader eyebrow="Services" title="Components desk" lead="One vendor, one quotation, one GST invoice for the parts your lab or project needs." />
+  <div class="mx-auto max-w-6xl px-4 py-10">
+    <div class="grid gap-6 md:grid-cols-3">
+      <div class="rounded-lg border border-slate-200 p-5"><h2 class="font-semibold text-slate-900">1. Send your BOM</h2><p class="mt-2 text-sm text-slate-600">Paste part numbers and quantities into the RFQ form or email a spreadsheet. Approximate descriptions are fine; we will suggest equivalents.</p></div>
+      <div class="rounded-lg border border-slate-200 p-5"><h2 class="font-semibold text-slate-900">2. Consolidated quotation</h2><p class="mt-2 text-sm text-slate-600">We quote every line in INR with GST and HSN, plus lead time and validity, on a single quotation your purchase section can process.</p></div>
+      <div class="rounded-lg border border-slate-200 p-5"><h2 class="font-semibold text-slate-900">3. Delivery with GST invoice</h2><p class="mt-2 text-sm text-slate-600">Pay online, by bank transfer or against a PO. Parts ship together with one GST tax invoice.</p></div>
+    </div>
+    <div class="prose prose-slate mt-10 max-w-none prose-a:text-brand-700">
+      <h2>What we source</h2>
+      <ul>
+        <li>Sensors: particulate, gas, temperature, humidity, pressure, current and voltage</li>
+        <li>Microcontroller and single-board computer modules, development boards</li>
+        <li>Communication modules (Wi-Fi, BLE, LoRa, 4G), GPS</li>
+        <li>Connectors, cables, power supplies, batteries and enclosures</li>
+      </ul>
+      <p>Components are supplied new and sourced from authorised distributors or manufacturers where available. Components carry the original manufacturer's warranty only, and returns follow our <a href="/cancellation-and-refunds/">Cancellation &amp; Refunds</a> policy.</p>
+      <p><a href="/contact/?product=Components%20desk%20(BOM)#rfq">Send a BOM →</a></p>
+    </div>
+  </div>
+</Base>

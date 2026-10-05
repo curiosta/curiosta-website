@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Price from '../components/Price.astro';
+import SampleNotice from '../components/SampleNotice.astro';
+import Placeholder from '../components/Placeholder.astro';
+import { getCollection } from 'astro:content';
+import { business } from '../config/site';
+const all = (await getCollection('products')).sort((a, b) => a.data.order - b.data.order);
+---
+<Base title="Pricing" description="Curiosta pricing: all prices in INR including GST, or price on request for configured instruments. Payment, quotation and invoicing terms.">
+  <PageHeader eyebrow="Pricing" title="Pricing" lead="All prices are in Indian Rupees (INR) and include GST. Configured and custom items are priced on request with a formal quotation." />
+  <div class="mx-auto max-w-6xl px-4 py-10">
+    <table class="w-full text-left text-sm">
+      <thead><tr class="border-b-2 border-slate-300"><th class="py-2 pr-4">Product</th><th class="py-2 pr-4">Price (INR, incl. GST)</th><th class="py-2">Status</th></tr></thead>
+      <tbody>
+        {all.map((p) => (
+          <tr class="border-b border-slate-200">
+            <td class="py-3 pr-4"><a class="font-medium text-brand-700 hover:underline" href={`/products/${p.id}/`}>{p.data.title}</a></td>
+            <td class="py-3 pr-4"><Price price={p.data.price} /></td>
+            <td class="py-3">{p.data.sample ? <SampleNotice compact /> : 'Available'}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <div class="prose prose-slate mt-10 max-w-none prose-a:text-brand-700">
+      <h2>What the price includes</h2>
+      <ul>
+        <li>Listed prices include GST at the applicable rate (CGST + SGST for delivery within {business.gstState}, IGST elsewhere in India).</li>
+        <li>Shipping: <Placeholder k="shippingRates" />. Any shipping charge is shown on the quotation or at checkout before you pay.</li>
+        <li>Quotations are valid for {business.quotationValidityDays} days unless stated otherwise.</li>
+        <li>Custom design work, calibration services and extended warranty are quoted separately.</li>
+      </ul>
+      <h2>How you can pay</h2>
+      <ul>
+        <li>Bank transfer (NEFT/RTGS/IMPS) against a proforma or tax invoice. Bank details appear only on our quotation and invoice, never on this website.</li>
+        <li>Purchase order or GeM order for institutions (see <a href="/how-to-buy/">How to buy</a>).</li>
+        <li>Online payment by UPI, cards and netbanking through Razorpay: coming soon.</li>
+      </ul>
+    </div>
+  </div>
+</Base>

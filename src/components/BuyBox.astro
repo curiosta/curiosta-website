@@ -1,0 +1,27 @@
+---
+/**
+ * Purchase panel. M1: quote-only. When STORE_ENABLED (M3+), this will mount
+ * an "Add to cart" island backed by the Medusa store API and Razorpay checkout.
+ */
+import Price from './Price.astro';
+import { STORE_ENABLED } from '../lib/commerce';
+import { business } from '../config/site';
+interface Props { title: string; price: any; sample: boolean; hsn?: string; leadTime?: string }
+const { title, price, sample, hsn, leadTime } = Astro.props;
+const rfqHref = `/contact/?product=${encodeURIComponent(title)}#rfq`;
+---
+<aside class="self-start rounded-lg border border-slate-200 bg-slate-50 p-5" aria-label="Purchase options">
+  <Price price={price} size="lg" />
+  {price.mode === 'fixed' && <p class="mt-1 text-xs text-slate-600">Price in INR, inclusive of GST. Shipping charges, if any, are shown on the quotation (see <a class="underline" href="/shipping-policy/">Shipping Policy</a>).</p>}
+  <dl class="mt-3 space-y-1 text-sm">
+    <div class="flex gap-2"><dt class="text-slate-500">HSN:</dt><dd>{hsn ?? 'to be confirmed'}</dd></div>
+    {leadTime && <div class="flex gap-2"><dt class="text-slate-500">Lead time:</dt><dd>{leadTime}</dd></div>}
+    <div class="flex gap-2"><dt class="text-slate-500">Sold by:</dt><dd>{business.legalName} (GSTIN {business.gstin})</dd></div>
+  </dl>
+  <div class="mt-4 flex flex-col gap-2">
+    {STORE_ENABLED && !sample
+      ? <div data-medusa-buybox data-product={title}><!-- M3+: cart island mounts here --></div>
+      : <a href={rfqHref} class="rounded-md bg-brand-700 px-4 py-2 text-center font-semibold text-white hover:bg-brand-800">Request a quote</a>}
+    <p class="text-xs text-slate-600">Online payment (UPI, cards, netbanking) is coming soon. Today you can order against a quotation, purchase order or GeM, with a GST tax invoice. <a class="underline" href="/how-to-buy/">How to buy</a></p>
+  </div>
+</aside>

@@ -1,0 +1,19 @@
+---
+import Price from './Price.astro';
+import SampleNotice from './SampleNotice.astro';
+interface Props { id: string; data: any }
+const { id, data } = Astro.props;
+const labels: Record<string, string> = { instruments: 'Instrument', kits: 'Kit', custom: 'Custom build', components: 'Components desk' };
+---
+<article class="flex flex-col rounded-lg border border-slate-200 p-5 shadow-sm transition hover:shadow-md">
+  <div class="flex items-center justify-between gap-2">
+    <span class="text-xs font-semibold uppercase tracking-wide text-brand-700">{labels[data.category]}</span>
+    {data.sample && <SampleNotice compact />}
+  </div>
+  <h3 class="mt-2 text-lg font-semibold text-slate-900"><a href={`/products/${id}/`} class="hover:text-brand-700">{data.title}</a></h3>
+  <p class="mt-2 flex-1 text-sm text-slate-600">{data.summary}</p>
+  <div class="mt-4 flex items-end justify-between gap-2">
+    <Price price={data.price} />
+    <a href={`/products/${id}/`} class="text-sm font-semibold text-brand-700 hover:underline">Details →</a>
+  </div>
+</article>

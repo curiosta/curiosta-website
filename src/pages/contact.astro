@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import RfqForm from '../components/RfqForm.astro';
+import BusinessDetails from '../components/BusinessDetails.astro';
+import GrievancePending from '../components/GrievancePending.astro';
+import { business } from '../config/site';
+---
+<Base title="Contact" description={`Contact ${business.brand} (${business.legalName}), ${business.address.city}: request a quotation, email ${business.email} or call ${business.phoneDisplay}.`}>
+  <PageHeader eyebrow="Contact" title="Contact us and request a quote" lead={`Send your requirement and we aim to reply with a formal quotation within ${business.quoteResponse}.`} />
+  <div class="mx-auto grid max-w-6xl gap-10 px-4 py-10 lg:grid-cols-[1fr_24rem]">
+    <section id="rfq" aria-labelledby="rfq-h">
+      <h2 id="rfq-h" class="mb-4 text-xl font-semibold text-slate-900">Request for quotation</h2>
+      <RfqForm />
+    </section>
+    <aside class="space-y-6">
+      <div class="rounded-lg border border-slate-200 p-6">
+        <h2 class="mb-4 text-lg font-semibold text-slate-900">Reach us</h2>
+        <BusinessDetails />
+      </div>
+      <div class="rounded-lg border border-slate-200 p-6 text-sm">
+        <h2 class="text-lg font-semibold text-slate-900">Complaints and grievances</h2>
+        <p class="mt-2">Grievance Officer: {business.grievance.name} <GrievancePending /><br />Email: <a class="text-brand-700 underline" href={`mailto:${business.grievance.email}`}>{business.grievance.email}</a></p>
+        <p class="mt-2"><a class="text-brand-700 underline" href="/grievance-redressal/">How we handle grievances</a></p>
+      </div>
+    </aside>
+  </div>
+</Base>

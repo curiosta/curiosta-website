@@ -1,0 +1,8 @@
+---
+import { placeholders, type PlaceholderKey } from '../config/site';
+interface Props { k: PlaceholderKey }
+const p = placeholders[Astro.props.k];
+---
+{p.confirmed && p.value
+  ? <span>{p.value}</span>
+  : <mark class="placeholder" data-placeholder={Astro.props.k} title="Placeholder: to be confirmed before go-live">[PLACEHOLDER: {p.fallback}]</mark>}

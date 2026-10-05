@@ -1,47 +1,57 @@
-# Astro Starter Kit: Minimal
+# curiosta.com (relaunch-2026)
 
+Static [Astro 7](https://astro.build) site for **Curiosta™**, a brand of Sahukar Consultancy.
+M1 scope: catalogue, services, how to buy, about, contact (RFQ) and the policy pages needed
+for Razorpay website verification. The old Medusa/Stripe/Meilisearch/Contentful storefront
+is gone; online checkout (Medusa 1.16 `store-backend` + Razorpay) arrives in a later milestone
+through `src/lib/commerce` and `src/components/BuyBox.astro`.
+
+## Develop
+
+Requires Node ≥ 22.12.
+
+```bash
+npm ci
+npm run dev                 # http://localhost:4321
+npm run build               # -> dist/
+npm run preview             # serves dist/ like CloudFront (dir index, 404, POST /api/rfq stub)
+npm run check               # astro check (types)
+npm run test:rfq            # RFQ Lambda stub unit tests
+npm run check:placeholders  # exit 1 while any [PLACEHOLDER]/SAMPLE remains (go-live gate)
+npm run check:policies -- http://localhost:4321 --md checklist.md   # Razorpay checklist
+node scripts/link-check.mjs # internal links against the preview
 ```
-npm create astro@latest -- --template minimal
-```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/minimal/devcontainer.json)
+## Where to edit
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+| What | File |
+|---|---|
+| Legal name, GSTIN, address, email, phone, grievance officer, refund days, quotation validity | `src/config/site.ts` → `business` |
+| Dispatch time, delivery estimate, shipping rates, returns window, damage-report window | `src/config/site.ts` → `placeholders` (set `value`, `confirmed: true`) |
+| Products | `src/content/products/*.md` (set `sample: false` and rename the file without `sample-` when real) |
+| Policies | `src/pages/{terms-and-conditions,privacy-policy,shipping-policy,cancellation-and-refunds,grievance-redressal}.astro` |
 
-## 🚀 Project Structure
+Prices are entered as the final INR amount **including GST** (`price: { mode: fixed, inrInclGst: 17700 }`)
+or `price: { mode: on-request }`.
 
-Inside of your Astro project, you'll see the following folders and files:
+## Reserved paths
 
-```
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+`/store/*`, `/admin/*`, `/app/*`, `/hooks/*`, `/health`, `/media/*` are routed by CloudFront to
+the future store backend/admin. Never create pages there.
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## RFQ form
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Built with `PUBLIC_RFQ_ENDPOINT` empty (M1), the form opens a pre-filled
+`mailto:info@curiosta.com`. With an endpoint set it POSTs JSON to the RFQ Lambda
+(`functions/rfq`, not deployed in M1) and falls back to mailto on any error.
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Deploy
 
-## 🧞 Commands
+`infra/template.yaml` (stack `curiosta-web`): private S3 bucket + OAC, CloudFront distribution,
+viewer-request function (www→apex, directory index), security headers.
+`infra/deploy-site.sh <bucket> <distribution-id> [--apply]` uploads `dist/`.
+The full change list and runbook live outside this repo (`m1-deploy-runbook.md`).
 
-All commands are run from the root of the project, from a terminal:
+## Licence
 
-| Command                | Action                                           |
-| :--------------------- | :----------------------------------------------- |
-| `npm install`          | Installs dependencies                            |
-| `npm run dev`          | Starts local dev server at `localhost:3000`      |
-| `npm run build`        | Build your production site to `./dist/`          |
-| `npm run preview`      | Preview your build locally, before deploying     |
-| `npm run astro ...`    | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+MPL-2.0 (see LICENSE).
