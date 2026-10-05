@@ -7,7 +7,7 @@ price: { mode: on-request }
 order: 3
 specs:
   - { k: "Variant 1: Sensirion SPS30", v: "PM1, PM2.5, PM4, PM10 (mass concentration)" }
-  - { k: "Variant 2: Alphasense OPC-N3", v: "Particle size distribution (16+ size bins), PM1, PM2.5, PM10" }
+  - { k: "Variant 2: Alphasense OPC-N3", v: "Particle size distribution (24 size bins, 0.35–40 µm), PM1, PM2.5, PM10" }
   - { k: Sampling interval, v: "1 minute" }
   - { k: Battery life, v: "6–8 hours" }
   - { k: Storage, v: "SD-card logging" }
